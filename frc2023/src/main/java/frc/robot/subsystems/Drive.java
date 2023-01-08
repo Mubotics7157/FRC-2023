@@ -3,8 +3,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants.DriveConstants;
@@ -19,9 +25,23 @@ public class Drive extends SubsystemBase {
     private SwerveModule rearLeft = DriveConstants.REAR_LEFT_MODULE;
     WPI_Pigeon2 gyro =new WPI_Pigeon2(30, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
+    TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
+    ProfiledPIDController rotController = new ProfiledPIDController(-4, 0, 0,rotProfile);
+
+    PIDController xController = new PIDController(DriveConstants.AUTO_CONTROLLER_kP, 0, 0);
+    PIDController yController = new PIDController(DriveConstants.AUTO_CONTROLLER_kP, 0, 0);
+    Trajectory currTrajectory;
+    private volatile Rotation2d desiredAutoHeading;
+    private double autoStartTime;
+    double maxAngVel = 2 * Math.PI;
+
+    HolonomicDriveController autoController;
+    
+
     public Drive(){
-
-
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
+        autoController = new HolonomicDriveController(xController, yController, rotController); 
+        autoController.setTolerance(new Pose2d(.5,.5,Rotation2d.fromDegrees(10)));
     }
 
     public static Drive getInstance(){
