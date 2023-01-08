@@ -9,6 +9,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.SetGains;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
@@ -55,6 +56,7 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
     m_driverController.leftTrigger().onTrue(new RunIntake(intake));
+    m_driverController.b().onTrue(new SetGains(drive));
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
