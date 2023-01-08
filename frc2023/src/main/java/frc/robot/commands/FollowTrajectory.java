@@ -39,7 +39,6 @@ public class FollowTrajectory extends CommandBase {
     private PIDController xController = new PIDController(DriveConstants.AUTO_CONTROLLER_kP, 0, 0);
     private PIDController yController = new PIDController(DriveConstants.AUTO_CONTROLLER_kP, 0, 0);
     private Trajectory currTrajectory;
-    private Rotation2d desiredAutoHeading;
     private HolonomicDriveController autoController;    
 
     private double autoStartTime;
@@ -57,18 +56,19 @@ public class FollowTrajectory extends CommandBase {
     }
     @Override
     public void initialize() {
+        tracker.setOdometry(currTrajectory.getInitialPose());
+        rotController.reset(Tracker.getInstance().getOdometry().getRotation().getRadians());
         autoStartTime = Timer.getFPGATimestamp();
     }
 
     @Override
     public void execute() {
         Trajectory.State goal = path.sample(getAutoTime());
-        Rotation2d target = desiredAutoHeading;
-        SmartDashboard.putNumber("desired rotation", target.getDegrees());
-        SmartDashboard.putNumber("heading error",Math.abs(target.rotateBy(Tracker.getInstance().getOdometry().getRotation()).getDegrees()));
+        SmartDashboard.putNumber("desired rotation", goal.poseMeters.getRotation().getDegrees());
+        SmartDashboard.putNumber("heading error",Math.abs(goal.poseMeters.getRotation().rotateBy(Tracker.getInstance().getOdometry().getRotation()).getDegrees()));
         SmartDashboard.putNumber("time elapsed", getAutoTime());
 
-        ChassisSpeeds desiredSpeeds = autoController.calculate(Tracker.getInstance().getOdometry(), goal, target);
+        ChassisSpeeds desiredSpeeds = autoController.calculate(Tracker.getInstance().getOdometry(), goal, goal.poseMeters.getRotation());
 
         driveFromChassis(desiredSpeeds);
 
