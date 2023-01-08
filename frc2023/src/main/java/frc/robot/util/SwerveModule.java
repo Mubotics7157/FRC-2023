@@ -94,6 +94,14 @@ public class SwerveModule {
         return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getSelectedSensorVelocity());
     }
 
+    public double getPosition(){
+        return CommonConversions.stepsToMeters(driveMotor.getSelectedSensorPosition());
+    }
+
+    public Rotation2d getRelativeHeading(){
+        return new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition()));
+    }
+
     public void updateP(double val){
         turnPID.setP(val);
     }
