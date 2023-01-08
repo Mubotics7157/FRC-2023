@@ -8,8 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.JogElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +34,7 @@ public class RobotContainer {
   
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
+  private final Elevator elevator = Elevator.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -55,6 +58,9 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
     m_driverController.leftTrigger().onTrue(new RunIntake(intake));
+
+    m_driverController.leftBumper().onTrue(new JogElevator(.25, elevator));
+    m_driverController.rightBumper().onTrue(new JogElevator(-.25, elevator));
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
