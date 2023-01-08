@@ -33,7 +33,7 @@ public class Drive extends SubsystemBase {
         
     }
 
-    private void setModuleStates(SwerveModuleState[] states){
+    public void setModuleStates(SwerveModuleState[] states){
         frontLeft.setState(states[0]);
         frontRight.setState(states[1]);
         rearLeft.setState(states[2]);

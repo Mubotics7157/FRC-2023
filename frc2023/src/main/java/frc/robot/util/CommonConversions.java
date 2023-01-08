@@ -6,7 +6,7 @@ import frc.robot.Constants.DriveConstants;
 public class CommonConversions {
   
      public static double stepsToMeters(double steps){
-      return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.ModuleConstants.DRIVE_GEAR_RATIO));
+      return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO));
   }
 
 
@@ -25,7 +25,7 @@ public class CommonConversions {
    * @return encoder units
    */
   public static double metersToSteps(double meters) {
-    return (meters / 0.1016 / Math.PI) *2048*Constants.ModuleConstants.DRIVE_GEAR_RATIO;
+    return (meters / 0.1016 / Math.PI) *2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
   }
 
     /**
