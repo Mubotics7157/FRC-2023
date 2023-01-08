@@ -54,7 +54,7 @@ public class DriveTele extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        driveFromChassis(new ChassisSpeeds(vx,vy,omega));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, drive.getDriveHeading()));
     }
 
     @Override
