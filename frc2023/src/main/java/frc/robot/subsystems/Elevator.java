@@ -14,7 +14,7 @@ public class Elevator extends SubsystemBase {
     
     public Elevator(){
 
-        elevatorMotor = new WPI_TalonFX(0);
+        elevatorMotor = new WPI_TalonFX(29);
 
         elevatorMotor.configPeakOutputForward(.25);
         elevatorMotor.configPeakOutputReverse(-.25);
