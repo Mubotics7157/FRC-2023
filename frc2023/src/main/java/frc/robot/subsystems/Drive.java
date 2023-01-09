@@ -73,6 +73,10 @@ public class Drive extends SubsystemBase {
         return gyro.getRotation2d();
     }
 
+    public synchronized void resetHeading(){
+        gyro.reset();
+    }
+
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
         SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());

@@ -17,6 +17,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -43,7 +45,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
-    elevator.setDefaultCommand(new IdleElevator(elevator));
+    //elevator.setDefaultCommand(new IdleElevator(elevator));
   }
 
   /**
@@ -60,12 +62,14 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.leftTrigger().whileTrue(new RunIntake(true,intake));
-    m_driverController.rightTrigger().whileTrue(new RunIntake(false,intake));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
     m_driverController.b().onTrue(new SetGains(drive));
 
     m_driverController.leftBumper().whileTrue(new JogElevator(.25, elevator));
     m_driverController.rightBumper().whileTrue(new JogElevator(-.25, elevator));
+
+    m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
