@@ -2,10 +2,12 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-public class Elevator {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+
+public class Elevator extends SubsystemBase {
 
     private WPI_TalonFX elevatorMotor;
     private static Elevator instance = new Elevator();
@@ -19,7 +21,7 @@ public class Elevator {
 
         elevatorMotor.setInverted(true);
 
-        elevatorMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 20, 1));
+        //elevatorMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 20, 1));
         elevatorMotor.setNeutralMode(NeutralMode.Brake);
     }
 

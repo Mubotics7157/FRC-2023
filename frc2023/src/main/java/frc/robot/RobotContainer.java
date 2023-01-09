@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.IdleElevator;
 import frc.robot.commands.JogElevator;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetGains;
@@ -42,6 +43,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
+    elevator.setDefaultCommand(new IdleElevator(elevator));
   }
 
   /**
@@ -58,11 +60,12 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.leftTrigger().onTrue(new RunIntake(intake));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(true,intake));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(false,intake));
     m_driverController.b().onTrue(new SetGains(drive));
 
-    m_driverController.leftBumper().onTrue(new JogElevator(.25, elevator));
-    m_driverController.rightBumper().onTrue(new JogElevator(-.25, elevator));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.25, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.25, elevator));
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class JogElevator extends CommandBase {
+public class IdleElevator extends CommandBase {
 
     Elevator elevator;
 
     double val;
 
-    public JogElevator(double val,Elevator instance){
+    public IdleElevator(Elevator instance){
         this.val = val;
 
         elevator = instance;
@@ -20,13 +20,11 @@ public class JogElevator extends CommandBase {
     
     @Override
     public void execute() {
-        elevator.setOutput(val);
-        SmartDashboard.putString("run elevator","yes");
+        elevator.idle();
+        SmartDashboard.putString("run elevator","idle");
     }
 
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putString("run elevator","no");
-        elevator.idle();
     }
 }

@@ -16,8 +16,9 @@ public class Intake extends SubsystemBase {
         intakeMaster = new CANSparkMax(9, MotorType.kBrushless);
         intakeSlave = new CANSparkMax(10, MotorType.kBrushless);
 
-        intakeMaster.setSmartCurrentLimit(40);
-        intakeSlave.setSmartCurrentLimit(40);
+        intakeMaster.setSmartCurrentLimit(5);
+        intakeSlave.setSmartCurrentLimit(5);
+
 
         intakeSlave.follow(intakeMaster);
     }
