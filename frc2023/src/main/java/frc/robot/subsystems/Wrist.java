@@ -33,6 +33,9 @@ public class Wrist extends SubsystemBase {
         wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
         wristMotor.configReverseSoftLimitEnable(true);
 
+        wristMotor.configPeakOutputForward(.25);
+        wristMotor.configPeakOutputReverse(-.25);
+
     }
 
     @Override

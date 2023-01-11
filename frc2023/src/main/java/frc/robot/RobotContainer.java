@@ -10,12 +10,15 @@ import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.IdleElevator;
 import frc.robot.commands.JogElevator;
+import frc.robot.commands.JogWrist;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetGains;
+import frc.robot.commands.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -37,15 +40,20 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(1);
+  
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Elevator elevator = Elevator.getInstance();
+  private final Wrist wrist = new Wrist();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
+    elevator.setDefaultCommand(new JogWrist(m_operatorController.getLeftY(), wrist));
     //elevator.setDefaultCommand(new IdleElevator(elevator));
   }
 
@@ -71,6 +79,8 @@ public class RobotContainer {
     m_driverController.rightBumper().whileTrue(new JogElevator(-.40, elevator));
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
+
+
 
     /* 
     int x = Integer.MAX_VALUE;
