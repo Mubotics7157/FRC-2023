@@ -8,9 +8,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.IdleElevator;
+import frc.robot.commands.IdleIntake;
 import frc.robot.commands.JogElevator;
-import frc.robot.commands.JogWrist;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetGains;
 import frc.robot.commands.SetWristAngle;
@@ -21,10 +20,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import java.lang.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,7 +50,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
-    elevator.setDefaultCommand(new JogWrist(m_operatorController.getLeftY(), wrist));
+    intake.setDefaultCommand(new IdleIntake(intake));
     //elevator.setDefaultCommand(new IdleElevator(elevator));
   }
 
@@ -80,6 +77,8 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
+    m_driverController.a().onTrue(new SetWristAngle(-120, wrist));
+    m_driverController.x().onTrue(new SetWristAngle(-45, wrist));
 
 
     /* 

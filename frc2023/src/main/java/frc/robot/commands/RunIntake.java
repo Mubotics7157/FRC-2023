@@ -21,10 +21,10 @@ public class RunIntake extends CommandBase {
     public void execute() {
         if (reverse){
             SmartDashboard.putString("running?", "reverse");
-            intake.setMotors(-SmartDashboard.getNumber("Intake Speed", 1));
+            intake.setMotors(-SmartDashboard.getNumber("Intake Speed", .5));
         }
         else{
-            intake.setMotors(SmartDashboard.getNumber("Intake Speed", 1));
+            intake.setMotors(SmartDashboard.getNumber("Intake Speed", .5));
             SmartDashboard.putString("running?", "forward");
         }
     }
