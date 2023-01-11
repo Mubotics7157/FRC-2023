@@ -32,7 +32,7 @@ public final class Constants {
 
     public static final String SWERVE_CANIVORE_ID = "swerve";
 
-    public static final int TIMEOUT_MS = 25;
+    public static final int TIMEOUT_MS = 50;
 }
 
 public static class DriveConstants{

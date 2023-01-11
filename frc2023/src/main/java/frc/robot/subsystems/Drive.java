@@ -22,7 +22,7 @@ public class Drive extends SubsystemBase {
     private SwerveModule frontRight = DriveConstants.FRONT_RIGHT_MODULE;
     private SwerveModule rearRight = DriveConstants.REAR_RIGHT_MODULE;
     private SwerveModule rearLeft = DriveConstants.REAR_LEFT_MODULE;
-    WPI_Pigeon2 gyro =new WPI_Pigeon2(30, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+    WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
 
 
     double maxAngVel = 2 * Math.PI;

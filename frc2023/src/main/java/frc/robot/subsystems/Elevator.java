@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,14 +11,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Elevator extends SubsystemBase {
 
     private WPI_TalonFX elevatorMotor;
+    private TalonFXConfiguration config;
     private static Elevator instance = new Elevator();
     
     public Elevator(){
 
+        config = new TalonFXConfiguration();
         elevatorMotor = new WPI_TalonFX(29);
 
-        elevatorMotor.configPeakOutputForward(.25);
-        elevatorMotor.configPeakOutputReverse(-.25);
+        config.slot0.kP = 0;
+        config.slot0.kD = 0;
+        config.slot0.kF = 0;
+        elevatorMotor.configAllSettings(config);
+
+        elevatorMotor.configPeakOutputForward(.75);
+        elevatorMotor.configPeakOutputReverse(-.75);
 
         elevatorMotor.setInverted(true);
 

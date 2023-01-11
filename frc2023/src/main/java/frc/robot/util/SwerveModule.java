@@ -31,8 +31,8 @@ public class SwerveModule {
         turnPID = new PIDController(.39, 0, 0); 
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
-        driveMotor = new WPI_TalonFX(drivePort,SwerveModuleConstants.SWERVE_CANIVORE_ID);
-        turnMotor = new WPI_TalonFX(turnPort,SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        driveMotor = new WPI_TalonFX(drivePort);
+        turnMotor = new WPI_TalonFX(turnPort);
 
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
@@ -47,13 +47,14 @@ public class SwerveModule {
         turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(false);
 
-        absEncoder = new WPI_CANCoder(encoderPort,SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        absEncoder = new WPI_CANCoder(encoderPort);
+    
         absEncoder.configFactoryDefault();
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         config.magnetOffsetDegrees = angleOffset;
-        absEncoder.configAllSettings(config);
+        absEncoder.configAllSettings(config,50);
     }
 
     public void setState(SwerveModuleState state){

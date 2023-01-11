@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import java.lang.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,12 +67,17 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
     m_driverController.b().onTrue(new SetGains(drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.25, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.25, elevator));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.40, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.40, elevator));
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-
+    /* 
+    int x = Integer.MAX_VALUE;
+    while(x > 1) {
+      x++;
+    }
+    */
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
