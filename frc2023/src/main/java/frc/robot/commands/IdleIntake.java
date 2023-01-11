@@ -13,6 +13,8 @@ public class IdleIntake extends CommandBase {
 
     public IdleIntake(Intake instance){
         intake = instance;
+
+        addRequirements(intake);
     }
 
     @Override

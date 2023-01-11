@@ -38,9 +38,12 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristController.setGoal(setpoint.getRadians());
-        double output = wristController.calculate(getRelativeAngle().getRadians(),setpoint.getRadians());
-        wristMotor.set(output); // might need to change to set
+        if(setpoint!= null){
+            wristController.setGoal(setpoint.getRadians());
+            double output = wristController.calculate(getRelativeAngle().getRadians(),setpoint.getRadians());
+            wristMotor.set(output); // might need to change to set
+            SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
+        }
 
         logData();
     }
@@ -65,7 +68,6 @@ public class Wrist extends SubsystemBase {
     private void logData(){
         SmartDashboard.putNumber("Wrist Angle", getRelativeAngle().getDegrees());
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
         SmartDashboard.putNumber("Wrist PID setpoint", wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
         SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
