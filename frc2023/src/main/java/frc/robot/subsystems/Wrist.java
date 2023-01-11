@@ -33,8 +33,6 @@ public class Wrist extends SubsystemBase {
         wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
         wristMotor.configReverseSoftLimitEnable(true);
 
-        wristMotor.configPeakOutputForward(.25);
-        wristMotor.configPeakOutputReverse(-.25);
 
     }
 
@@ -42,8 +40,9 @@ public class Wrist extends SubsystemBase {
     public void periodic() {
         wristController.setGoal(setpoint.getRadians());
         double output = wristController.calculate(getRelativeAngle().getRadians(),setpoint.getRadians());
-        wristMotor.setVoltage(output); // might need to change to set
+        wristMotor.set(output); // might need to change to set
 
+        logData();
     }
 
     public void jog(double val){
@@ -69,6 +68,7 @@ public class Wrist extends SubsystemBase {
         SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
         SmartDashboard.putNumber("Wrist PID setpoint", wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
+        SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
 
     }
 
