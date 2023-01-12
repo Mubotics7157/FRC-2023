@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -15,7 +16,7 @@ import frc.robot.Constants.WristConstants;
 public class Wrist extends SubsystemBase {
     private WPI_TalonFX wristMotor;
     private DutyCycleEncoder wristEncoder;
-    private Rotation2d setpoint;
+    private double setpoint = 0;
     private ProfiledPIDController wristController;
     
     public Wrist(){
@@ -32,18 +33,20 @@ public class Wrist extends SubsystemBase {
         wristMotor.configForwardSoftLimitEnable(true);
         wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
         wristMotor.configReverseSoftLimitEnable(true);
+        wristMotor.config_kP(0, 0);
+
+        wristMotor.setNeutralMode(NeutralMode.Brake);
+
+        wristMotor.configPeakOutputForward(.5);
+        wristMotor.configPeakOutputReverse(-.5);
 
 
     }
 
     @Override
     public void periodic() {
-        if(setpoint!= null){
-            wristController.setGoal(setpoint.getRadians());
-            double output = wristController.calculate(getRelativeAngle().getRadians(),setpoint.getRadians());
-            wristMotor.set(output); // might need to change to set
-            SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
-        }
+
+        wristMotor.set(ControlMode.Position,setpoint);
 
         logData();
     }
@@ -61,7 +64,7 @@ public class Wrist extends SubsystemBase {
         wristController.setPID(SmartDashboard.getNumber("Wrist kP", 0), 0, 0);
     }
 
-    public void setSetpoint(Rotation2d requestedAngle){
+    public void setSetpoint(double requestedAngle){
         setpoint = requestedAngle;
     }
 

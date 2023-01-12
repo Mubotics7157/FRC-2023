@@ -22,7 +22,7 @@ public class SetWristAngle extends CommandBase{
 
     @Override
     public void execute() {
-        wrist.setSetpoint(Rotation2d.fromDegrees(setpoint));
+        wrist.setSetpoint(setpoint);
     }
 
     @Override
