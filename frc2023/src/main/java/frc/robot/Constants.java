@@ -105,7 +105,7 @@ public final class Constants {
 
       public static final int ABS_ENCODER_PORT = 0;
 
-      public static final double WRIST_CONTROLLER_KP = .75;
+      public static final double WRIST_CONTROLLER_KP = .3;
       public static final double WRIST_CONTROLLER_KI = 0;
       public static final double WRIST_CONTROLLER_KD = 0;
       public static final double WRIST_CONTROLLER_KF = 0;
