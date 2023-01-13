@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -18,29 +19,42 @@ public class Wrist extends SubsystemBase {
     private DutyCycleEncoder wristEncoder;
     private double setpoint = 0;
     private ProfiledPIDController wristController;
+    private static Wrist instance = new Wrist();
     
     public Wrist(){
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
         wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
         wristController = new ProfiledPIDController(WristConstants.WRIST_CONTROLLER_KP, WristConstants.WRIST_CONTROLLER_KI, WristConstants.WRIST_CONTROLLER_KD, new TrapezoidProfile.Constraints(2*Math.PI,1.5*Math.PI));
-
+  
         wristController.enableContinuousInput(-Math.PI, Math.PI);
         wristController.setTolerance(WristConstants.WRIST_CONTROLLER_TOLERANCE_RAD);
         wristEncoder.setDistancePerRotation(2*Math.PI);
-
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.slot0.kP = .3;
+        wristMotor.configAllSettings(config);
         wristMotor.configFactoryDefault();
+
+        
+       
         wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
         wristMotor.configForwardSoftLimitEnable(true);
         wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
         wristMotor.configReverseSoftLimitEnable(true);
-        wristMotor.config_kP(0, 0);
+
 
         wristMotor.setNeutralMode(NeutralMode.Brake);
 
         wristMotor.configPeakOutputForward(.5);
         wristMotor.configPeakOutputReverse(-.5);
 
+        wristMotor.setSelectedSensorPosition(0);
 
+
+
+    }
+
+    public static Wrist getInstance(){
+        return instance;
     }
 
     @Override
@@ -61,7 +75,8 @@ public class Wrist extends SubsystemBase {
     }
 
     public void setGains(){
-        wristController.setPID(SmartDashboard.getNumber("Wrist kP", 0), 0, 0);
+        wristMotor.config_kP(0, .3);
+        //wristController.setPID(SmartDashboard.getNumber("Wrist kP", 0), 0, 0);
     }
 
     public void setSetpoint(double requestedAngle){
@@ -71,7 +86,7 @@ public class Wrist extends SubsystemBase {
     private void logData(){
         SmartDashboard.putNumber("Wrist Angle", getRelativeAngle().getDegrees());
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Wrist PID setpoint", wristController.getGoal().position);
+        SmartDashboard.putNumber("Wrist PID setpoint", setpoint);//wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
         SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
 

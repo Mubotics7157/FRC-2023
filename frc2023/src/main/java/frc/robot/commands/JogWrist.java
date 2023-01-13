@@ -1,14 +1,15 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Wrist;
 
 public class JogWrist extends CommandBase {
     
-    private double output;
+    private boolean output;
     private Wrist wrist;
 
-    public JogWrist(double output, Wrist instance){
+    public JogWrist(boolean output, Wrist instance){
         this.output = output;
 
         wrist = instance;
@@ -18,7 +19,12 @@ public class JogWrist extends CommandBase {
 
     @Override
     public void execute() {
-        wrist.jog(output);
+        if(output){
+            wrist.jog(.5);
+
+        }
+        else
+            wrist.jog(-.5);
     }
 
     @Override

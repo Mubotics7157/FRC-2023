@@ -16,8 +16,8 @@ public class Intake extends SubsystemBase {
     public Intake(){
         
         
-        intakeMaster = new WPI_TalonFX(9);
-        intakeSlave = new WPI_TalonFX(10);
+        intakeMaster = new WPI_TalonFX(19);
+        intakeSlave = new WPI_TalonFX(20);
 
         intakeMaster.configFactoryDefault();
         intakeSlave.configFactoryDefault();
