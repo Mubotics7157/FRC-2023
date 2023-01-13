@@ -20,7 +20,6 @@ public class IdleElevator extends CommandBase{
 
     @Override
     public void execute() {
-        elevator.idle();
     }
 
     @Override

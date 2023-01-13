@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
@@ -18,7 +17,8 @@ public class SetElevatorHeight extends CommandBase {
 
     @Override
     public void initialize() {
-        elevator.setGains(SmartDashboard.getNumber("Elevator kP", 0));
+        elevator.setGains(.08);
+        elevator.setPositionHold(true);
     }
 
     @Override
@@ -28,6 +28,7 @@ public class SetElevatorHeight extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        elevator.setPositionHold(false);
         
     }
 }

@@ -90,16 +90,24 @@ public final class Constants {
 
     public static class ElevatorConstants{
       public static final double ELEVATOR_GEARING = 6;
-      public static final int DEVICE_ID_ELEVATOR = 0;
+      public static final int DEVICE_ID_ELEVATOR = 29;
+
+      public static final double WRIST_PEAK_OUTPUT_FORWARD = .75;
+      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.75;
+
+      public static final double ELEVATOR_KP = .08;
 
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 12/60;
-      public static final int DEVICE_ID_WRIST = 0;
+      public static final double WRIST_GEARING = 68.57;
+      public static final int DEVICE_ID_WRIST = 9;
 
-      public static final double SOFT_LIMIT_FORWARD = 0;
-      public static final double SOFT_LIMIT_REVERSE = -81094;
+      public static final double SOFT_LIMIT_FORWARD = 72456;
+      public static final double SOFT_LIMIT_REVERSE = 0;
+
+      public static final double WRIST_PEAK_OUTPUT_FORWARD = .5;
+      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.5;
 
       public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
 

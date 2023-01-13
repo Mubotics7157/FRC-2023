@@ -13,6 +13,7 @@ import frc.robot.commands.IdleIntake;
 import frc.robot.commands.JogElevator;
 import frc.robot.commands.JogWrist;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetGains;
 import frc.robot.commands.SetWristAngle;
 import frc.robot.subsystems.Drive;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -58,15 +60,6 @@ public class RobotContainer {
     //elevator.setDefaultCommand(new IdleElevator(elevator));
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
@@ -74,19 +67,23 @@ public class RobotContainer {
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
     m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
-    m_driverController.b().onTrue(new SetGains(drive));
+    //m_driverController.b().onTrue(new SetGains(drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.40, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.40, elevator));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.30, elevator));
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    //m_driverController.a().onTrue(new SetWristAngle(-120, wrist));
-    //m_driverController.x().onTrue(new SetWristAngle(-45, wrist));
    // m_driverController.a().whileTrue(new JogWrist(true, wrist));
     m_driverController.x().whileTrue(new SetWristAngle(0, wrist));
 
     m_driverController.y().whileTrue(new SetWristAngle(72456, wrist));
+
+    //m_driverController.a().whileTrue(new SetElevatorHeight(53822, elevator));
+    
+     m_driverController.a().onTrue(Commands.parallel(new SetElevatorHeight(53822,elevator),new SetWristAngle(72456, wrist)));
+     m_driverController.b().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator),new SetWristAngle(0, wrist)));
+    // m_driverController.x().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator),new SetWristAngle(0, wrist)));
     
 
 

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
+import frc.robot.util.CommonConversions;
 
 public class Wrist extends SubsystemBase {
     private WPI_TalonFX wristMotor;
@@ -44,12 +45,10 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.setNeutralMode(NeutralMode.Brake);
 
-        wristMotor.configPeakOutputForward(.5);
-        wristMotor.configPeakOutputReverse(-.5);
+        wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
+        wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
 
         wristMotor.setSelectedSensorPosition(0);
-
-
 
     }
 
@@ -59,7 +58,6 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         wristMotor.set(ControlMode.Position,setpoint);
 
         logData();
@@ -76,7 +74,6 @@ public class Wrist extends SubsystemBase {
 
     public void setGains(){
         wristMotor.config_kP(0, .3);
-        //wristController.setPID(SmartDashboard.getNumber("Wrist kP", 0), 0, 0);
     }
 
     public void setSetpoint(double requestedAngle){
@@ -84,7 +81,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private void logData(){
-        SmartDashboard.putNumber("Wrist Angle", getRelativeAngle().getDegrees());
+        SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57)));
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("Wrist PID setpoint", setpoint);//wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  

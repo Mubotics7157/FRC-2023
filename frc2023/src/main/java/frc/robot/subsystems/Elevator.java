@@ -5,10 +5,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.DutyCycle;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.util.CommonConversions;
 
 
@@ -17,17 +17,16 @@ public class Elevator extends SubsystemBase {
     private WPI_TalonFX elevatorMotor;
     private TalonFXConfiguration config;
     private static Elevator instance = new Elevator();
-    private DutyCycleEncoder encoder;
+    private boolean runPID = false;
 
     private double setpoint = 0;
     
     public Elevator(){
-        encoder = new DutyCycleEncoder(2);
         //encoder.setDistancePerRotation();
         config = new TalonFXConfiguration();
-        elevatorMotor = new WPI_TalonFX(29);
+        elevatorMotor = new WPI_TalonFX(ElevatorConstants.DEVICE_ID_ELEVATOR);
 
-        config.slot0.kP = 0;
+        config.slot0.kP = ElevatorConstants.ELEVATOR_KP; 
         config.slot0.kD = 0;
         config.slot0.kF = 0;
         config.motionCruiseVelocity =  CommonConversions.radPerSecToStepsPerDecisec(2*Math.PI,6);
@@ -35,20 +34,25 @@ public class Elevator extends SubsystemBase {
 
         elevatorMotor.configAllSettings(config);
 
-        elevatorMotor.configPeakOutputForward(.75);
-        elevatorMotor.configPeakOutputReverse(-.75);
+        elevatorMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
+        elevatorMotor.configPeakOutputReverse(ElevatorConstants.WRIST_PEAK_OUTPUT_REVERSE);
 
         elevatorMotor.setInverted(true);
 
         //elevatorMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 20, 1));
         elevatorMotor.setNeutralMode(NeutralMode.Brake);
+        elevatorMotor.setSelectedSensorPosition(0);
+
+        elevatorMotor.configReverseSoftLimitThreshold(0);
+        elevatorMotor.configReverseSoftLimitEnable(true);
     }
 
     @Override
     public void periodic() {
-        //elevatorMotor.set(ControlMode.Position,setpoint);
-        SmartDashboard.putNumber("encoder relative", encoder.get());
-        SmartDashboard.putNumber("encoder absolute", encoder.getAbsolutePosition());
+        if(runPID)
+            elevatorMotor.set(ControlMode.Position,setpoint);
+    
+        SmartDashboard.putNumber("elevator onboard encoder", elevatorMotor.getSelectedSensorPosition());
     }
 
     public static Elevator getInstance(){
@@ -59,13 +63,28 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.set(ControlMode.PercentOutput, val);
     }
 
-    public void idle(){
-        elevatorMotor.set(ControlMode.PercentOutput,.05);
-    }
 
     public void setSetpoint(double heightIn){
         setpoint = heightIn;
     }
+
+    public void setGains(double kP){
+        elevatorMotor.config_kP(0, kP);
+    }
+
+    public void setPositionHold(boolean hold){
+        runPID = hold;
+    }
+
+    public double getHeight(){
+        return elevatorMotor.getSelectedSensorPosition();
+    }
+
+    /*
+    public double getElevatorHeightIn(){
+
+    }
+    */
 
     
 }

@@ -26,7 +26,7 @@ public class JogElevator extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        elevator.setOutput(0);
         SmartDashboard.putString("run elevator","no");
-        elevator.idle();
     }
 }
