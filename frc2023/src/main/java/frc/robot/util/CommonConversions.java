@@ -46,22 +46,22 @@ public class CommonConversions {
   }
 
 
-  public static double radiansToSteps(double rad){
-    double radPerStep = (((2*Math.PI)/12.8)) / 2048;
+  public static double radiansToSteps(double rad,double gearing){
+    double radPerStep = (((2*Math.PI)/gearing)) / 2048;
     return rad/radPerStep;
   }
 
-  public static double stepsToRadians(double steps){
-    double radPerStep = (((2*Math.PI)/12.8)) / 2048;
+  public static double stepsToRadians(double steps,double gearing){
+    double radPerStep = (((2*Math.PI)/gearing)) / 2048;
     return steps*radPerStep;
   }
 
-  public static double radPerSecToStepsPerDecisec(double radPerSec){
-    return radiansToSteps(radPerSec) *.1;
+  public static double radPerSecToStepsPerDecisec(double radPerSec,double gearing){
+    return radiansToSteps(radPerSec,gearing) *.1;
   }
 
-  public static double radPerSecSquaredToStepsPerDecisecSquared(double radPerSec){
-    return radiansToSteps(radPerSec) *.01;
+  public static double radPerSecSquaredToStepsPerDecisecSquared(double radPerSec,double gearing){
+    return radiansToSteps(radPerSec,gearing) *.01;
   }
 
 }
