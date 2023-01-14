@@ -9,15 +9,16 @@ public class SetWristAngle extends CommandBase{
 
     private Wrist wrist;
     private Rotation2d setpoint;
+    private boolean useSD;
 
     public SetWristAngle(Rotation2d setpoint,Wrist instance, boolean useSD){
         this.setpoint = setpoint;
+        this.useSD = useSD;
 
         wrist = instance;
         addRequirements(wrist);
 
-        if(useSD)
-            this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 0));
+       
 
 
     }
@@ -26,12 +27,21 @@ public class SetWristAngle extends CommandBase{
     public void initialize() {
         //setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint",0));
         wrist.setGains();
+
+         if(useSD)
+            this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
     }
 
     @Override
     public void execute() {
+
+        //if(useSD)
+            //this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
+
         //if(Elevator.getInstance().getHeight()>0)
             wrist.setSetpoint(setpoint);
+
+            
     }
 
     @Override
