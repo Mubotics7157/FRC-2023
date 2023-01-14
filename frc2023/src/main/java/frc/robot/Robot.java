@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Drive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,6 +32,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("Intake Speed", .5);
     SmartDashboard.putNumber("Wrist kP", 0);
+    SmartDashboard.putNumber("elevator setpoint", 0);
+    SmartDashboard.putNumber("wrist setpoint", 0);
   }
 
   /**
@@ -47,6 +50,12 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    Drive.getInstance().setGyroGains(
+      SmartDashboard.getNumber("gyro controller P", 0),
+      SmartDashboard.getNumber("gyro controller D", 0)
+      
+      );
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
