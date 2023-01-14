@@ -50,6 +50,8 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.setSelectedSensorPosition(0);
 
+        SmartDashboard.putNumber("wrist setpoint", 0);
+
     }
 
     public static Wrist getInstance(){

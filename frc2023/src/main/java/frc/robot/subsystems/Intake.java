@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(false);
+        intakeMaster.setInverted(true);
         intakeSlave.setInverted(false);
 
         intakeMaster.setNeutralMode(NeutralMode.Brake);
@@ -35,6 +35,7 @@ public class Intake extends SubsystemBase {
         //TODO: ask harshal abt further clarification for regular intake current limit
 
         //intakeSlave.follow(intakeMaster);
+        
         
     }
 

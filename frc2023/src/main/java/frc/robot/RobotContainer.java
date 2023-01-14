@@ -57,6 +57,8 @@ public class RobotContainer {
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     intake.setDefaultCommand(new IdleIntake(intake));
+    SmartDashboard.putNumber("test", 0);
+
   }
 
   private void configureBindings() {
@@ -64,21 +66,31 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
+    //m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
+    //m_driverController.leftTrigger().onFalse(new IdleIntake(intake));
     m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
+  
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.30, elevator));
+    //m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
+  //m_driverController.rightBumper().whileTrue(new JogElevator(-.30, elevator));
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.x().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist));
+    m_driverController.x().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
 
-    m_driverController.y().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(180.5), wrist));
+    m_driverController.y().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(180.5), wrist, false));
 
-    
-     m_driverController.a().onTrue(Commands.parallel(new SetElevatorHeight(53822,elevator),new SetWristAngle(Rotation2d.fromDegrees(180.5), wrist)));
-     m_driverController.b().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator),new SetWristAngle(Rotation2d.fromDegrees(0), wrist)));
+    //m_driverController.x().whileTrue(new JogWrist(true, wrist));
+    //m_driverController.y().whileTrue(new JogWrist(false,wrist));
+
+    //17791
+     
+    m_driverController.leftTrigger().onTrue(Commands.parallel(new SetElevatorHeight(10000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(175), wrist, false), new RunIntake(false, intake)));
+    m_driverController.leftTrigger().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(false, intake));
+
+    m_driverController.rightTrigger().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+    m_driverController.b().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
     
 
 

@@ -45,6 +45,8 @@ public class Elevator extends SubsystemBase {
 
         elevatorMotor.configReverseSoftLimitThreshold(0);
         elevatorMotor.configReverseSoftLimitEnable(true);
+
+        SmartDashboard.putNumber("elevator setpoint", 0);
     }
 
     @Override
@@ -78,6 +80,10 @@ public class Elevator extends SubsystemBase {
 
     public double getHeight(){
         return elevatorMotor.getSelectedSensorPosition();
+    }
+
+    public void setSetpoint(){
+
     }
 
     /*

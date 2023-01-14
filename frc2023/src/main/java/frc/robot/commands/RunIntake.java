@@ -31,7 +31,14 @@ public class RunIntake extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        intake.setMotors(0);
+        if(reverse){
+            intake.setMotors(.05);
+            intake.currentLimit(true);
+        }
+        else{
+            intake.setMotors(0);
+            intake.currentLimit(false);
+        }
         SmartDashboard.putString("running?", "no");
     }
 
