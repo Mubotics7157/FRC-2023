@@ -7,9 +7,9 @@ import frc.robot.subsystems.Wrist;
 public class SetWristAngle extends CommandBase{
 
     private Wrist wrist;
-    private double setpoint;
+    private Rotation2d setpoint;
 
-    public SetWristAngle(double setpoint,Wrist instance){
+    public SetWristAngle(Rotation2d setpoint,Wrist instance){
         this.setpoint = setpoint;
 
         wrist = instance;

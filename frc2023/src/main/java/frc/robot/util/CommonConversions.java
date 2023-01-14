@@ -5,8 +5,13 @@ import frc.robot.Constants.DriveConstants;
 
 public class CommonConversions {
   
-     public static double stepsToMeters(double steps){
-      return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO));
+  public static double stepsToMeters(double steps){
+    return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO));
+  }
+
+   public static double stepsToInches(double steps,double wheelDiameter,double gearRatio){
+    //1.625
+    return steps*((wheelDiameter* Math.PI) / (2048*gearRatio));
   }
 
 
