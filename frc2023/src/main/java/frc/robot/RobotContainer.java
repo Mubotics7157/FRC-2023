@@ -68,7 +68,7 @@ public class RobotContainer {
 
     //m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
     //m_driverController.leftTrigger().onFalse(new IdleIntake(intake));
-    m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake, "cones"));
   
 
     //m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
@@ -85,10 +85,10 @@ public class RobotContainer {
 
     //17791
      
-    m_driverController.leftTrigger().onTrue(Commands.parallel(new SetElevatorHeight(32000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(200), wrist, false), new RunIntake(false, intake)));
+    m_driverController.leftTrigger().onTrue(Commands.parallel(new SetElevatorHeight(32000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(200), wrist, false), new RunIntake(false, intake, "cones")));
     m_driverController.leftTrigger().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
 
-    m_driverController.leftBumper().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(170), wrist, false), new RunIntake(false, intake)));
+    m_driverController.leftBumper().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(170), wrist, false), new RunIntake(false, intake, "cones")));
     m_driverController.leftBumper().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
 
 
