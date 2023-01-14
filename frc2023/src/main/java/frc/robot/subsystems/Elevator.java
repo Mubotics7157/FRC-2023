@@ -53,6 +53,7 @@ public class Elevator extends SubsystemBase {
     public void periodic() {
         if(runPID)
             elevatorMotor.set(ControlMode.Position,setpoint);
+            //elevatorMotor.set(ControlMode.Position,CommonConversions.inchesToSteps(setpoint, 1.625, 6));
     
         SmartDashboard.putNumber("elevator onboard encoder", elevatorMotor.getSelectedSensorPosition());
     }
@@ -68,6 +69,7 @@ public class Elevator extends SubsystemBase {
 
     public void setSetpoint(double heightIn){
         setpoint = heightIn;
+        //setpoint = CommonConversions.inchesToSteps(heightIn, 1.625, 6);
     }
 
     public void setGains(double kP){

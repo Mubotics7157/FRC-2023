@@ -51,11 +51,11 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    Drive.getInstance().setGyroGains(
-      SmartDashboard.getNumber("gyro controller P", 0),
-      SmartDashboard.getNumber("gyro controller D", 0)
-      
-      );
+    // Drive.getInstance().setGyroGains(
+      // SmartDashboard.getNumber("gyro controller P", 0),
+      // SmartDashboard.getNumber("gyro controller D", 0)
+      // 
+      // );
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
