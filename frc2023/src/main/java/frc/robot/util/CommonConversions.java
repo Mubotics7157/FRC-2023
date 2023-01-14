@@ -14,6 +14,9 @@ public class CommonConversions {
     return steps*((wheelDiameter* Math.PI) / (2048*gearRatio));
   }
 
+   public static double inchesToSteps(double inches,double wheelDiameter,double gearRatio){
+    return (inches/(wheelDiameter*Math.PI)) * 2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
+  }
 
   /**
    * Converts from encoder units per 100 milliseconds to meters per second.
@@ -29,8 +32,8 @@ public class CommonConversions {
    * @param meters meters
    * @return encoder units
    */
-  public static double metersToSteps(double meters) {
-    return (meters / 0.1016 / Math.PI) *2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
+  public static double metersToSteps(double meters,double wheelDiameter) {
+    return (meters / (wheelDiameter*Math.PI) ) *2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
   }
 
     /**
@@ -38,8 +41,8 @@ public class CommonConversions {
    * @param metersPerSec meters per second
    * @return encoder units per decisecond
    */
-  public static double metersPerSecToStepsPerDecisec(double metersPerSec) {
-    return metersToSteps(metersPerSec) * .1d;
+  public static double metersPerSecToStepsPerDecisec(double metersPerSec,double wheelDiameter) {
+    return metersToSteps(metersPerSec,wheelDiameter) * .1d;
   }
 
   public static double RPMToStepsPerDecisec(double velRPM){
