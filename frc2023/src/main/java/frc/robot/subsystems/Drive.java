@@ -3,17 +3,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.SwerveModuleConstants;
 
 public class Drive extends SubsystemBase {
     
@@ -30,8 +26,6 @@ public class Drive extends SubsystemBase {
     
 
     public Drive(){
-        SmartDashboard.putNumber("module P Gain", 0);
-        SmartDashboard.putNumber("moduel D Gain", 0);
     }
 
     public static Drive getInstance(){
@@ -48,6 +42,9 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
         SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
+
+        SmartDashboard.putNumber("left rear adjusted angle", rearLeft.getRelativeHeading().getDegrees());
+
     }
 
     public void setModuleStates(SwerveModuleState[] states){
