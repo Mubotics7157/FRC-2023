@@ -18,11 +18,11 @@ public class MoveIntakeAngle extends CommandBase{
 
     @Override
     public void execute() {
-        intake.setAngle(value);
+        //intake.setAngle(value);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngle(0);
+        //intake.setAngle(0);
     }
 }

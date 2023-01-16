@@ -60,7 +60,7 @@ public class CommonConversions {
   }
 
   public static double stepsToRadians(double steps,double gearing){
-    double radPerStep = (((2*Math.PI)/gearing)) / 2048;
+    double radPerStep = 2*Math.PI / (gearing * 2048);
     return steps*radPerStep;
   }
 
@@ -72,4 +72,13 @@ public class CommonConversions {
     return radiansToSteps(radPerSec,gearing) *.01;
   }
 
+  public static double stepsToDegrees(double steps,double gearing){
+    double degPerStep = 360 / (gearing * 2048);
+    return steps*degPerStep;
+  }
+
+  public static double degreeToSteps(double steps,double gearing){
+    double degPerStep = 360 / (gearing * 2048);
+    return steps/degPerStep;
+  }
 }
