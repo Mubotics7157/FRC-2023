@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -7,10 +8,13 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
@@ -21,6 +25,16 @@ public class Intake extends SubsystemBase {
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
     private static Intake instance = new Intake();
+    private SparkMaxPIDController jawController;
+    private RelativeEncoder jawEncoder;
+    private Rotation2d intakeAngleSetpoint;
+
+
+    public enum ObjectType{
+        CUBE,
+        CONE,
+        SIDEWAYS_CONE
+    }
 
     public Intake(){
         
@@ -45,6 +59,7 @@ public class Intake extends SubsystemBase {
         //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
         //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
 
+        intakeAngle.setSmartCurrentLimit(20);
 
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
@@ -57,9 +72,16 @@ public class Intake extends SubsystemBase {
         intakeSlave.setNeutralMode(NeutralMode.Brake);
         intakeAngle.setIdleMode(IdleMode.kBrake);
 
+
         //TODO: ask harshal abt further clarification for regular intake current limit
 
         //intakeSlave.follow(intakeMaster);
+
+        jawController = intakeAngle.getPIDController();
+        jawEncoder = intakeAngle.getEncoder();
+        jawEncoder.setPositionConversionFactor(2*Math.PI/20);
+
+        jawController.setP(0);
         
         
     }
@@ -68,29 +90,30 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
-    public void setMotors(String objectType, double val, double angleVal){
+    public void intakeGamePiece(ObjectType type){
        
+        switch(type){
+            case CONE:
+            break;
 
-        if(objectType == "cones"){
-            intakeMaster.set(val);
-            intakeAngle.set(val);
-            //intakeAngle.set(angleVal);
+            case CUBE:
+            break;
+
+            case SIDEWAYS_CONE:
+
+            break;
+
+            default:
+            break;
+
         }
-        else if(objectType == "cubes"){
-            intakeMaster.set(val);
-            intakeSlave.set(val);
-            //intakeAngle.set(angleVal);
-        }
-        else{
-            intakeMaster.set(val);
-            intakeSlave.set(val);
-            //intakeAngle.set(angleVal);
-        }
+
     }
 
-    public void setAngle(double value){
-        intakeAngle.set(value);
+    public void setAngle(Rotation2d angle){
+        intakeAngleSetpoint = angle;
     }
+
 
     public void currentLimit(boolean enable){
         if(enable){
@@ -108,4 +131,19 @@ public class Intake extends SubsystemBase {
     public double getIntakeAngle(){
         return intakeEncoder.getPosition() / 20;
     }
+
+    private void jogIntakeAngle(double val){
+        intakeAngle.set(val);
+    }
+
+    public void runIntake(double val){
+        intakeMaster.set(ControlMode.PercentOutput,val);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("intake encoder", jawEncoder.getPosition());
+        jawController.setReference(intakeAngleSetpoint.getRadians(), ControlType.kPosition);
+    }
+
 }

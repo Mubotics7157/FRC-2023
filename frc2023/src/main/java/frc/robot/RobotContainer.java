@@ -89,10 +89,10 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake, "all"));
+    m_driverController.leftTrigger().whileTrue(new RunIntake(false, intake, Rotation2d.fromDegrees(0)));
     m_driverController.leftTrigger().onFalse(new IdleIntake(intake));
     
-    m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake, "all"));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(true, intake, Rotation2d.fromDegrees(0)));
     m_driverController.rightTrigger().onFalse(new IdleIntake(intake));
   
 
