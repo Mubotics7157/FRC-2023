@@ -4,7 +4,15 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -21,6 +29,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  private SendableChooser<String> autoChooser = new SendableChooser<>();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -30,6 +40,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    autoChooser.addOption("test 1", "pathplanner/generatedJSON/Test Path.wpilib.json");
+    autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight line.wpilib.json");
+    SmartDashboard.putData(autoChooser);
+
     SmartDashboard.putNumber("Intake Speed", .5);
     SmartDashboard.putNumber("Wrist kP", 0);
     SmartDashboard.putNumber("elevator setpoint", 0);
@@ -45,6 +60,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+   
+      
+    //}
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -68,7 +86,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
