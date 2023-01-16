@@ -101,7 +101,9 @@ public class SwerveModule {
     }
 
     public Rotation2d getRelativeHeading(){
-        return new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),12.8));
+       // return getAbsHeading();
+        return getAbsHeading();
+        //new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),12.8));
     }
 
     public void updateP(double val){

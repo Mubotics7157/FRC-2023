@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
@@ -19,6 +21,10 @@ public class Drive extends SubsystemBase {
     private SwerveModule rearRight = DriveConstants.REAR_RIGHT_MODULE;
     private SwerveModule rearLeft = DriveConstants.REAR_LEFT_MODULE;
     WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
+    TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
+    ProfiledPIDController rotController = new ProfiledPIDController(-4.5, 0, 0,rotProfile);
+ 
+   
 
 
     double maxAngVel = 2 * Math.PI;
@@ -26,6 +32,8 @@ public class Drive extends SubsystemBase {
     
 
     public Drive(){
+        rotController.setTolerance(5);
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public static Drive getInstance(){
@@ -35,7 +43,7 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Gyro Angle", -gyro.getAngle());
-        SmartDashboard.putNumber("gyro yaw", gyro.getYaw());
+        SmartDashboard.putNumber("gyro yaw", Rotation2d.fromDegrees(gyro.getYaw()).getDegrees());
 
         SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
 
@@ -45,6 +53,8 @@ public class Drive extends SubsystemBase {
 
         SmartDashboard.putNumber("left rear adjusted angle", rearLeft.getRelativeHeading().getDegrees());
 
+
+        SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
     }
 
     public void setModuleStates(SwerveModuleState[] states){
@@ -81,12 +91,16 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition rearRightPos = new SwerveModulePosition(rearLeft.getPosition(),rearRight.getRelativeHeading());
 
         SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
-
+        SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
         return modulePositions;
     }
     public void setIndividualModule(SwerveModule module, SwerveModuleState state){
         
 
+    }
+
+    public ProfiledPIDController getRotationController(){
+        return rotController;
     }
 
     public void setGains(double kP, double kD){
