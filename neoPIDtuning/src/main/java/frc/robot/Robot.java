@@ -13,6 +13,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,6 +57,8 @@ public class Robot extends TimedRobot {
     encoder.setPosition(0);
     intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 2000);
     intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
+
+    encoder.setPositionConversionFactor(2*Math.PI/20);
 
 
     
@@ -114,9 +117,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
     if(controller.getRawButton(1)){
-      intakeController.setReference(SmartDashboard.getNumber("angle", 0) * 20, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+      intakeController.setReference(Units.degreesToRadians(SmartDashboard.getNumber("angle", 0)),com.revrobotics.CANSparkMax.ControlType.kPosition);
     }
 
   }
