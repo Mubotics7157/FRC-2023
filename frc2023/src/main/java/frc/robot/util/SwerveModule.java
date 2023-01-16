@@ -73,7 +73,7 @@ public class SwerveModule {
             driveMotor.set(ControlMode.PercentOutput, 0);
         } 
         else 
-        driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint,DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/RobotController.getBatteryVoltage());
+            driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/RobotController.getBatteryVoltage());
     }
 
 
