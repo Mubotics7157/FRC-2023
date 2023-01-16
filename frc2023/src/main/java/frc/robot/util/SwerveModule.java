@@ -60,6 +60,7 @@ public class SwerveModule {
 
     public void setState(SwerveModuleState state){
         SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAbsHeading());
+        //SwerveModuleState optimizedState = CTREUtils.optimize(state, getAbsHeading());
 
             setVelocity(optimizedState.speedMetersPerSecond, .2);
             setTurnRad(optimizedState.angle);
@@ -73,7 +74,7 @@ public class SwerveModule {
             driveMotor.set(ControlMode.PercentOutput, 0);
         } 
         else 
-        driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/RobotController.getBatteryVoltage());
+            driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/RobotController.getBatteryVoltage());
     }
 
 
@@ -81,7 +82,13 @@ public class SwerveModule {
         double output = turnPID.calculate(getAbsHeading().getRadians(), turnSetpointRad.getRadians());
 
         turnMotor.set(ControlMode.PercentOutput,output);
+
         
+    }
+
+    private void setTurnDeg(Rotation2d turnSetpoint){
+        turnMotor.set(ControlMode.Position,CommonConversions.degreeToSteps(turnSetpoint.getDegrees(), SwerveModuleConstants.TURN_GEAR_RATIO));
+
     }
 
     public SwerveModuleState getState(){
@@ -90,6 +97,10 @@ public class SwerveModule {
 
     private Rotation2d getAbsHeading(){
         return Rotation2d.fromDegrees(absEncoder.getAbsolutePosition());
+    }
+
+    private Rotation2d getHeading(){
+        return Rotation2d.fromDegrees(CommonConversions.stepsToDegrees(turnMotor.getSelectedSensorPosition(), SwerveModuleConstants.TURN_GEAR_RATIO));
     }
 
     public double getDriveVelocity(){
