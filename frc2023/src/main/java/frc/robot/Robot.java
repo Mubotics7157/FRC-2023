@@ -49,6 +49,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Wrist kP", 0);
     SmartDashboard.putNumber("elevator setpoint", 0);
     SmartDashboard.putNumber("wrist setpoint", 0);
+    SmartDashboard.putNumber("Intake Angle Degrees", 0);
   }
 
   /**

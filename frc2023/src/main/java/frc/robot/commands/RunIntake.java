@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
@@ -9,63 +10,31 @@ public class RunIntake extends CommandBase {
     
     private Intake intake;
     private boolean reverse;
-    private String objectType;
+    private Rotation2d angle;
 
-    public RunIntake(boolean reverse, Intake instance, String objectType){
+    public RunIntake(boolean reverse, Intake instance, Rotation2d jawAngle){
         this.reverse = reverse;
 
         intake = instance;
 
-        this.objectType = objectType;
+        angle = jawAngle;
 
         addRequirements(intake);
     }
 
     @Override
     public void execute() {
-        if(objectType== "cones"){
+        if(!reverse)
+            intake.runIntake(SmartDashboard.getNumber("Intake Speed", 0));
+        else
+            intake.runIntake(-SmartDashboard.getNumber("Intake Speed", 0));
 
-        if (reverse && Wrist.getInstance().atSetpoint()){
-            SmartDashboard.putString("running?", "reverse");
-            intake.setMotors( "cones", -SmartDashboard.getNumber("Intake Speed", .5), 0);
-        }
-        else if (!reverse && Wrist.getInstance().atSetpoint()){
-            intake.setMotors("cones", SmartDashboard.getNumber("Intake Speed", .5), 0);
-            SmartDashboard.putString("running?", "forward");
-        }
-    }
-
-        else if(objectType== "cubes"){
-
-            if (reverse && Wrist.getInstance().atSetpoint()){
-                SmartDashboard.putString("running?", "reverse");
-                intake.setMotors( "cubes", -SmartDashboard.getNumber("Intake Speed", .5), 0);
-            }
-            else if (!reverse && Wrist.getInstance().atSetpoint()){
-                intake.setMotors("cubes", SmartDashboard.getNumber("Intake Speed", .5), 0);
-                SmartDashboard.putString("running?", "forward");
-            }
-    }
-
-        else{
-            if(reverse)
-                intake.setMotors("all", -.5 , 0);
-            else if(!reverse)
-                intake.setMotors("all", .5, 0);
-        }
+        intake.setAngle(Rotation2d.fromDegrees(SmartDashboard.getNumber("Intake Angle Degrees", 0)));
     }
 
     @Override
     public void end(boolean interrupted) {
-        if(reverse && objectType == "cones"){
-            intake.setMotors("cones", .05, 0);
-            //intake.currentLimit(true);
-        }
-        else{
-            intake.setMotors("cones", 0, 0);
-            //intake.currentLimit(false);
-        }
-        SmartDashboard.putString("running?", "no");
+        intake.runIntake(0);
     }
 
 }
