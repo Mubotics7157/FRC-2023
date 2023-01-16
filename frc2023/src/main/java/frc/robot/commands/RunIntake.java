@@ -27,10 +27,10 @@ public class RunIntake extends CommandBase {
 
         if (reverse && Wrist.getInstance().atSetpoint()){
             SmartDashboard.putString("running?", "reverse");
-            intake.setMotors( "cones", -SmartDashboard.getNumber("Intake Speed", .5));
+            intake.setMotors( "cones", -SmartDashboard.getNumber("Intake Speed", .5), 0);
         }
         else if (!reverse && Wrist.getInstance().atSetpoint()){
-            intake.setMotors("cones", SmartDashboard.getNumber("Intake Speed", .5));
+            intake.setMotors("cones", SmartDashboard.getNumber("Intake Speed", .5), 0);
             SmartDashboard.putString("running?", "forward");
         }
     }
@@ -39,23 +39,30 @@ public class RunIntake extends CommandBase {
 
             if (reverse && Wrist.getInstance().atSetpoint()){
                 SmartDashboard.putString("running?", "reverse");
-                intake.setMotors( "cubes", -SmartDashboard.getNumber("Intake Speed", .5));
+                intake.setMotors( "cubes", -SmartDashboard.getNumber("Intake Speed", .5), 0);
             }
             else if (!reverse && Wrist.getInstance().atSetpoint()){
-                intake.setMotors("cubes", SmartDashboard.getNumber("Intake Speed", .5));
+                intake.setMotors("cubes", SmartDashboard.getNumber("Intake Speed", .5), 0);
                 SmartDashboard.putString("running?", "forward");
             }
     }
+
+        else{
+            if(reverse)
+                intake.setMotors("all", -.5 , 0);
+            else if(!reverse)
+                intake.setMotors("all", .5, 0);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         if(reverse && objectType == "cones"){
-            intake.setMotors("cones", .05);
+            intake.setMotors("cones", .05, 0);
             //intake.currentLimit(true);
         }
         else{
-            intake.setMotors("cones", 0);
+            intake.setMotors("cones", 0, 0);
             //intake.currentLimit(false);
         }
         SmartDashboard.putString("running?", "no");

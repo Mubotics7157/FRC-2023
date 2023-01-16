@@ -24,7 +24,7 @@ public class IdleIntake extends CommandBase {
     
     @Override
     public void execute() {
-        intake.setMotors("all", .1);
+        intake.setMotors("all", .1, 0);
     }
 
     @Override
