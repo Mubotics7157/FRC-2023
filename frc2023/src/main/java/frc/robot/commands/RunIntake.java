@@ -11,13 +11,16 @@ public class RunIntake extends CommandBase {
     private Intake intake;
     private boolean reverse;
     private Rotation2d angle;
+    private boolean useSD;
 
-    public RunIntake(boolean reverse, Intake instance, Rotation2d jawAngle){
+    public RunIntake(boolean reverse, Intake instance, Rotation2d jawAngle,boolean useSD){
         this.reverse = reverse;
 
         intake = instance;
 
         angle = jawAngle;
+
+        this.useSD = useSD;
 
         addRequirements(intake);
     }
@@ -29,7 +32,10 @@ public class RunIntake extends CommandBase {
         else
             intake.runIntake(-SmartDashboard.getNumber("Intake Speed", 0));
 
-        intake.setAngle(Rotation2d.fromDegrees(SmartDashboard.getNumber("Intake Angle Degrees", 0)));
+        if(useSD)
+            intake.setAngle(Rotation2d.fromDegrees(SmartDashboard.getNumber("Intake Angle Degrees", 0)));
+        else
+            intake.setAngle(angle);
     }
 
     @Override

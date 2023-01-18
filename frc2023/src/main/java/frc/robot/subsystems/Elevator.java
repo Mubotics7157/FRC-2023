@@ -1,98 +1,74 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import java.util.LinkedHashMap;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.WristConstants;
-import frc.robot.util.CommonConversions;
 
 
 public class Elevator extends SubsystemBase {
 
-    private WPI_TalonFX elevatorMotor;
-    private TalonFXConfiguration config;
-    private static Elevator instance = new Elevator();
-    private boolean runPID = false;
+    private CANSparkMax elevatorMotor;
+    private SparkMaxPIDController elevatorController;
+    private RelativeEncoder elevatorEncoder;
 
-    private double setpoint = 0;
-    
-    public Elevator(){
-        //encoder.setDistancePerRotation();
-        config = new TalonFXConfiguration();
-        elevatorMotor = new WPI_TalonFX(ElevatorConstants.DEVICE_ID_ELEVATOR);
+    private LinkedHashMap <ElevatorSetpoint,Integer> elevatorHeights = new LinkedHashMap<>();
+    private ElevatorSetpoint currentState;
 
-        config.slot0.kP = ElevatorConstants.ELEVATOR_KP; 
-        config.slot0.kD = 0;
-        config.slot0.kF = 0;
-        config.motionCruiseVelocity =  CommonConversions.radPerSecToStepsPerDecisec(2*Math.PI,6);
-        config.motionAcceleration = CommonConversions.radPerSecSquaredToStepsPerDecisecSquared(Math.PI,6);
+    private static Elevator instance;
 
-        elevatorMotor.configAllSettings(config);
-
-        elevatorMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
-        elevatorMotor.configPeakOutputReverse(ElevatorConstants.WRIST_PEAK_OUTPUT_REVERSE);
-
-        elevatorMotor.setInverted(true);
-
-        //elevatorMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 20, 1));
-        elevatorMotor.setNeutralMode(NeutralMode.Brake);
-        elevatorMotor.setSelectedSensorPosition(0);
-
-        elevatorMotor.configReverseSoftLimitThreshold(0);
-        elevatorMotor.configReverseSoftLimitEnable(true);
-
-        SmartDashboard.putNumber("elevator setpoint", 0);
+    public enum ElevatorSetpoint{
+        GROUND_INTAKE,
+        STOW,
+        LOW,
+        MID,
+        HIGH
     }
 
-    @Override
-    public void periodic() {
-        if(runPID)
-            elevatorMotor.set(ControlMode.Position,setpoint);
-            //elevatorMotor.set(ControlMode.Position,CommonConversions.inchesToSteps(setpoint, 1.625, 6));
-    
-        SmartDashboard.putNumber("elevator onboard encoder", elevatorMotor.getSelectedSensorPosition());
+    public Elevator(){
+        elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR, MotorType.kBrushless);
+        elevatorController = elevatorMotor.getPIDController();
+        elevatorEncoder = elevatorMotor.getEncoder();
+
+        configElevatorMotor();
+
+        instance = new Elevator();
+
+        elevatorHeights.put(ElevatorSetpoint.STOW, 0);
+        elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
+
+        currentState = ElevatorSetpoint.STOW;
     }
 
     public static Elevator getInstance(){
         return instance;
     }
 
-    public void setOutput(double val){
-        elevatorMotor.set(ControlMode.PercentOutput, val);
+
+    private void configElevatorPID(boolean useSD){
+        elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
+        elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
+        elevatorController.setD(SmartDashboard.getNumber("Elevator kD", 0));
+        elevatorController.setFF(SmartDashboard.getNumber("Elevator kF", 0));
     }
 
-
-    public void setSetpoint(double heightIn){
-        setpoint = heightIn;
-        //setpoint = CommonConversions.inchesToSteps(heightIn, 1.625, 6);
+    private void configElevatorMotor(){
+        elevatorMotor.setSmartCurrentLimit(30);
+        elevatorMotor.setControlFramePeriodMs(50);
+        elevatorMotor.setIdleMode(IdleMode.kBrake);
+        //elevatorMotor.enableSoftLimit(null, false)
+        elevatorController.setP(0);
+        elevatorController.setI(0);
+        elevatorController.setD(0);
+        elevatorController.setFF(0);
+        elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
     }
 
-    public void setGains(double kP){
-        elevatorMotor.config_kP(0, kP);
-    }
-
-    public void setPositionHold(boolean hold){
-        runPID = hold;
-    }
-
-    public double getHeight(){
-        return elevatorMotor.getSelectedSensorPosition();
-    }
-
-    public void setSetpoint(){
-
-    }
-
-    /*
-    public double getElevatorHeightIn(){
-
-    }
-    */
-
-    
 }

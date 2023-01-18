@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -129,7 +130,7 @@ public class Intake extends SubsystemBase {
     }
 
     public double getIntakeAngle(){
-        return intakeEncoder.getPosition() / 20;
+        return Units.radiansToDegrees(intakeEncoder.getPosition());
     }
 
     private void jogIntakeAngle(double val){
@@ -143,6 +144,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("intake encoder", jawEncoder.getPosition());
+        SmartDashboard.putNumber("wrist jaw reported angle", getIntakeAngle());
         jawController.setReference(intakeAngleSetpoint.getRadians(), ControlType.kPosition);
     }
 
