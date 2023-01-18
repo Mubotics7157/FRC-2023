@@ -43,7 +43,7 @@ public final class Constants {
   public static class DriveConstants{
     public static final int MAX_TANGENTIAL_VELOCITY = 4; 
     public static final double MAX_TELE_TANGENTIAL_VELOCITY = 3.5; 
-    public static final double MAX_TELE_ANGULAR_VELOCITY = 0.85 * Math.PI; 
+    public static final double MAX_TELE_ANGULAR_VELOCITY = 2 * Math.PI; 
     public static final double WHEELBASE_WIDTH = .6604;
     public static final double WHEELBASE_LENGTH = .6604;
     public static final double WHEEL_DIAMETER_METERS = .1016;
@@ -64,15 +64,15 @@ public final class Constants {
     private static final int REAR_LEFT_ENCODER_PORT = 9;
     private static final int REAR_RIGHT_ENCODER_PORT = 12;
 
-    private static final double FRONT_LEFT_ENCODER_OFFSET = 178.857;//174.0234375;//11.162109375;//2.724609375;
-    private static final double FRONT_RIGHT_ENCODER_OFFSET =  -4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    private static final double REAR_LEFT_ENCODER_OFFSET = -169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    private static final double REAR_RIGHT_ENCODER_OFFSET = 88.770;//173.759765625   ;//-79.716796875;//-80.439453125;
+    private static final double FRONT_LEFT_ENCODER_OFFSET = -97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
+    private static final double FRONT_RIGHT_ENCODER_OFFSET =  -167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
+    private static final double REAR_LEFT_ENCODER_OFFSET = -168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    private static final double REAR_RIGHT_ENCODER_OFFSET = -107;//88.770;//173.759765625   ;//-79.716796875;//-80.439453125;
 
-    public static SwerveModule REAR_RIGHT_MODULE = new SwerveModule(FRONT_LEFT_DRIVE_PORT,FRONT_LEFT_TURN_PORT,FRONT_LEFT_ENCODER_PORT,FRONT_LEFT_ENCODER_OFFSET, false);
+    public static SwerveModule REAR_RIGHT_MODULE = new SwerveModule(FRONT_LEFT_DRIVE_PORT,FRONT_LEFT_TURN_PORT,FRONT_LEFT_ENCODER_PORT,FRONT_LEFT_ENCODER_OFFSET, true);
     public static SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_DRIVE_PORT,FRONT_RIGHT_TURN_PORT,FRONT_RIGHT_ENCODER_PORT,FRONT_RIGHT_ENCODER_OFFSET, true);
     public static SwerveModule FRONT_LEFT_MODULE = new SwerveModule(REAR_LEFT_DRIVE_PORT,REAR_LEFT_TURN_PORT,REAR_LEFT_ENCODER_PORT,REAR_LEFT_ENCODER_OFFSET, true);
-    public static SwerveModule REAR_LEFT_MODULE = new SwerveModule(REAR_RIGHT_DRIVE_PORT,REAR_RIGHT_TURN_PORT,REAR_RIGHT_ENCODER_PORT,REAR_RIGHT_ENCODER_OFFSET, false);
+    public static SwerveModule REAR_LEFT_MODULE = new SwerveModule(REAR_RIGHT_DRIVE_PORT,REAR_RIGHT_TURN_PORT,REAR_RIGHT_ENCODER_PORT,REAR_RIGHT_ENCODER_OFFSET, true);
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
