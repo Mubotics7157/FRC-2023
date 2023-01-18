@@ -41,7 +41,6 @@ public class Elevator extends SubsystemBase {
         CUBE_HIGH
     }
 
-
     public Elevator(){
         elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR, MotorType.kBrushless);
         elevatorController = elevatorMotor.getPIDController();
@@ -64,6 +63,10 @@ public class Elevator extends SubsystemBase {
         return instance;
     }
 
+    public void setPercentOutput(double val){
+        elevatorMotor.set(val);
+    }
+
     public boolean setState(ElevatorSetpoint wantedState){
         setpoint = elevatorHeights.get(wantedState);
 
@@ -72,12 +75,25 @@ public class Elevator extends SubsystemBase {
         return atSetpoint();
     }
 
-    private boolean atSetpoint(){
-        return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
+    public boolean holdAtWantedState(){
+        elevatorController.setReference(setpoint, ControlType.kPosition);
+        return atSetpoint();
+    }
+
+    public void zeroElevator(){
+        elevatorEncoder.setPosition(0);
     }
 
     private double getElevatorHeight(){
         return elevatorEncoder.getPosition();
+    }
+
+    private boolean atSetpoint(){
+        return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
+    }
+
+    private boolean elevatorIsAtZero(){
+        return false;
     }
 
     private void configElevatorPID(boolean useSD){
