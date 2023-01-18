@@ -6,12 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.SetGains;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.IdleElevator;
-import frc.robot.commands.elevator.JogElevator;
 import frc.robot.commands.elevator.SetElevatorHeight;
 import frc.robot.commands.intake.IdleIntake;
 import frc.robot.commands.intake.MoveIntakeAngle;
@@ -69,9 +66,9 @@ public class RobotContainer {
       new CommandXboxController(1);
   
   private final Drive drive = Drive.getInstance();
-  private final Intake intake = Intake.getInstance();
-  private final Elevator elevator = Elevator.getInstance();
-  private final Wrist wrist = Wrist.getInstance();
+  // private final Intake intake = Intake.getInstance();
+  // private final Elevator elevator = Elevator.getInstance();
+  // private final Wrist wrist = Wrist.getInstance();
   private final Tracker tracker= Tracker.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -79,7 +76,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
-    intake.setDefaultCommand(new IdleIntake(intake));
+    //intake.setDefaultCommand(new IdleIntake(intake));
     SmartDashboard.putNumber("test", 0);
 
   }
@@ -89,6 +86,7 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+    /*
     m_driverController.leftTrigger().whileTrue(new RunIntake(false, intake, Rotation2d.fromDegrees(0),true));
     m_driverController.leftTrigger().onFalse(new IdleIntake(intake));
     
@@ -101,14 +99,15 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
+    */
     //m_driverController
 
 
-    
     //m_driverController.x().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
 
     //m_driverController.y().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(180.5), wrist, false));
 
+    /* 
     m_driverController.b().whileTrue(new MoveIntakeAngle(intake, 1));
     m_driverController.b().onFalse(new MoveIntakeAngle(intake, 0));
 
@@ -118,6 +117,7 @@ public class RobotContainer {
     
     m_driverController.x().whileTrue(new JogWrist(true, wrist));
     m_driverController.y().whileTrue(new JogWrist(false,wrist));
+    */
 
 /* 
     //17791

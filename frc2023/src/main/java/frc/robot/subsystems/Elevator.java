@@ -88,6 +88,10 @@ public class Elevator extends SubsystemBase {
         return elevatorEncoder.getPosition();
     }
 
+    private ElevatorSetpoint getCurrentState(){
+        return currentState;
+    }
+
     private boolean atSetpoint(){
         return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
     }

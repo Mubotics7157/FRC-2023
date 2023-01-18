@@ -50,6 +50,7 @@ public class SwerveModule {
 
         absEncoder = new WPI_CANCoder(encoderPort);
     
+
         absEncoder.configFactoryDefault();
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;

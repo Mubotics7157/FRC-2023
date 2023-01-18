@@ -23,8 +23,8 @@ public class SetElevatorHeight extends CommandBase {
 
     @Override
     public void initialize() {
-        elevator.setGains(.08);
-        elevator.setPositionHold(true);
+        // elevator.setGains(.08);
+        // elevator.setPositionHold(true);
 
         if(useSD)
             this.height = SmartDashboard.getNumber("elevator setpoint", 17791);
@@ -37,15 +37,15 @@ public class SetElevatorHeight extends CommandBase {
             //this.height = SmartDashboard.getNumber("elevator setpoint", 17791);
         
             
-        elevator.setSetpoint(height);
-        SmartDashboard.putNumber("elevator height setpoint", height);
+        // elevator.setSetpoint(height);
+        // SmartDashboard.putNumber("elevator height setpoint", height);
         //SmartDashboard.putNumber("bruh", SmartDashboard.getNumber("elevator onboard encoder", 0));
 
     }
 
     @Override
     public void end(boolean interrupted) {
-        elevator.setPositionHold(false);
+        // elevator.setPositionHold(false);
         
     }
 }
