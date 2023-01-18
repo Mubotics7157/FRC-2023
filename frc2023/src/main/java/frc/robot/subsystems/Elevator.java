@@ -92,7 +92,7 @@ public class Elevator extends SubsystemBase {
         return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
     }
 
-    private boolean elevatorIsAtZero(){
+    public boolean isAtZero(){
         return false;
     }
 

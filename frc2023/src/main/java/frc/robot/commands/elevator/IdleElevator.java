@@ -14,16 +14,12 @@ public class IdleElevator extends CommandBase{
     }
 
     @Override
-    public void initialize() {
-        
-    }
-
-    @Override
     public void execute() {
+        elevator.holdAtWantedState();
     }
 
     @Override
     public void end(boolean interrupted) {
-        
+        elevator.setPercentOutput(0);       
     }
 }
