@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.LinkedHashMap;
 
-import org.opencv.core.Mat;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -14,7 +13,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Robot.ObjectType;
 
 
 public class Elevator extends SubsystemBase {
@@ -28,11 +26,12 @@ public class Elevator extends SubsystemBase {
 
     private static Elevator instance;
 
-    private int setpoint;
+    private double setpoint;
+    private boolean lockElevator;
 
     public enum ElevatorSetpoint{
-        GROUND_INTAKE,
         STOW,
+        GROUND_INTAKE,
         CONE_LOW,
         CONE_MID,
         CONE_HIGH,
@@ -47,16 +46,15 @@ public class Elevator extends SubsystemBase {
         elevatorEncoder = elevatorMotor.getEncoder();
 
         configElevatorMotor();
-
         instance = new Elevator();
-
-        elevatorHeights.put(ElevatorSetpoint.STOW, 0);
-        elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
-
         currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
+        lockElevator = true;
 
+
+        elevatorHeights.put(ElevatorSetpoint.STOW, 0);
+        elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
     }
 
     public static Elevator getInstance(){
@@ -68,6 +66,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean setState(ElevatorSetpoint wantedState){
+        lockElevator = false;
+
         setpoint = elevatorHeights.get(wantedState);
 
         elevatorController.setReference(setpoint, ControlType.kPosition);
@@ -75,7 +75,18 @@ public class Elevator extends SubsystemBase {
         return atSetpoint();
     }
 
+    public boolean setState(double setpoint){
+        lockElevator = false;
+
+        this.setpoint = setpoint;
+
+        elevatorController.setReference(setpoint, ControlType.kPosition);
+
+        return atSetpoint();
+    }
+
     public boolean holdAtWantedState(){
+        lockElevator = true;
         elevatorController.setReference(setpoint, ControlType.kPosition);
         return atSetpoint();
     }
@@ -92,6 +103,14 @@ public class Elevator extends SubsystemBase {
         return currentState;
     }
 
+    private double getSetpoint(){
+        return setpoint;
+    }
+
+    private double getError(){
+        return Math.abs(setpoint - getElevatorHeight());
+    }
+
     private boolean atSetpoint(){
         return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
     }
@@ -100,11 +119,13 @@ public class Elevator extends SubsystemBase {
         return false;
     }
 
-    private void configElevatorPID(boolean useSD){
-        elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
-        elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
-        elevatorController.setD(SmartDashboard.getNumber("Elevator kD", 0));
-        elevatorController.setFF(SmartDashboard.getNumber("Elevator kF", 0));
+    public void configElevatorPID(boolean useSD){
+        if(useSD){
+            elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
+            elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
+            elevatorController.setD(SmartDashboard.getNumber("Elevator kD", 0));
+            elevatorController.setFF(SmartDashboard.getNumber("Elevator kF", 0));
+        }
     }
 
     private void configElevatorMotor(){
@@ -117,6 +138,10 @@ public class Elevator extends SubsystemBase {
         elevatorController.setD(0);
         elevatorController.setFF(0);
         elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
+    }
+
+    private void logData(){
+        SmartDashboard.putBoolean("Lock Elevator?", lockElevator);
     }
 
 }
