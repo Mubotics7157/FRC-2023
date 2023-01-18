@@ -25,6 +25,12 @@ import frc.robot.subsystems.Drive;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  public enum ObjectType{
+    CUBE,
+    CONE
+  }
+  
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
