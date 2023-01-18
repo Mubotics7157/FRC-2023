@@ -5,42 +5,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Intake.IntakeState;
 
 public class RunIntake extends CommandBase {
     
     private Intake intake;
-    private boolean reverse;
-    private Rotation2d angle;
-    private boolean useSD;
+    private IntakeState state;
 
-    public RunIntake(boolean reverse, Intake instance, Rotation2d jawAngle,boolean useSD){
-        this.reverse = reverse;
+    public RunIntake(Intake instance, IntakeState state){
 
         intake = instance;
 
-        angle = jawAngle;
-
-        this.useSD = useSD;
+        this.state = state;
 
         addRequirements(intake);
     }
 
     @Override
     public void execute() {
-        if(!reverse)
-            intake.runIntake(SmartDashboard.getNumber("Intake Speed", 0));
-        else
-            intake.runIntake(-SmartDashboard.getNumber("Intake Speed", 0));
-
-        if(useSD)
-            intake.setAngle(Rotation2d.fromDegrees(SmartDashboard.getNumber("Intake Angle Degrees", 0)));
-        else
-            intake.setAngle(angle);
+        intake.setIntakeState(state);
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.runIntake(0);
+        
+        if(state == IntakeState.INTAKE || state == IntakeState.INTAKE_CONE || state == IntakeState.INTAKE_CUBE)
+            intake.setIntakeState(IntakeState.IDLE);
+        else
+            intake.setIntakeState(IntakeState.OFF);
+            
+
+        //intake.setIntakeState(IntakeState.OFF);
     }
 
 }
