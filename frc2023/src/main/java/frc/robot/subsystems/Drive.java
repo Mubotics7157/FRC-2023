@@ -23,13 +23,8 @@ public class Drive extends SubsystemBase {
     WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
     TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     ProfiledPIDController rotController = new ProfiledPIDController(-4.5, 0, 0,rotProfile);
- 
-   
-
 
     double maxAngVel = 2 * Math.PI;
-
-    
 
     public Drive(){
         rotController.setTolerance(5);
@@ -93,10 +88,6 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
         SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
         return modulePositions;
-    }
-    public void setIndividualModule(SwerveModule module, SwerveModuleState state){
-        
-
     }
 
     public ProfiledPIDController getRotationController(){
