@@ -46,7 +46,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
 
-        SmartDashboard.putNumber("left rear adjusted angle", rearLeft.getRelativeHeading().getDegrees());
+        SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
 
 
         SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());

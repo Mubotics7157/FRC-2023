@@ -36,6 +36,8 @@ public class SwerveModule {
         driveMotor = new WPI_TalonFX(drivePort);
         turnMotor = new WPI_TalonFX(turnPort);
 
+        turnMotor.configFactoryDefault();
+
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
         driveConfig.openloopRamp = SwerveModuleConstants.OPEN_LOOP_RAMP_RATE;
@@ -49,7 +51,7 @@ public class SwerveModule {
         turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
         turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(false);
-        turnMotor.config_kP(0, 0);
+        turnMotor.config_kP(0, .2);
 
         absEncoder = new WPI_CANCoder(encoderPort);
     
@@ -101,14 +103,14 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getDriveVelocity(), getAbsHeading()); 
+        return new SwerveModuleState(getDriveVelocity(), getHeading()); 
     }
 
     private Rotation2d getAbsHeading(){
         return Rotation2d.fromDegrees(absEncoder.getAbsolutePosition());
     }
 
-    private Rotation2d getHeading(){
+    public Rotation2d getHeading(){
         return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*12.8)));
     }
 
