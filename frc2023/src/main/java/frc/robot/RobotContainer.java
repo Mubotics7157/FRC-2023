@@ -15,8 +15,12 @@ import frc.robot.subsystems.Tracker;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -75,15 +79,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand(String autoToUse) {
 
-    TrajectoryConfig config = new TrajectoryConfig(2, 1);
+    TrajectoryConfig config = new TrajectoryConfig(.75, 1);
     PIDController xController = new PIDController(1.25, 0, 0);
     PIDController yController = new PIDController(1.25, 0, 0);
     
     xController.setTolerance(.05);
     yController.setTolerance(.05);
 
-    Trajectory testTrajectory = new Trajectory() ;
-    /*TrajectoryGenerator.generateTrajectory(
+    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
         new Pose2d(0.0, 0.0, new Rotation2d(0)),
         List.of(
           new Translation2d(0, .25),
@@ -91,8 +94,8 @@ public class RobotContainer {
         ),
         new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
         config
-        );*/
-        //Traje   ctory testTrajectory;
+        );
+        /* 
       try{
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(autoToUse);
         testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -100,13 +103,14 @@ public class RobotContainer {
       catch(IOException ex){
         System.out.println();
       }
+      */
       
   
 
       SwerveControllerCommand swerveControllerCommand =
     new SwerveControllerCommand(
         testTrajectory,
-        tracker::getOdometry, // Functional interface to feed supplier
+        tracker::getOdometry, // Functional interface to feed supplierx
         DriveConstants.DRIVE_KINEMATICS,
         // Position controllers 
         xController,

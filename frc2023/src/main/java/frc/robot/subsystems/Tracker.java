@@ -32,11 +32,11 @@ public class Tracker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // m_field.setRobotPose(odometry.getPoseMeters());
-        // odometry.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
-        // SmartDashboard.putNumber("odom x", getOdometry().getX());
-        // SmartDashboard.putNumber("odom y", getOdometry().getY());
-        // SmartDashboard.putNumber("odometry r", getOdometry().getRotation().getDegrees());
+         m_field.setRobotPose(odometry.getPoseMeters());
+         odometry.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+         SmartDashboard.putNumber("odom x", getOdometry().getX());
+         SmartDashboard.putNumber("odom y", getOdometry().getY());
+        SmartDashboard.putNumber("odometry r", getOdometry().getRotation().getDegrees());
     }
 
     public synchronized void setOdometry(Pose2d pose){
