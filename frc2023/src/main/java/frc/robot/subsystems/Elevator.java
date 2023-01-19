@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -23,11 +25,13 @@ public class Elevator extends SubsystemBase {
 
     private LinkedHashMap <ElevatorSetpoint,Integer> elevatorHeights = new LinkedHashMap<>();
     private ElevatorSetpoint currentState;
+    private double setpoint;
 
     private static Elevator instance;
 
-    private double setpoint;
     private boolean lockElevator;
+
+    ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
 
     public enum ElevatorSetpoint{
         STOW,
@@ -142,6 +146,7 @@ public class Elevator extends SubsystemBase {
 
     private void logData(){
         SmartDashboard.putBoolean("Lock Elevator?", lockElevator);
+        SmartDashboard.putString("Elevator State", getCurrentState().toString());
     }
 
 }
