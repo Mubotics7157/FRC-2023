@@ -8,6 +8,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
+import frc.robot.commands.elevator.JogElevator;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -54,6 +55,7 @@ public class RobotContainer {
   
   private final Drive drive = Drive.getInstance();
   private final Tracker tracker= Tracker.getInstance();
+  private final Elevator elevator = Elevator.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -70,6 +72,9 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
+
+    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
   }
 
   /**
