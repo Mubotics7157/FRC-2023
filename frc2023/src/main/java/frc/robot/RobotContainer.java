@@ -8,15 +8,30 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
+import frc.robot.commands.elevator.IdleElevator;
+import frc.robot.commands.elevator.SetElevatorHeight;
+import frc.robot.commands.intake.IdleIntake;
+import frc.robot.commands.intake.MoveIntakeAngle;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.wrist.JogWrist;
+import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.Wrist;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -47,8 +62,13 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
+  private final CommandXboxController m_operatorController =
+      new CommandXboxController(1);
   
   private final Drive drive = Drive.getInstance();
+  // private final Intake intake = Intake.getInstance();
+  // private final Elevator elevator = Elevator.getInstance();
+  // private final Wrist wrist = Wrist.getInstance();
   private final Tracker tracker= Tracker.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -65,7 +85,74 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    /*
+    m_driverController.leftTrigger().whileTrue(new RunIntake(false, intake, Rotation2d.fromDegrees(0),true));
+    m_driverController.leftTrigger().onFalse(new IdleIntake(intake));
+    
+    m_driverController.rightTrigger().whileTrue(new RunIntake(true, intake, Rotation2d.fromDegrees(0),true));
+    m_driverController.rightTrigger().onFalse(new IdleIntake(intake));
+  
+
+    m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.30, elevator));
+*/
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
+/* 
+    */
+    //m_driverController
+
+
+    //m_driverController.x().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
+
+    //m_driverController.y().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(180.5), wrist, false));
+
+    /* 
+    m_driverController.b().whileTrue(new MoveIntakeAngle(intake, 1));
+    m_driverController.b().onFalse(new MoveIntakeAngle(intake, 0));
+
+    m_driverController.a().whileTrue(new MoveIntakeAngle(intake, -1));
+    m_driverController.a().onFalse(new MoveIntakeAngle(intake, 0));
+
+    
+    m_driverController.x().whileTrue(new JogWrist(true, wrist));
+    m_driverController.y().whileTrue(new JogWrist(false,wrist));
+    */
+
+/* 
+    //17791
+     
+    m_driverController.leftTrigger().onTrue(Commands.parallel(new SetElevatorHeight(32000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(200), wrist, false), new RunIntake(false, intake, "cones")));
+    m_driverController.leftTrigger().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+
+    m_driverController.leftBumper().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(170), wrist, false), new RunIntake(false, intake, "cones")));
+    m_driverController.leftBumper().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+
+
+    //m_driverController.leftTrigger().whileTrue(new RunIntake(false, intake));
+
+    //m_driverController.rightTrigger().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, true),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,true), new RunIntake(true, intake)));
+    m_driverController.rightTrigger().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+
+    m_driverController.leftStick().onTrue(Commands.parallel(new SetElevatorHeight(45000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(200), wrist, false)));
+    //m_driverController.leftStick().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+
+    m_driverController.rightStick().onTrue(Commands.parallel(new SetElevatorHeight(60000,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(200), wrist, false)));
+    //m_driverController.rightStick().onFalse(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+    
+
+    m_driverController.b().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator, false),new SetWristAngle(Rotation2d.fromDegrees(0), wrist,false)));
+    */
+
+
+    /* 
+    int x = Integer.MAX_VALUE;
+    while(x > 1) {
+      x++;
+    }
+    */
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
   }
 
   /**

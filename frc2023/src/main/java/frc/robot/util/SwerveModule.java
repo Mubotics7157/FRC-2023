@@ -84,7 +84,6 @@ public class SwerveModule {
 
         turnMotor.set(ControlMode.PercentOutput,output);
 
-        turnMotor.set(ControlMode.Position, CommonConversions.radiansToSteps(turnSetpointRad.getRadians(), 12.8));
         
     }
 
