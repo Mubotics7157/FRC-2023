@@ -58,7 +58,7 @@ public class SwerveModule {
 
         absEncoder.configFactoryDefault();
         CANCoderConfiguration config = new CANCoderConfiguration();
-        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;//AbsoluteSensorRange.Signed_PlusMinus180;
+        config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         config.magnetOffsetDegrees = angleOffset;
         absEncoder.configAllSettings(config,50);
