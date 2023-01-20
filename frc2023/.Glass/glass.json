@@ -20,7 +20,6 @@
     }
   },
   "NetworkTables Settings": {
-    "mode": "Client (NT3)",
-    "serverTeam": "10.71.57.2"
+    "mode": "Client (NT3)"
   }
 }
