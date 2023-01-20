@@ -27,7 +27,7 @@ public class Elevator extends SubsystemBase {
     private ElevatorSetpoint currentState;
     private double setpoint;
 
-    private static Elevator instance;
+    private static Elevator instance = new Elevator();
 
     private boolean lockElevator;
 
@@ -50,7 +50,6 @@ public class Elevator extends SubsystemBase {
         elevatorEncoder = elevatorMotor.getEncoder();
 
         configElevatorMotor();
-        instance = new Elevator();
         currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
