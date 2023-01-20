@@ -73,8 +73,8 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.75, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.75, elevator));
   }
 
   /**
