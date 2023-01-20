@@ -20,16 +20,16 @@ public class JogWrist extends CommandBase {
     @Override
     public void execute() {
         if(output){
-            wrist.jog(.75);
+            wrist.setPercentOutput(.75);
 
         }
         else
-            wrist.jog(-.75);
+            wrist.setPercentOutput(-.75);
     }
 
     @Override
     public void end(boolean interrupted) {
-        wrist.jog(0);
+        wrist.setPercentOutput(0);
     }
 
 

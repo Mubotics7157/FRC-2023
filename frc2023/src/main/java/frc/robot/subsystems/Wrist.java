@@ -1,114 +1,73 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
-import frc.robot.util.CommonConversions;
 
 public class Wrist extends SubsystemBase {
-    private WPI_TalonFX wristMotor;
-    private DutyCycleEncoder wristEncoder;
-    private Rotation2d setpoint = Rotation2d.fromDegrees(0);
-    private ProfiledPIDController wristController;
+    private CANSparkMax wristMaster;
+    private CANSparkMax wristSlave;
+    private SparkMaxPIDController wristController;
+    private RelativeEncoder wristEncoder;
+
     private static Wrist instance = new Wrist();
-    private SendableChooser<Double> wristChooser;
-    
+
+    private double setpoint;
+
+
+
     public Wrist(){
-        wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
-        wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
-        wristController = new ProfiledPIDController(WristConstants.WRIST_CONTROLLER_KP, WristConstants.WRIST_CONTROLLER_KI, WristConstants.WRIST_CONTROLLER_KD, new TrapezoidProfile.Constraints(2*Math.PI,1.5*Math.PI));
-  
-        wristController.enableContinuousInput(-Math.PI, Math.PI);
-        wristController.setTolerance(WristConstants.WRIST_CONTROLLER_TOLERANCE_RAD);
-        wristEncoder.setDistancePerRotation(2*Math.PI);
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = .3;
-        wristMotor.configAllSettings(config);
-        wristMotor.configFactoryDefault();
+        wristMaster = new CANSparkMax(WristConstants.DEVICE_ID_WRIST_MASTER, MotorType.kBrushless);
+        wristSlave = new CANSparkMax(WristConstants.DEVICE_ID_WRIST_SLAVE, MotorType.kBrushless);
 
-        
-       
-        wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
-        wristMotor.configForwardSoftLimitEnable(true);
-        wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
-        wristMotor.configReverseSoftLimitEnable(true);
+        wristMaster.setIdleMode(IdleMode.kBrake);
+        wristSlave.setIdleMode(IdleMode.kBrake);
 
+        wristEncoder = wristMaster.getEncoder();
+        wristController = wristMaster.getPIDController();
 
-        wristMotor.setNeutralMode(NeutralMode.Brake);
+        wristSlave.follow(wristMaster);
 
-        wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
-        wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
+        setpoint = 0;
+    }
 
-        wristMotor.setSelectedSensorPosition(0);
-
-        wristChooser = new SendableChooser<>();
-        wristChooser.addOption("intake fallen cone", 165.0);
-        wristChooser.addOption("intake upright cone", 200.0);
-        wristChooser.addOption("score high cone", 200.0);
-        wristChooser.addOption("score mid cone", 200.0);
-        wristChooser.addOption("custom", SmartDashboard.getNumber("wrist setpoint", 0));
-
-        SmartDashboard.putData(wristChooser);
-
-        SmartDashboard.putNumber("elevator setpoint", 0);
-        SmartDashboard.putNumber("wrist setpoint", 0);
-
+    @Override
+    public void periodic() {
+        logData();
     }
 
     public static Wrist getInstance(){
         return instance;
     }
 
-    @Override
-    public void periodic() {
-        wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
-
-        logData();
+    public void setPercentOutput(double val){
+        wristMaster.set(val);
     }
 
-    public void jog(double val){
-        wristMotor.set(ControlMode.PercentOutput, val);
+    public void setSetpoint(double setpoint){
+        this.setpoint = setpoint;
     }
 
-    private Rotation2d getRelativeAngle(){
-        Rotation2d reportedAngle = new Rotation2d(wristEncoder.get()*Math.PI*2);
-        return reportedAngle;
+    public void goToPosition(){
+        wristController.setReference(setpoint, ControlType.kPosition);
+
     }
 
-    public void setGains(){
-        wristMotor.config_kP(0, .3);
-    }
-
-    public void setSetpoint(Rotation2d requestedAngle){
-        setpoint = requestedAngle;
-    }
-    
-    public double getSelectedAngle(){
-        return wristChooser.getSelected();
-    }
-
-    public boolean atSetpoint(){
-        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
+    private double getPosition(){
+        return wristEncoder.getPosition();
     }
 
     private void logData(){
-        SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57)));
-        SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Wrist PID setpoint", setpoint.getDegrees());//wristController.getGoal().position);
-        SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
-        SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
-
+        SmartDashboard.putNumber("wrist position", getPosition());
     }
+
 
 }

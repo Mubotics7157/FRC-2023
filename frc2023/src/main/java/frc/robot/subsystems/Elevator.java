@@ -19,7 +19,8 @@ import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
 
-    private CANSparkMax elevatorMotor;
+    private CANSparkMax elevatorMaster;
+    private CANSparkMax elevatorSlave;
     private SparkMaxPIDController elevatorController;
     private RelativeEncoder elevatorEncoder;
 
@@ -31,7 +32,6 @@ public class Elevator extends SubsystemBase {
 
     private boolean lockElevator;
 
-    ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
 
     public enum ElevatorSetpoint{
         STOW,
@@ -44,17 +44,24 @@ public class Elevator extends SubsystemBase {
         CUBE_HIGH
     }
 
-    public Elevator(){
-        elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR, MotorType.kBrushless);
-        elevatorController = elevatorMotor.getPIDController();
-        elevatorEncoder = elevatorMotor.getEncoder();
+    @Override
+    public void periodic() {
+        logData();
+    }
 
-        configElevatorMotor();
+    public Elevator(){
+        elevatorMaster = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_MASTER, MotorType.kBrushless);
+        elevatorSlave = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_SLAVE, MotorType.kBrushless);
+        elevatorController = elevatorMaster.getPIDController();
+        elevatorEncoder = elevatorMaster.getEncoder();
+
+        configelevatorMaster();
         currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
         lockElevator = true;
 
+        elevatorSlave.follow(elevatorMaster);
 
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
@@ -66,7 +73,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setPercentOutput(double val){
-        elevatorMotor.set(val);
+        elevatorMaster.set(val);
     }
 
     public boolean setState(ElevatorSetpoint wantedState){
@@ -132,11 +139,11 @@ public class Elevator extends SubsystemBase {
         }
     }
 
-    private void configElevatorMotor(){
-        elevatorMotor.setSmartCurrentLimit(30);
-        elevatorMotor.setControlFramePeriodMs(50);
-        elevatorMotor.setIdleMode(IdleMode.kBrake);
-        //elevatorMotor.enableSoftLimit(null, false)
+    private void configelevatorMaster(){
+        elevatorMaster.setSmartCurrentLimit(30);
+        elevatorMaster.setControlFramePeriodMs(50);
+        elevatorMaster.setIdleMode(IdleMode.kBrake);
+        //elevatorMaster.enableSoftLimit(null, false)
         elevatorController.setP(0);
         elevatorController.setI(0);
         elevatorController.setD(0);
@@ -147,6 +154,10 @@ public class Elevator extends SubsystemBase {
     private void logData(){
         SmartDashboard.putBoolean("Lock Elevator?", lockElevator);
         SmartDashboard.putString("Elevator State", getCurrentState().toString());
+        SmartDashboard.putNumber("Elevator Height", getElevatorHeight());
+        SmartDashboard.putNumber("Elevator Setpoint", getSetpoint());
+        SmartDashboard.putBoolean("Elevator At Setpoint", atSetpoint());
+        SmartDashboard.putNumber("Elevator Controller Error", getError());
     }
 
 }
