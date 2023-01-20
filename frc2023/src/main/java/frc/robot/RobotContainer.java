@@ -9,11 +9,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
-import frc.robot.commands.intake.RunIntake;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
 
 import java.io.IOException;
@@ -54,6 +52,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
+  
   private final Drive drive = Drive.getInstance();
   private final Tracker tracker= Tracker.getInstance();
   private final Elevator elevator = Elevator.getInstance();
@@ -74,11 +73,8 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.8, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.8, elevator));
-
-    //m_driverController.leftTrigger().whileTrue(new RunIntake(intake, .5));
-    //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, -.5));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
   }
 
   /**

@@ -10,27 +10,32 @@ import frc.robot.subsystems.Intake.IntakeState;
 public class RunIntake extends CommandBase {
     
     private Intake intake;
-    private double val;
+    private IntakeState state;
 
-    public RunIntake(Intake instance, double val){
+    public RunIntake(Intake instance, IntakeState state){
 
         intake = instance;
 
-        this.val = val;
+        this.state = state;
 
         addRequirements(intake);
     }
 
     @Override
     public void execute() {
-        intake.setMotors(val);
+        intake.setIntakeState(state);
     }
 
     @Override
     public void end(boolean interrupted) {
         
-        intake.setMotors(0);
+        if(state == IntakeState.INTAKE || state == IntakeState.INTAKE_CONE || state == IntakeState.INTAKE_CUBE)
+            intake.setIntakeState(IntakeState.IDLE);
+        else
+            intake.setIntakeState(IntakeState.OFF);
+            
 
+        //intake.setIntakeState(IntakeState.OFF);
     }
 
 }

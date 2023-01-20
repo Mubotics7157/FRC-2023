@@ -80,8 +80,7 @@ public class Drive extends SubsystemBase {
     }
 
     public synchronized void resetHeading(){
-        gyro.reset();
-        //Tracker.getInstance().resetHeading();
+        Tracker.getInstance().resetHeading();
     }
 
     public SwerveModulePosition[] getModulePositions(){

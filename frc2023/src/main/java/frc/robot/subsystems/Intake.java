@@ -75,8 +75,6 @@ public class Intake extends SubsystemBase {
         intakeSlave.setNeutralMode(NeutralMode.Brake);
         intakeAngle.setIdleMode(IdleMode.kBrake);
 
-        intakeSlave.follow(intakeMaster);
-
         //TODO: ask harshal abt further clarification for regular intake current limit
 
         //intakeSlave.follow(intakeMaster);
@@ -91,7 +89,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /*
+
         switch(intakeState){
             case OFF:
                 currentLimit(false);
@@ -132,8 +130,6 @@ public class Intake extends SubsystemBase {
                 setMotors(.1);
                 break;
         }
-
-        */
     }
 
     public void setIntakeState(IntakeState state){
@@ -142,15 +138,12 @@ public class Intake extends SubsystemBase {
 
     public void setMotors(double speed){
         intakeMaster.set(speed);
+        intakeSlave.set(speed);
     }
 
     public void setAngle(double angle){
         double value = angle * 20;
         intakeController.setReference(value, com.revrobotics.CANSparkMax.ControlType.kPosition);
-    }
-
-    public void jogJawMotor(double val){
-        intakeAngle.set(val);
     }
 
     public void currentLimit(boolean enable){
