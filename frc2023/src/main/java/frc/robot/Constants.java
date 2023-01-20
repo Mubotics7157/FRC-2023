@@ -93,7 +93,8 @@ public final class Constants {
 
     public static class ElevatorConstants{
       public static final double ELEVATOR_GEARING = 6;
-      public static final int DEVICE_ID_ELEVATOR = 12;
+      public static final int DEVICE_ID_ELEVATOR_MASTER = 12;
+      public static final int DEVICE_ID_ELEVATOR_SLAVE = 14;
 
       public static final double WRIST_PEAK_OUTPUT_FORWARD = .75;
       public static final double WRIST_PEAK_OUTPUT_REVERSE = -.75;
@@ -103,6 +104,8 @@ public final class Constants {
       public static final double ELEVATOR_HEIGHT_TOLERANCE = 0;
 
       public static final double ZEROING_SPEED = -.05;
+
+      public static final double ELEVATOR_ZERO_HEIGHT = 0;
 
     }
 
