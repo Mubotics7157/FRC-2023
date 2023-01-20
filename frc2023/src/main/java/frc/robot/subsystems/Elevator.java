@@ -56,8 +56,9 @@ public class Elevator extends SubsystemBase {
         lockElevator = true;
 
 
-        elevatorHeights.put(ElevatorSetpoint.STOW, 0);
-        elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
+        //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
+        //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
+
     }
 
     public static Elevator getInstance(){

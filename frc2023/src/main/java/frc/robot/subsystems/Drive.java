@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -16,19 +17,22 @@ import frc.robot.Constants.DriveConstants;
 public class Drive extends SubsystemBase {
     
     private static Drive instance = new Drive();
-    private SwerveModule frontLeft = DriveConstants.FRONT_LEFT_MODULE;
-    private SwerveModule frontRight = DriveConstants.FRONT_RIGHT_MODULE;
-    private SwerveModule rearRight = DriveConstants.REAR_RIGHT_MODULE;
-    private SwerveModule rearLeft = DriveConstants.REAR_LEFT_MODULE;
+    public SwerveModule rearRight = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, true);
+    public SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, true);
+    public SwerveModule frontLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, true);
+    public SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, true);
     WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
     TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
-    ProfiledPIDController rotController = new ProfiledPIDController(-4.5, 0, 0,rotProfile);
+    ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
     double maxAngVel = 2 * Math.PI;
 
     public Drive(){
         rotController.setTolerance(5);
         rotController.enableContinuousInput(-Math.PI, Math.PI);
+
+        gyro.reset();
+        //sgyro.setYaw(180);
     }
 
     public static Drive getInstance(){
@@ -46,7 +50,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
 
-        SmartDashboard.putNumber("left rear adjusted angle", rearLeft.getRelativeHeading().getDegrees());
+        SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
 
 
         SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
@@ -76,14 +80,14 @@ public class Drive extends SubsystemBase {
     }
 
     public synchronized void resetHeading(){
-        gyro.reset();
+        Tracker.getInstance().resetHeading();
     }
 
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
         SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
         SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
-        SwerveModulePosition rearRightPos = new SwerveModulePosition(rearLeft.getPosition(),rearRight.getRelativeHeading());
+        SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
         SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
         SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
