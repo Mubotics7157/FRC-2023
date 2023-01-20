@@ -17,10 +17,10 @@ import frc.robot.Constants.DriveConstants;
 public class Drive extends SubsystemBase {
     
     private static Drive instance = new Drive();
-    public SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, true);
+    public SwerveModule rearRight = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, true);
     public SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, true);
-    public SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, true);
-    public SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, true);
+    public SwerveModule frontLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, true);
+    public SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, true);
     WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
     TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
@@ -89,9 +89,7 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
         SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
-        //SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
-        SwerveModulePosition[] modulePositions = {rearRightPos,frontRightPos,frontLeftPos,rearLeftPos};
-
+        SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
         SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
         return modulePositions;
     }
