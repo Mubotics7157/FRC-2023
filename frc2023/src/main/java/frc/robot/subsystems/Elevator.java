@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -64,6 +65,7 @@ public class Elevator extends SubsystemBase {
 
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
+
 
     }
 
@@ -135,7 +137,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void configElevatorPID(boolean useSD){
-        if(useSD)a
+        if(useSD){
             elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
             elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
             elevatorController.setD(SmartDashboard.getNumber("Elevator kD", 0));
@@ -153,6 +155,10 @@ public class Elevator extends SubsystemBase {
         elevatorController.setD(0);
         elevatorController.setFF(0);
         elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
+
+        // elevatorController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
+        // elevatorController.setSmartMotionMaxAccel(setpoint, 0);
+        // elevatorController.setSmartMotionMaxVelocity(setpoint, 0);
     }
 
     private void logData(){
