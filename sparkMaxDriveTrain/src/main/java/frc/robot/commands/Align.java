@@ -26,6 +26,8 @@ public class Align extends CommandBase{
     public void initialize() {
         controller = new ProfiledPIDController(1.5, 0, 0, new TrapezoidProfile.Constraints(2, 1));
         controller.enableContinuousInput(-Math.PI, Math.PI);
+        controller.setTolerance(Units.degreesToRadians(3));
+        controller.setP(SmartDashboard.getNumber("align kP", 0));
         
     }
 
