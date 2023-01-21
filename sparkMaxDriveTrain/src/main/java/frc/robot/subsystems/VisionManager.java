@@ -22,14 +22,14 @@ public class VisionManager extends SubsystemBase{
         return instance;
     }
 
-    public double getTargetYaw(){
+    public Rotation2d getTargetYaw(){
         double targets = tableLime.getEntry("tv").getDouble(0);
         double yaw = tableLime.getEntry("tx").getDouble(0);
         if(targets != 0){
-            return yaw;
+            return Rotation2d.fromDegrees(yaw);
         }
         else
-            return 0;
+            return Rotation2d.fromDegrees(0);
     }
 
     public double getTargetPitch(){
@@ -77,7 +77,7 @@ public class VisionManager extends SubsystemBase{
     }
     
     public void logData(){
-        SmartDashboard.putNumber("Target yaw", getTargetYaw());
+        SmartDashboard.putNumber("Target yaw", getTargetYaw().getDegrees());
         SmartDashboard.putNumber("Target pitch", getTargetPitch());
         SmartDashboard.putNumber("Targets", getTargets());
     
