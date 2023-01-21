@@ -24,6 +24,12 @@ public class Drive extends SubsystemBase {
         leftSlave.follow(leftMaster);
         rightSlave.follow(rightMaster);
 
+        leftMaster.setInverted(true);
+        leftSlave.setInverted(leftMaster.getInverted());
+
+        rightMaster.setInverted(false);
+        rightSlave.setInverted(rightMaster.getInverted());
+
         gyro = new Pigeon2(DriveConstants.DEVICE_ID_GYRO);
     }
 

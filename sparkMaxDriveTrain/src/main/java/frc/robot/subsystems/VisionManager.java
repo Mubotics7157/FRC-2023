@@ -23,8 +23,8 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Rotation2d getTargetYaw(){
-        double targets = tableLime.getDoubleTopic("tv").subscribe(0).get();
-        double yaw = tableLime.getDoubleTopic("tx").subscribe(0).get();
+        double targets = tableLime.getEntry("tv").getDouble(0);
+        double yaw = tableLime.getEntry("tx").getDouble(0);
         if(targets != 0){
             return Rotation2d.fromDegrees(yaw);
         }
@@ -33,8 +33,8 @@ public class VisionManager extends SubsystemBase{
     }
 
     public double getTargetPitch(){
-        double targets = tableLime.getDoubleTopic("tv").subscribe(0).get();
-        double pitch = tableLime.getDoubleTopic("ty").subscribe(0).get();
+        double targets = tableLime.getEntry("tv").getDouble(0);
+        double pitch = tableLime.getEntry("ty").getDouble(0);
         if(targets != 0){
             return pitch;
         }
@@ -43,12 +43,12 @@ public class VisionManager extends SubsystemBase{
     }
 
     public double getTargets(){
-        double targets = tableLime.getDoubleTopic("tv").subscribe(0).get();
+        double targets = tableLime.getEntry("tv").getDouble(0);
         return targets;
     }
 
     public boolean hasTargets(){
-        double targets = tableLime.getDoubleTopic("tv").subscribe(0).get();
+        double targets = tableLime.getEntry("tv").getDouble(0);
 
         if(targets == 0){
             return false;
@@ -58,21 +58,21 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void toggleLimeLight(){
-        if(tableLime.getDoubleTopic("ledMode").subscribe(0).get() == 1){
-            tableLime.getDoubleTopic("ledMode").publish().set(0);
+        if(tableLime.getEntry("ledMode").getDouble(0) == 1){
+            tableLime.getEntry("ledMode").setNumber(1);
         }
-        else if(tableLime.getDoubleTopic("ledMode").subscribe(0).get() == 0){
-            tableLime.getDoubleTopic("ledMode").publish().set(1);
+        else if(tableLime.getEntry("ledMode").getDouble(0) == 0){
+            tableLime.getEntry("ledMode").setNumber(1);
         }
     }
 
     public void togglePipeLine(){
         //switch to object detection to reflective tape
-        if(tableLime.getDoubleTopic("pipeline").subscribe(0).get() == 1){
-            tableLime.getDoubleTopic("pipeline").publish().set(0);;
+        if(tableLime.getEntry("pipeline").getDouble(0) == 1){
+            tableLime.getEntry("pipeline").setDouble(0);
         }
-        else if(tableLime.getDoubleTopic("pipeline").subscribe(0).get() == 0){
-            tableLime.getDoubleTopic("pipeline").publish().set(1);
+        else if(tableLime.getEntry("pipeline").getDouble(0) == 0){
+            tableLime.getEntry("pipeline").setDouble(1);
         }
     }
     
@@ -85,7 +85,7 @@ public class VisionManager extends SubsystemBase{
 
     public Pose2d getBotPose(){
         /* 
-        double[] poseEntry = tableLime.getDoubleTopic("botpose").getDoubleArray(testArray);
+        double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
 
         if(hasTargets()&& poseEntry.length>0){
         
@@ -97,7 +97,7 @@ public class VisionManager extends SubsystemBase{
             */
         if(hasTargets()){
             try{
-                double[] poseEntry = tableLime.getDoubleArrayTopic("botpose").subscribe(testArray).get();
+                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
                 Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
                 return pose;
             }
@@ -110,7 +110,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public double getLatency(){
-        double latency = tableLime.getDoubleTopic("tl").subscribe(0).get();
+        double latency = tableLime.getEntry("tl").getDouble(0);
         return latency;
     }
 }   

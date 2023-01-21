@@ -18,10 +18,10 @@ public final class Constants {
   }
 
   public static class DriveConstants{
-    public static final int DEVICE_ID_LEFT_MASTER = 0;
-    public static final int DEVICE_ID_LEFT_SLAVE = 0;
-    public static final int DEVICE_ID_RIGHT_MASTER = 0;
-    public static final int DEVICE_ID_RIGHT_SLAVE = 0;
+    public static final int DEVICE_ID_LEFT_MASTER = 40;
+    public static final int DEVICE_ID_LEFT_SLAVE = 41;
+    public static final int DEVICE_ID_RIGHT_MASTER = 42;
+    public static final int DEVICE_ID_RIGHT_SLAVE = 43;
     
     public static final int DEVICE_ID_GYRO = 0;
   }

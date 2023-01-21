@@ -27,12 +27,13 @@ public class Align extends CommandBase{
         controller = new ProfiledPIDController(1.5, 0, 0, new TrapezoidProfile.Constraints(2, 1));
         controller.enableContinuousInput(-Math.PI, Math.PI);
         controller.setTolerance(Units.degreesToRadians(3));
-        controller.setP(SmartDashboard.getNumber("align kP", 0));
+        
         
     }
 
     @Override
     public void execute() {
+        controller.setP(SmartDashboard.getNumber("align kP", 0));
         double error = Rotation2d.fromDegrees(0).rotateBy(vision.getTargetYaw()).getRadians();
 
         double deltaSpeed = controller.calculate(error);
