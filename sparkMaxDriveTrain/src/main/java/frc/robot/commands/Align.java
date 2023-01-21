@@ -24,17 +24,16 @@ public class Align extends CommandBase{
 
     @Override
     public void initialize() {
-        controller = new ProfiledPIDController(1.5, 0, 0, new TrapezoidProfile.Constraints(2, 1));
+        controller = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , Math.PI));
         controller.enableContinuousInput(-Math.PI, Math.PI);
-        controller.setTolerance(Units.degreesToRadians(3));
-        
-        
+        controller.setTolerance(Units.degreesToRadians(1));
     }
 
     @Override
     public void execute() {
-        controller.setP(SmartDashboard.getNumber("align kP", 0));
-        double error = Rotation2d.fromDegrees(0).rotateBy(vision.getTargetYaw()).getRadians();
+        controller.setP(SmartDashboard.getNumber("Align kP", 0));
+        Rotation2d onTarget = Rotation2d.fromDegrees(0);
+        double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
         double deltaSpeed = controller.calculate(error);
 
@@ -46,7 +45,8 @@ public class Align extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return controller.atGoal() || !vision.hasTargets();
+        return false;
+        //return controller.atGoal() || !vision.hasTargets();
     }
     @Override
     public void end(boolean interrupted) {

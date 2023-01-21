@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
@@ -36,6 +37,13 @@ public class Drive extends SubsystemBase {
     public void setMotors(double left, double right ){
         leftMaster.set(left);
         rightMaster.set(right);
+    }
+
+    public void tankDrive(){
+        double leftOutput = Math.abs(RobotContainer.m_driverController.getLeftY()) > .2 ? RobotContainer.m_driverController.getLeftY() :0;
+        double rightOutput = Math.abs(RobotContainer.m_driverController.getRightY()) > .2 ? RobotContainer.m_driverController.getRightY() :0;
+        leftMaster.set(leftOutput);
+        rightMaster.set(rightOutput);
     }
 
 
