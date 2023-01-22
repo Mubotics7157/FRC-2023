@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Odometry;
 import frc.robot.subsystems.VisionManager;
 
 /**
@@ -46,11 +47,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("lime yaw", VisionManager.getInstance().getLimeYaw().getDegrees());
-    SmartDashboard.putNumber("shutter yaw", VisionManager.getInstance().getShutterYaw().getDegrees());
+    SmartDashboard.putNumber("lime x", VisionManager.getInstance().getLimePose().getX());
+    SmartDashboard.putNumber("lime y", VisionManager.getInstance().getLimePose().getY());
+    SmartDashboard.putNumber("lime rot", VisionManager.getInstance().getLimePose().getRotation().getDegrees());
 
-    SmartDashboard.putBoolean("lime has", VisionManager.getInstance().limeHasTargets());
-    SmartDashboard.putBoolean("shutter hasTargets", VisionManager.getInstance().shutterHasTargets());
+    /*
+    SmartDashboard.putNumber("shutter x", VisionManager.getInstance().getShutterPose().getX());
+    SmartDashboard.putNumber("shutter y", VisionManager.getInstance().getShutterPose().getY());
+    SmartDashboard.putNumber("shutter rot", VisionManager.getInstance().getShutterPose().getRotation().getDegrees());
+    */
+
+    SmartDashboard.putNumber("pose x", Odometry.getInstance().getPose().getX());
+    SmartDashboard.putNumber("pose y", Odometry.getInstance().getPose().getY());
+    SmartDashboard.putNumber("pose rot", Odometry.getInstance().getPose().getRotation().getDegrees());
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
