@@ -1,4 +1,3 @@
-/* 
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -18,7 +17,8 @@ public class Odometry extends SubsystemBase{
     public Odometry(){
         kinematics = new DifferentialDriveKinematics(0.8);
 
-        estimator = new DifferentialDrivePoseEstimator(kinematics, meth.getInstance().getRotation(), Drive.getInstance().getLeftDistance(), Drive.getInstance().getRightDistance(), new Pose2d());
+
+        estimator = new DifferentialDrivePoseEstimator(kinematics, Drive.getInstance().getDriveHeading(), Drive.getInstance().getLeftDistance(), Drive.getInstance().getRightDistance(), new Pose2d());
     }
 
     public static Odometry getInstance(){
@@ -30,13 +30,12 @@ public class Odometry extends SubsystemBase{
     }
 
     public Pose2d getPose(){
-        estimator.update(meth.getInstance().getRotation(), Drive.getInstance().getLeftDistance(), Drive.getInstance().getRightDistance());
+        estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getLeftDistance(), Drive.getInstance().getRightDistance());
         return estimator.getEstimatedPosition();
     }
 
     public void relocalize(){
-        estimator.resetPosition(meth.getInstance().getRotation(), 0, 0, VisionManager.getInstance().getBotPose());
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), 0, 0, VisionManager.getInstance().getBotPose());
     }
 
 }
-*/
