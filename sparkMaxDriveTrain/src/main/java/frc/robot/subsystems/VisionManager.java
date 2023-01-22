@@ -59,7 +59,7 @@ public class VisionManager extends SubsystemBase{
 
     @Override
     public void periodic() {
-        
+        updateResults();
     }
 
     public static VisionManager getInstance(){
@@ -120,4 +120,12 @@ public class VisionManager extends SubsystemBase{
         limePoseEstimator.setReferencePose(prevEstimatedRobotPose);
         return limePoseEstimator.update();
     }
+
+    public void updateResults(){
+        limeResult = limeLight.getLatestResult();
+        shutterResult = shutter.getLatestResult();
+
+    }
+
+
 }   
