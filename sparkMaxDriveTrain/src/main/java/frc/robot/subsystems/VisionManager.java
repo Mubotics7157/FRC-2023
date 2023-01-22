@@ -133,7 +133,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Pose2d getLimePose(){
-        EstimatedRobotPose estPose = getEstimatedLimePose(new Pose2d()).get();
+        EstimatedRobotPose estPose = getEstimatedLimePose(Odometry.getInstance().getPose()).get();
         double x = estPose.estimatedPose.getX();
         double y = estPose.estimatedPose.getY();
         Rotation2d theta = Rotation2d.fromRadians(estPose.estimatedPose.getRotation().getAngle());
@@ -143,7 +143,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Pose2d getShutterPose(){
-        EstimatedRobotPose estPose = getEstimatedShutterPose(new Pose2d()).get();
+        EstimatedRobotPose estPose = getEstimatedShutterPose(Odometry.getInstance().getPose()).get();
         double x = estPose.estimatedPose.getX();
         double y = estPose.estimatedPose.getY();
         Rotation2d theta = Rotation2d.fromRadians(estPose.estimatedPose.getRotation().getAngle());
