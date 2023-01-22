@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.util.OrangeUtility;
 
 
 public class Elevator extends SubsystemBase {
@@ -66,6 +67,8 @@ public class Elevator extends SubsystemBase {
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
 
+        OrangeUtility.sleep(1000);
+        SmartDashboard.putNumber("elevator setpoint", 0);
 
     }
 
@@ -162,8 +165,11 @@ public class Elevator extends SubsystemBase {
     }
 
     private void logData(){
-        SmartDashboard.putBoolean("Lock Elevator?", lockElevator);
-        SmartDashboard.putString("Elevator State", getCurrentState().toString());
+        Shuffleboard.getTab("elevator").add("Lock Elevator?", lockElevator);
+        Shuffleboard.getTab("elevator").add("Elevator Setpoint", setpoint);
+        Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
+        // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
+        // SmartDashboard.putString("Elevator State", getCurrentState().toString());
     }
 
 }

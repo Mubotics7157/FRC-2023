@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import frc.robot.Constants.DriveConstants.*;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -80,8 +79,7 @@ public class Drive extends SubsystemBase {
     }
 
     public synchronized void resetHeading(){
-        Tracker.getInstance().resetHeading();
-    }
+        Tracker.getInstance().resetHeading();    }
 
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
@@ -89,7 +87,7 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
         SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
-        SwerveModulePosition[] modulePositions = {frontLeftPos,rearLeftPos,frontRightPos,rearRightPos};
+        SwerveModulePosition[] modulePositions = {frontLeftPos,frontRightPos,rearLeftPos,rearRightPos};
         SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
         return modulePositions;
     }
