@@ -23,6 +23,6 @@ public final class Constants {
     public static final int DEVICE_ID_RIGHT_MASTER = 42;
     public static final int DEVICE_ID_RIGHT_SLAVE = 43;
     
-    public static final int DEVICE_ID_GYRO = 0;
+    public static final int DEVICE_ID_GYRO = 30;
   }
 }
