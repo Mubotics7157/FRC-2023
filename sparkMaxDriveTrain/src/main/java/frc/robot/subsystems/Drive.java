@@ -30,6 +30,11 @@ public class Drive extends SubsystemBase {
     }
 
     public Drive(){
+        leftMaster = new CANSparkMax(DriveConstants.DEVICE_ID_LEFT_MASTER, MotorType.kBrushless);
+        leftSlave = new CANSparkMax(DriveConstants.DEVICE_ID_LEFT_SLAVE, MotorType.kBrushless);
+        rightMaster = new CANSparkMax(DriveConstants.DEVICE_ID_RIGHT_MASTER, MotorType.kBrushless);
+        rightSlave = new CANSparkMax(DriveConstants.DEVICE_ID_RIGHT_SLAVE, MotorType.kBrushless);
+
         leftSlave.restoreFactoryDefaults();
         leftMaster.restoreFactoryDefaults();
         rightSlave.restoreFactoryDefaults();
@@ -39,11 +44,6 @@ public class Drive extends SubsystemBase {
         lfEncoder = leftMaster.getEncoder();
         rbEncoder = rightSlave.getEncoder();
         rfEncoder = rightMaster.getEncoder();
-
-        leftMaster = new CANSparkMax(DriveConstants.DEVICE_ID_LEFT_MASTER, MotorType.kBrushless);
-        leftSlave = new CANSparkMax(DriveConstants.DEVICE_ID_LEFT_SLAVE, MotorType.kBrushless);
-        rightMaster = new CANSparkMax(DriveConstants.DEVICE_ID_RIGHT_MASTER, MotorType.kBrushless);
-        rightSlave = new CANSparkMax(DriveConstants.DEVICE_ID_RIGHT_SLAVE, MotorType.kBrushless);
 
         leftSlave.follow(leftMaster);
         rightSlave.follow(rightMaster);
