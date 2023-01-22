@@ -33,7 +33,7 @@ public class Align extends CommandBase{
     public void execute() {
         controller.setP(SmartDashboard.getNumber("Align kP", 0));
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
-        double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
+        double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
         double deltaSpeed = controller.calculate(error);
 

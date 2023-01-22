@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.VisionManager;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,6 +32,9 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     SmartDashboard.putNumber("Align kP", 0);
+
+    
+
   }
 
   /**
@@ -42,6 +46,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("lime yaw", VisionManager.getInstance().getLimeYaw().getDegrees());
+    SmartDashboard.putNumber("shutter yaw", VisionManager.getInstance().getShutterYaw().getDegrees());
+
+    SmartDashboard.putBoolean("lime has", VisionManager.getInstance().limeHasTargets());
+    SmartDashboard.putBoolean("shutter hasTargets", VisionManager.getInstance().shutterHasTargets());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
