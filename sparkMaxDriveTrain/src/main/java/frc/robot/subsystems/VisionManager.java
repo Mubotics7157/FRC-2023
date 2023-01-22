@@ -11,6 +11,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -121,11 +122,36 @@ public class VisionManager extends SubsystemBase{
         return limePoseEstimator.update();
     }
 
+    public Optional<EstimatedRobotPose> getEstimatedShutterPose(Pose2d prevEstimatedRobotPose) {
+        shutterPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return shutterPoseEstimator.update();
+    }
+
     public void updateResults(){
         limeResult = limeLight.getLatestResult();
         shutterResult = shutter.getLatestResult();
-
     }
+
+    public Pose2d getLimePose(){
+        EstimatedRobotPose estPose = getEstimatedLimePose(new Pose2d()).get();
+        double x = estPose.estimatedPose.getX();
+        double y = estPose.estimatedPose.getY();
+        Rotation2d theta = Rotation2d.fromRadians(estPose.estimatedPose.getRotation().getAngle());
+
+        Pose2d pose = new Pose2d(x, y, theta);
+        return pose;
+    }
+
+    public Pose2d getShutterPose(){
+        EstimatedRobotPose estPose = getEstimatedShutterPose(new Pose2d()).get();
+        double x = estPose.estimatedPose.getX();
+        double y = estPose.estimatedPose.getY();
+        Rotation2d theta = Rotation2d.fromRadians(estPose.estimatedPose.getRotation().getAngle());
+
+        Pose2d pose = new Pose2d(x, y, theta);
+        return pose;
+    }
+
 
 
 }   

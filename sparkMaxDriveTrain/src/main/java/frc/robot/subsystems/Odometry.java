@@ -26,7 +26,7 @@ public class Odometry extends SubsystemBase{
     }
 
     public void updateRobot(){
-        estimator.addVisionMeasurement(VisionManager.getInstance().getBotPose(), VisionManager.getInstance().getLatency());
+        estimator.addVisionMeasurement(VisionManager.getInstance().getLimePose(), VisionManager.getInstance().getLimeLatency());
     }
 
     public Pose2d getPose(){
@@ -35,7 +35,7 @@ public class Odometry extends SubsystemBase{
     }
 
     public void relocalize(){
-        estimator.resetPosition(Drive.getInstance().getDriveHeading(), 0, 0, VisionManager.getInstance().getBotPose());
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), 0, 0, VisionManager.getInstance().getLimePose());
     }
 
 }
