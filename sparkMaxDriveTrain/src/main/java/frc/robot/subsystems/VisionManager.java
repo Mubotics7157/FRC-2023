@@ -1,116 +1,123 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionManager extends SubsystemBase{
-    
-    NetworkTable tableLime;
-    private double[] testArray = {0, 0, 0, 0, 0, 0};
     private static VisionManager instance = new VisionManager();
 
+    PhotonCamera limeLight;
+    PhotonPipelineResult limeResult;
+
+    PhotonCamera shutter;
+    PhotonPipelineResult shutterResult;
+    
+    AprilTagFieldLayout aprilTagFieldLayout;
+
+    Transform3d robotToLime;
+    Transform3d robotToShutter;
+
+    PhotonPoseEstimator limePoseEstimator;
+    PhotonPoseEstimator shutterPoseEstimator;
+    
+
     public VisionManager(){
-        tableLime = NetworkTableInstance.getDefault().getTable("limelight");
+        limeLight = new PhotonCamera("limeLight");
+        limeResult = limeLight.getLatestResult();
+        
+        shutter = new PhotonCamera("GSC");
+        shutterResult = shutter.getLatestResult();
+
+        try{
+        aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        }
+        catch(Exception e){
+            System.out.print("yes");
+        }
+
+        robotToShutter = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
+        robotToLime = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
+        //^^^^^ needs to be configured!! >:P
+        limePoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limeLight, robotToLime);
+        shutterPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,shutter, robotToShutter);
+
+    }
+
+    @Override
+    public void periodic() {
+        
     }
 
     public static VisionManager getInstance(){
         return instance;
     }
 
-    public Rotation2d getTargetYaw(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        double yaw = tableLime.getEntry("tx").getDouble(0);
-        if(targets != 0){
-            return Rotation2d.fromDegrees(yaw);
+    public boolean limeHasTargets(){
+        boolean hasTargets = limeResult.hasTargets();
+        return hasTargets;
+    }
+
+    public boolean shutterHasTargets(){
+        boolean hasTargets = shutterResult.hasTargets();
+        return hasTargets;
+    }
+
+    public Rotation2d getLimeYaw(){
+        if(limeHasTargets()){
+            return Rotation2d.fromDegrees(limeResult.getBestTarget().getYaw());
         }
         else
             return Rotation2d.fromDegrees(0);
     }
 
-    public double getTargetPitch(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        double pitch = tableLime.getEntry("ty").getDouble(0);
-        if(targets != 0){
-            return pitch;
+    public Rotation2d getShutterYaw(){
+        if(shutterHasTargets()){
+            return Rotation2d.fromDegrees(shutterResult.getBestTarget().getYaw());
         }
         else
-            return 0;
+            return Rotation2d.fromDegrees(0);
     }
 
-    public double getTargets(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        return targets;
-    }
-
-    public boolean hasTargets(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-
-        if(targets == 0){
-            return false;
+    public Rotation2d getLimePitch(){
+        if(limeHasTargets()){
+            return Rotation2d.fromDegrees(limeResult.getBestTarget().getPitch());
         }
         else
-            return true;
-    }
+            return Rotation2d.fromDegrees(0);
+    } 
 
-    public void toggleLimeLight(){
-        if(tableLime.getEntry("ledMode").getDouble(0) == 1){
-            tableLime.getEntry("ledMode").setNumber(1);
-        }
-        else if(tableLime.getEntry("ledMode").getDouble(0) == 0){
-            tableLime.getEntry("ledMode").setNumber(1);
-        }
-    }
-
-    public void togglePipeLine(){
-        //switch to object detection to reflective tape
-        if(tableLime.getEntry("pipeline").getDouble(0) == 1){
-            tableLime.getEntry("pipeline").setDouble(0);
-        }
-        else if(tableLime.getEntry("pipeline").getDouble(0) == 0){
-            tableLime.getEntry("pipeline").setDouble(1);
-        }
-    }
-    
-    public void logData(){
-        SmartDashboard.putNumber("Target yaw", getTargetYaw().getDegrees());
-        SmartDashboard.putNumber("Target pitch", getTargetPitch());
-        SmartDashboard.putNumber("Targets", getTargets());
-    
-    }
-
-    public Pose2d getBotPose(){
-        /* 
-        double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-
-        if(hasTargets()&& poseEntry.length>0){
-        
-        Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[4]));
-        return pose;
-        }
-        else
-            return new Pose2d();
-            */
-        if(hasTargets()){
-            try{
-                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-                Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-                return pose;
+    public Rotation2d getShutterPitch(){
+        if(shutterHasTargets()){
+            return Rotation2d.fromDegrees(shutterResult.getBestTarget().getPitch());
             }
-            catch(Exception e){
-                return new Pose2d();
-            }
-        }
         else
-            return new Pose2d();
+            return Rotation2d.fromDegrees(0);
     }
 
-    public double getLatency(){
-        double latency = tableLime.getEntry("tl").getDouble(0);
-        return latency;
+    public double getLimeLatency(){
+        return limeResult.getTimestampSeconds();
+    }
+
+    public double getShutterLatency(){
+        return shutterResult.getTimestampSeconds();
+    }
+
+    public Optional<EstimatedRobotPose> getEstimatedLimePose(Pose2d prevEstimatedRobotPose) {
+        limePoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return limePoseEstimator.update();
     }
 }   
