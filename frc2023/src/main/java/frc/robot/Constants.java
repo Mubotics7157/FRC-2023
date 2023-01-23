@@ -106,7 +106,7 @@ public final class Constants {
 
     public static class WristConstants{
       public static final double WRIST_GEARING = 68.57;
-      public static final int DEVICE_ID_WRIST = 9;
+      public static final int DEVICE_ID_WRIST = 29;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
       public static final double SOFT_LIMIT_REVERSE = 0;

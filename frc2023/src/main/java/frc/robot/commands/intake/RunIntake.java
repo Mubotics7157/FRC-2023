@@ -23,16 +23,19 @@ public class RunIntake extends CommandBase {
 
     @Override
     public void execute() {
-        intake.setIntakeState(state);
+        intake.setIntakeState(state); 
     }
 
     @Override
     public void end(boolean interrupted) {
+        //intake.setMotors(0);
         
         if(state == IntakeState.INTAKE || state == IntakeState.INTAKE_CONE || state == IntakeState.INTAKE_CUBE)
             intake.setIntakeState(IntakeState.IDLE);
         else
             intake.setIntakeState(IntakeState.OFF);
+            
+        
             
 
         //intake.setIntakeState(IntakeState.OFF);

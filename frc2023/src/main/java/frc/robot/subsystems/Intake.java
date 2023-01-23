@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,10 +29,9 @@ public class Intake extends SubsystemBase {
         IDLE
     }
 
-    //9 10   
-    private WPI_TalonFX intakeMaster; 
-    private WPI_TalonFX intakeSlave;
-    private CANSparkMax intakeAngle;
+    private CANSparkMax intakeMaster; 
+    private CANSparkMax intakeSlave;
+    //private CANSparkMax intakeAngle;
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
@@ -42,23 +42,21 @@ public class Intake extends SubsystemBase {
         
         intakeState = IntakeState.OFF;
 
-        intakeMaster = new WPI_TalonFX(19);
-        intakeSlave = new WPI_TalonFX(20);
-        intakeAngle = new CANSparkMax(14, MotorType.kBrushless);
+        intakeMaster = new CANSparkMax(10, MotorType.kBrushless);
+        intakeSlave = new CANSparkMax(18, MotorType.kBrushless);
 
-        intakeController = intakeAngle.getPIDController();
-        intakeEncoder = intakeAngle.getEncoder();
+        intakeController = intakeMaster.getPIDController();
+        intakeEncoder = intakeMaster.getEncoder();
 
-        intakeMaster.configFactoryDefault();
-        intakeSlave.configFactoryDefault();
-        intakeAngle.restoreFactoryDefaults();
+        intakeMaster.restoreFactoryDefaults();
+        intakeSlave.restoreFactoryDefaults();
 
         intakeController.setP(0);
         intakeController.setFF(0);
 
-        intakeController.setOutputRange(-0.5, 0.5);
+        //intakeController.setOutputRange(-0.5, 0.5);
 
-        intakeEncoder.setPosition(0);
+        //intakeEncoder.setPosition(0);
 
         //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
         //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
@@ -67,18 +65,15 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(true);
-        intakeSlave.setInverted(false);
-        intakeAngle.setInverted(false);
+        intakeMaster.setInverted(false);
+        intakeSlave.setInverted(!intakeMaster.getInverted());
 
-        intakeMaster.setNeutralMode(NeutralMode.Brake);
-        intakeSlave.setNeutralMode(NeutralMode.Brake);
-        intakeAngle.setIdleMode(IdleMode.kBrake);
+        intakeSlave.follow(intakeMaster);
+
+        intakeMaster.setIdleMode(IdleMode.kBrake);
+        intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
         //TODO: ask harshal abt further clarification for regular intake current limit
-
-        //intakeSlave.follow(intakeMaster);
-        
         
     }
 
@@ -90,7 +85,12 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
 
-        switch(intakeState){
+        IntakeState snapIntakeState;       
+        synchronized(this){
+            snapIntakeState = intakeState;
+        }
+        
+        switch(snapIntakeState){
             case OFF:
                 currentLimit(false);
                 setMotors(0);
@@ -98,24 +98,20 @@ public class Intake extends SubsystemBase {
             case INTAKE_CUBE:
                 currentLimit(false);
                 setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
-                setAngle(SmartDashboard.getNumber("Intake Angle Degrees", 0));
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 currentLimit(false);
                 setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
-                setAngle(SmartDashboard.getNumber("Intake Angle Degrees", 0));
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
                 setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
-                setAngle(SmartDashboard.getNumber("Intake Angle Degrees", 0));
                 break;
             case OUTTAKE_CONE:
                 currentLimit(false);
                 setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
-                setAngle(SmartDashboard.getNumber("Intake Angle Degrees", 0));
                 break;
             case INTAKE:
                 currentLimit(false);
@@ -130,6 +126,7 @@ public class Intake extends SubsystemBase {
                 setMotors(.1);
                 break;
         }
+        
     }
 
     public void setIntakeState(IntakeState state){
@@ -141,25 +138,15 @@ public class Intake extends SubsystemBase {
         intakeSlave.set(speed);
     }
 
-    public void setAngle(double angle){
-        double value = angle * 20;
-        intakeController.setReference(value, com.revrobotics.CANSparkMax.ControlType.kPosition);
-    }
 
     public void currentLimit(boolean enable){
         if(enable){
-            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 2, 10, .25));
-            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 2, 10, .25));
-            intakeAngle.setSmartCurrentLimit(2, 20);
+            intakeMaster.setSmartCurrentLimit(2, 10);
+            intakeSlave.setSmartCurrentLimit(2, 10);
         }
         else{
-            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 2, 10, .25));
-            intakeSlave .configStatorCurrentLimit(new StatorCurrentLimitConfiguration(false, 2, 10, .25));
-            intakeAngle.setSmartCurrentLimit(40);
+            intakeMaster.setSmartCurrentLimit(50);
+            intakeSlave.setSmartCurrentLimit(50);
         }
-    }
-
-    public double getIntakeAngle(){
-        return intakeEncoder.getPosition() / 20;
     }
 }

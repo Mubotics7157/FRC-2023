@@ -9,10 +9,15 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.wrist.JogWrist;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Intake.IntakeState;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -56,6 +61,8 @@ public class RobotContainer {
   private final Drive drive = Drive.getInstance();
   private final Tracker tracker= Tracker.getInstance();
   private final Elevator elevator = Elevator.getInstance();
+  private final Wrist wrist = Wrist.getInstance();
+  private final Intake intake = Intake.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -71,13 +78,26 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
     m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
     m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
 
-  }
+    m_driverController.a().whileTrue(new JogWrist(false, wrist));
+    m_driverController.y().whileTrue(new JogWrist(true, wrist));
 
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
+
+    //m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
+    //m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
+    //^^^ not needed until intake has jawz :P
+
+
+
+  }
+//Big money yuoung money cash money brash money
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

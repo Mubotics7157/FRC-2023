@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.SwerveModuleConstants;
 
 public class Drive extends SubsystemBase {
     
@@ -20,7 +21,7 @@ public class Drive extends SubsystemBase {
     public SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, true);
     public SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, true);
     public SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, true);
-    WPI_Pigeon2 gyro =new WPI_Pigeon2(30);
+    WPI_Pigeon2 gyro =new WPI_Pigeon2(30, SwerveModuleConstants.SWERVE_CANIVORE_ID);
     TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 

@@ -56,6 +56,8 @@ public class Elevator extends SubsystemBase {
         elevatorController = elevatorMotor.getPIDController();
         elevatorEncoder = elevatorMotor.getEncoder();
 
+        elevatorMotor.restoreFactoryDefaults();
+        elevatorSlave.restoreFactoryDefaults();
         configElevatorMotor();
         currentState = ElevatorSetpoint.STOW;
 
@@ -148,10 +150,14 @@ public class Elevator extends SubsystemBase {
         }
     }
 
-    private void configElevatorMotor(){
-        elevatorMotor.setSmartCurrentLimit(30);
+    private void 
+    configElevatorMotor(){
+
+        //elevatorMotor.setSmartCurrentLimit(20);
+        //elevatorSlave.setSmartCurrentLimit(20);
         elevatorMotor.setControlFramePeriodMs(50);
         elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
         //elevatorMotor.enableSoftLimit(null, false)
         elevatorController.setP(0);
         elevatorController.setI(0);
@@ -165,9 +171,9 @@ public class Elevator extends SubsystemBase {
     }
 
     private void logData(){
-        Shuffleboard.getTab("elevator").add("Lock Elevator?", lockElevator);
-        Shuffleboard.getTab("elevator").add("Elevator Setpoint", setpoint);
-        Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
+        //Shuffleboard.getTab("elevator").add("Lock Elevator?", lockElevator);
+        //Shuffleboard.getTab("elevator").add("Elevator Setpoint", setpoint);
+        //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
         // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         // SmartDashboard.putString("Elevator State", getCurrentState().toString());
     }

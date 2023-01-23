@@ -39,10 +39,10 @@ public class Wrist extends SubsystemBase {
 
         
        
-        wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
-        wristMotor.configForwardSoftLimitEnable(true);
-        wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
-        wristMotor.configReverseSoftLimitEnable(true);
+        //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
+        //wristMotor.configForwardSoftLimitEnable(true);
+        //wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
+        //wristMotor.configReverseSoftLimitEnable(true);
 
 
         wristMotor.setNeutralMode(NeutralMode.Brake);
@@ -72,7 +72,7 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
+        //wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
 
         logData();
     }
