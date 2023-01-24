@@ -41,7 +41,7 @@ public class AlignToTarget extends CommandBase{
     public void execute() {
         controller.setP(SmartDashboard.getNumber("Align kP", 0));
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
-        double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
+        double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
         double deltaSpeed = controller.calculate(error);
 
@@ -53,7 +53,7 @@ public class AlignToTarget extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        return controller.atGoal() || !vision.hasTargets();
+        return controller.atGoal() || !vision.limeHasTargets();
     }
     @Override
     public void end(boolean interrupted) {
