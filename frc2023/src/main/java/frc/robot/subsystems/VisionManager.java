@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 
 public class VisionManager extends SubsystemBase{
     private static VisionManager instance = new VisionManager();
@@ -28,9 +29,6 @@ public class VisionManager extends SubsystemBase{
     PhotonPipelineResult shutterResult;
     
     AprilTagFieldLayout aprilTagFieldLayout;
-
-    Transform3d robotToLime;
-    Transform3d robotToShutter;
 
     PhotonPoseEstimator limePoseEstimator;
     PhotonPoseEstimator shutterPoseEstimator;
@@ -50,12 +48,9 @@ public class VisionManager extends SubsystemBase{
             System.out.print("yes");
         }
 
-        robotToShutter = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
-        robotToLime = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
-        //TODO: ^^^^^ needs to be configured!! this is the distance of your camera to the center of your robobot >:P 
-        limePoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limeLight, robotToLime);
-        shutterPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,shutter, robotToShutter);
-
+        limePoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limeLight, VisionConstants.LIME_TRANS);
+        shutterPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,shutter, VisionConstants.SHUTTER_TRANS);
+        //TODO: ^^^^^ needs to be configured!! this is the distance of your camera to the center of your robobot >:P
     }
 
     @Override
