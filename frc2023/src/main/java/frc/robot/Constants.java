@@ -125,6 +125,14 @@ public final class Constants {
       public static final double WRIST_CONTROLLER_KF = 0;
     }
 
+    public static class IntakeConstants{
+      public static final int DEVICE_ID_INTAKE_SLAVE = 18;
+      public static final int DEVICE_ID_INTAKE_MASTER = 10;
+
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
+      //TODO: figure out the ports
+    }
 public static class FieldConstants{
   public static final AprilTag tag01= new AprilTag(
     1,

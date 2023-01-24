@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
 
@@ -35,7 +36,7 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeMaster; 
     private CANSparkMax intakeSlave;
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
 
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
@@ -47,8 +48,8 @@ public class Intake extends SubsystemBase {
         
         intakeState = IntakeState.OFF;
 
-        intakeMaster = new CANSparkMax(10, MotorType.kBrushless);
-        intakeSlave = new CANSparkMax(18, MotorType.kBrushless);
+        intakeMaster = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_MASTER, MotorType.kBrushless);
+        intakeSlave = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_SLAVE, MotorType.kBrushless);
 
         intakeController = intakeMaster.getPIDController();
         intakeEncoder = intakeMaster.getEncoder();
