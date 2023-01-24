@@ -28,7 +28,7 @@ import frc.robot.subsystems.Drive;
  */
 public class Robot extends TimedRobot {
 
-  Compressor compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+  Compressor compressor = new Compressor(50 , PneumaticsModuleType.REVPH);
 
 
   public enum ObjectType{
