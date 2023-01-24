@@ -52,7 +52,7 @@ public class VisionManager extends SubsystemBase{
 
         robotToShutter = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
         robotToLime = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
-        //^^^^^ needs to be configured!! this is the distance of your camera to the center of your robobot >:P 
+        //TODO: ^^^^^ needs to be configured!! this is the distance of your camera to the center of your robobot >:P 
         limePoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limeLight, robotToLime);
         shutterPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE,shutter, robotToShutter);
 
