@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeMaster; 
     private CANSparkMax intakeSlave;
 
-    //private DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
 
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
@@ -104,24 +104,24 @@ public class Intake extends SubsystemBase {
             case INTAKE_CUBE:
                 currentLimit(false);
                 setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
-                //toggleIntake(false);
+                toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 currentLimit(false);
                 setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
-                //toggleIntake(false);
+                toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
                 setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
-                //toggleIntake(true);
+                toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 currentLimit(false);
                 setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
-                //toggleIntake(true);
+                toggleIntake(true);
                 break;
             case INTAKE:
                 currentLimit(false);
@@ -149,12 +149,12 @@ public class Intake extends SubsystemBase {
     }
 
     public void toggleIntake(boolean forward){
-        /* 
+        
         if(forward)
             solenoid.set(Value.kForward);
         else
             solenoid.set(Value.kReverse);
-        */
+        
     }
 
 

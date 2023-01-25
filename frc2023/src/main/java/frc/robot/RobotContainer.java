@@ -90,8 +90,8 @@ public class RobotContainer {
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
 
-    //m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
-    //m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
+    m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
+    m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
     //^^^ not needed until intake has jawz :P
 
 

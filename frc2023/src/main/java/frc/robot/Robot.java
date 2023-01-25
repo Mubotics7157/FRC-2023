@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Drive;
 
 /**
@@ -28,7 +29,7 @@ import frc.robot.subsystems.Drive;
  */
 public class Robot extends TimedRobot {
 
-  Compressor compressor = new Compressor(50 , PneumaticsModuleType.REVPH);
+  Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_REVPH , PneumaticsModuleType.REVPH);
 
 
   public enum ObjectType{
