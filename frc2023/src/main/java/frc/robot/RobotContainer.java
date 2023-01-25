@@ -71,6 +71,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
     SmartDashboard.putNumber("test", 0);
+    elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
 
   }
 
@@ -92,7 +93,6 @@ public class RobotContainer {
 
     m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
     m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
-    //^^^ not needed until intake has jawz :P
 
 
 

@@ -23,6 +23,6 @@ public class JogElevator extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        elevator.setPercentOutput(0);
+        elevator.setState(elevator.getElevatorHeight());
     }
 }

@@ -23,6 +23,7 @@ public class Wrist extends SubsystemBase {
     private ProfiledPIDController wristController;
     private static Wrist instance = new Wrist();
     private SendableChooser<Double> wristChooser;
+    private boolean holdAtWantedState;
     
     public Wrist(){
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
@@ -33,11 +34,14 @@ public class Wrist extends SubsystemBase {
         wristController.setTolerance(WristConstants.WRIST_CONTROLLER_TOLERANCE_RAD);
         wristEncoder.setDistancePerRotation(2*Math.PI);
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = .3;
+        config.slot0.kP = .075;
         wristMotor.configAllSettings(config);
         wristMotor.configFactoryDefault();
 
-        
+        wristMotor.configMotionCruiseVelocity(30000);
+        wristMotor.configMotionAcceleration(15000);
+
+        holdAtWantedState = false;
        
         //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
         //wristMotor.configForwardSoftLimitEnable(true);
@@ -72,7 +76,8 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
+        if(holdAtWantedState)
+            wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
 
         logData();
     }
@@ -81,19 +86,22 @@ public class Wrist extends SubsystemBase {
         wristMotor.set(ControlMode.PercentOutput, val);
     }
 
+    public void setHolding(boolean hold){
+        holdAtWantedState = hold;
+
+        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57));
+    }
+
     private Rotation2d getRelativeAngle(){
         Rotation2d reportedAngle = new Rotation2d(wristEncoder.get()*Math.PI*2);
         return reportedAngle;
     }
 
     public void setGains(){
-        wristMotor.config_kP(0, .3);
+        wristMotor.config_kP(0, .075);
     }
 
-    public void setSetpoint(Rotation2d requestedAngle){
-        setpoint = requestedAngle;
-    }
-    
+
     public double getSelectedAngle(){
         return wristChooser.getSelected();
     }

@@ -58,11 +58,12 @@ public class Elevator extends SubsystemBase {
 
         elevatorMotor.restoreFactoryDefaults();
         elevatorSlave.restoreFactoryDefaults();
+
         configElevatorMotor();
         currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
-        lockElevator = true;
+        lockElevator = false;
 
         elevatorSlave.follow(elevatorMotor);
 
@@ -112,12 +113,11 @@ public class Elevator extends SubsystemBase {
         elevatorController.setReference(setpoint, ControlType.kPosition);
         return atSetpoint();
     }
-
     public void zeroElevator(){
         elevatorEncoder.setPosition(0);
     }
 
-    private double getElevatorHeight(){
+    public double getElevatorHeight(){
         return elevatorEncoder.getPosition();
     }
 
@@ -159,7 +159,7 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
         //elevatorMotor.enableSoftLimit(null, false)
-        elevatorController.setP(0);
+        elevatorController.setP(.35);
         elevatorController.setI(0);
         elevatorController.setD(0);
         elevatorController.setFF(0);

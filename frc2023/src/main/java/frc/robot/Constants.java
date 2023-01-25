@@ -111,8 +111,8 @@ public final class Constants {
       public static final double SOFT_LIMIT_FORWARD = 72456;
       public static final double SOFT_LIMIT_REVERSE = 0;
 
-      public static final double WRIST_PEAK_OUTPUT_FORWARD = .5;
-      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.5;
+      public static final double WRIST_PEAK_OUTPUT_FORWARD = 1;
+      public static final double WRIST_PEAK_OUTPUT_REVERSE = -1;
 
       public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
 
