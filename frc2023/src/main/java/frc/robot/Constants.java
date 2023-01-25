@@ -131,7 +131,8 @@ public final class Constants {
 
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
-      //TODO: figure out the ports
+
+      public static final int DEVICE_ID_REV_PH = 28;
     }
 public static class FieldConstants{
   public static final AprilTag tag01= new AprilTag(
