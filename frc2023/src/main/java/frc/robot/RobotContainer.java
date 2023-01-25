@@ -4,27 +4,42 @@
 
 package frc.robot;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.DriveTele;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.IdleElevator;
-import frc.robot.commands.IdleIntake;
-import frc.robot.commands.JogElevator;
-import frc.robot.commands.JogWrist;
-import frc.robot.commands.RunIntake;
-import frc.robot.commands.SetElevatorHeight;
-import frc.robot.commands.SetGains;
-import frc.robot.commands.SetWristAngle;
+import frc.robot.commands.drive.DriveTele;
+import frc.robot.commands.elevator.JogElevator;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.wrist.JogWrist;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Intake.IntakeState;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.constraint.SwerveDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -42,13 +57,12 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
-  private final CommandXboxController m_operatorController =
-      new CommandXboxController(1);
   
   private final Drive drive = Drive.getInstance();
-  private final Intake intake = Intake.getInstance();
+  private final Tracker tracker= Tracker.getInstance();
   private final Elevator elevator = Elevator.getInstance();
   private final Wrist wrist = Wrist.getInstance();
+  private final Intake intake = Intake.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,8 +70,8 @@ public class RobotContainer {
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
-    //wrist.setDefaultCommand(new JogWrist(, wrist));
-    //elevator.setDefaultCommand(new IdleElevator(elevator));
+    SmartDashboard.putNumber("test", 0);
+
   }
 
   private void configureBindings() {
@@ -65,45 +79,94 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    m_driverController.leftTrigger().whileTrue(new RunIntake(false,intake));
-    m_driverController.rightTrigger().whileTrue(new RunIntake(true,intake));
-    //m_driverController.b().onTrue(new SetGains(drive));
-
-    m_driverController.leftBumper().whileTrue(new JogElevator(.30, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.30, elevator));
-
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-   // m_driverController.a().whileTrue(new JogWrist(true, wrist));
-    m_driverController.x().whileTrue(new SetWristAngle(0, wrist));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
 
-    m_driverController.y().whileTrue(new SetWristAngle(72456, wrist));
+    m_driverController.a().whileTrue(new JogWrist(false, wrist));
+    m_driverController.y().whileTrue(new JogWrist(true, wrist));
 
-    //m_driverController.a().whileTrue(new SetElevatorHeight(53822, elevator));
-    
-     m_driverController.a().onTrue(Commands.parallel(new SetElevatorHeight(53822,elevator),new SetWristAngle(72456, wrist)));
-     m_driverController.b().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator),new SetWristAngle(0, wrist)));
-    // m_driverController.x().onTrue(Commands.parallel(new SetElevatorHeight(0,elevator),new SetWristAngle(0, wrist)));
-    
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
+
+    m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
+    m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
+    //^^^ not needed until intake has jawz :P
 
 
-    /* 
-    int x = Integer.MAX_VALUE;
-    while(x > 1) {
-      x++;
-    }
-    */
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+
   }
-
+//Big money yuoung money cash money brash money
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+  public Command getAutonomousCommand(String autoToUse) {
+
+    TrajectoryConfig config = new TrajectoryConfig(.75, 1);
+    PIDController xController = new PIDController(1.25, 0, 0);
+    PIDController yController = new PIDController(1.25, 0, 0);
+    
+    xController.setTolerance(.05);
+    yController.setTolerance(.05);
+
+    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0.0, 0.0, new Rotation2d(0)),
+        List.of(
+          new Translation2d(0, .25),
+          new Translation2d(0,.5)
+        ),
+        new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
+        config
+        );
+        /* 
+      try{
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(autoToUse);
+        testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      }
+      catch(IOException ex){
+        System.out.println();
+      }
+      */
+      
+  
+
+      SwerveControllerCommand swerveControllerCommand =
+    new SwerveControllerCommand(
+        testTrajectory,
+        tracker::getOdometry, // Functional interface to feed supplierx
+        DriveConstants.DRIVE_KINEMATICS,
+        // Position controllers 
+        xController,
+        yController,
+        drive.getRotationController(),
+        drive::setModuleStates,
+        drive);
+
+        
+        return  swerveControllerCommand;
+  }
+
+  public void configurePath(){
+    Trajectory testTrajectory = new Trajectory() ;
+    /*TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0.0, 0.0, new Rotation2d(0)),
+        List.of(
+          new Translation2d(0, .25),
+          new Translation2d(0,.5)
+        ),
+        new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
+        config
+        );*/
+        //Trajectory testTrajectory;
+      try{
+        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/huh.wpilib.json");
+        testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      }
+      catch(IOException ex){
+        System.out.println();
+      }
   }
 }

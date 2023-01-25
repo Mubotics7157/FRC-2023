@@ -15,8 +15,13 @@ import frc.robot.Constants.DriveConstants;
 public class Tracker extends SubsystemBase{
 
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(DriveConstants.DRIVE_KINEMATICS, Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions());
-    Field2d m_field;
+    private final Field2d m_field = new Field2d();
+
     private static Tracker instance = new Tracker();
+
+    public Tracker(){
+        SmartDashboard.putData("Field", m_field);
+    }
 
 
 
@@ -27,7 +32,11 @@ public class Tracker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        odometry.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+         m_field.setRobotPose(odometry.getPoseMeters());
+         odometry.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+         SmartDashboard.putNumber("odom x", getOdometry().getX());
+         SmartDashboard.putNumber("odom y", getOdometry().getY());
+        SmartDashboard.putNumber("odometry r", getOdometry().getRotation().getDegrees());
     }
 
     public synchronized void setOdometry(Pose2d pose){

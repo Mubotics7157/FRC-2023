@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.intake;
 
 import java.util.function.DoubleSupplier;
 
@@ -24,7 +24,7 @@ public class IdleIntake extends CommandBase {
     
     @Override
     public void execute() {
-        intake.setMotors(.05);
+        //intake.runIntake(0);
     }
 
     @Override

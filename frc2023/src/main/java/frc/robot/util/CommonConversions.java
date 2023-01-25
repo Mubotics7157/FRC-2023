@@ -5,10 +5,18 @@ import frc.robot.Constants.DriveConstants;
 
 public class CommonConversions {
   
-     public static double stepsToMeters(double steps){
-      return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO));
+  public static double stepsToMeters(double steps){
+    return steps*((DriveConstants.WHEEL_DIAMETER_METERS * Math.PI) / (2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO));
   }
 
+   public static double stepsToInches(double steps,double wheelDiameter,double gearRatio){
+    //1.625
+    return steps*((wheelDiameter* Math.PI) / (2048*gearRatio));
+  }
+
+   public static double inchesToSteps(double inches,double wheelDiameter,double gearRatio){
+    return (inches/(wheelDiameter*Math.PI)) * 2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
+  }
 
   /**
    * Converts from encoder units per 100 milliseconds to meters per second.
@@ -24,8 +32,8 @@ public class CommonConversions {
    * @param meters meters
    * @return encoder units
    */
-  public static double metersToSteps(double meters) {
-    return (meters / 0.1016 / Math.PI) *2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
+  public static double metersToSteps(double meters,double wheelDiameter) {
+    return (meters / (wheelDiameter*Math.PI) ) *2048*Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO;
   }
 
     /**
@@ -33,8 +41,8 @@ public class CommonConversions {
    * @param metersPerSec meters per second
    * @return encoder units per decisecond
    */
-  public static double metersPerSecToStepsPerDecisec(double metersPerSec) {
-    return metersToSteps(metersPerSec) * .1d;
+  public static double metersPerSecToStepsPerDecisec(double metersPerSec,double wheelDiameter) {
+    return metersToSteps(metersPerSec,wheelDiameter) * .1d;
   }
 
   public static double RPMToStepsPerDecisec(double velRPM){
@@ -52,7 +60,7 @@ public class CommonConversions {
   }
 
   public static double stepsToRadians(double steps,double gearing){
-    double radPerStep = (((2*Math.PI)/gearing)) / 2048;
+    double radPerStep = 2*Math.PI / (gearing * 2048);
     return steps*radPerStep;
   }
 
@@ -64,4 +72,13 @@ public class CommonConversions {
     return radiansToSteps(radPerSec,gearing) *.01;
   }
 
+  public static double stepsToDegrees(double steps,double gearing){
+    double degPerStep = 360 / (gearing * 2048);
+    return steps*degPerStep;
+  }
+
+  public static double degreeToSteps(double steps,double gearing){
+    double degPerStep = 360 / (gearing * 2048);
+    return steps/degPerStep;
+  }
 }

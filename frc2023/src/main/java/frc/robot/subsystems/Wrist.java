@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
@@ -18,9 +19,10 @@ import frc.robot.util.CommonConversions;
 public class Wrist extends SubsystemBase {
     private WPI_TalonFX wristMotor;
     private DutyCycleEncoder wristEncoder;
-    private double setpoint = 0;
+    private Rotation2d setpoint = Rotation2d.fromDegrees(0);
     private ProfiledPIDController wristController;
     private static Wrist instance = new Wrist();
+    private SendableChooser<Double> wristChooser;
     
     public Wrist(){
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
@@ -37,10 +39,10 @@ public class Wrist extends SubsystemBase {
 
         
        
-        wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
-        wristMotor.configForwardSoftLimitEnable(true);
-        wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
-        wristMotor.configReverseSoftLimitEnable(true);
+        //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
+        //wristMotor.configForwardSoftLimitEnable(true);
+        //wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
+        //wristMotor.configReverseSoftLimitEnable(true);
 
 
         wristMotor.setNeutralMode(NeutralMode.Brake);
@@ -50,6 +52,18 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.setSelectedSensorPosition(0);
 
+        wristChooser = new SendableChooser<>();
+        wristChooser.addOption("intake fallen cone", 165.0);
+        wristChooser.addOption("intake upright cone", 200.0);
+        wristChooser.addOption("score high cone", 200.0);
+        wristChooser.addOption("score mid cone", 200.0);
+        wristChooser.addOption("custom", SmartDashboard.getNumber("wrist setpoint", 0));
+
+        SmartDashboard.putData(wristChooser);
+
+        SmartDashboard.putNumber("elevator setpoint", 0);
+        SmartDashboard.putNumber("wrist setpoint", 0);
+
     }
 
     public static Wrist getInstance(){
@@ -58,7 +72,7 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        wristMotor.set(ControlMode.Position,setpoint);
+        //wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
 
         logData();
     }
@@ -76,14 +90,22 @@ public class Wrist extends SubsystemBase {
         wristMotor.config_kP(0, .3);
     }
 
-    public void setSetpoint(double requestedAngle){
+    public void setSetpoint(Rotation2d requestedAngle){
         setpoint = requestedAngle;
+    }
+    
+    public double getSelectedAngle(){
+        return wristChooser.getSelected();
+    }
+
+    public boolean atSetpoint(){
+        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 94.5)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
     }
 
     private void logData(){
         SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57)));
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Wrist PID setpoint", setpoint);//wristController.getGoal().position);
+        SmartDashboard.putNumber("Wrist PID setpoint", setpoint.getDegrees());//wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
         SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
 

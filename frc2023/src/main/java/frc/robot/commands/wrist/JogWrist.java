@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.wrist;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -20,11 +20,11 @@ public class JogWrist extends CommandBase {
     @Override
     public void execute() {
         if(output){
-            wrist.jog(.5);
+            wrist.jog(.15);
 
         }
         else
-            wrist.jog(-.5);
+            wrist.jog(-.15);
     }
 
     @Override
