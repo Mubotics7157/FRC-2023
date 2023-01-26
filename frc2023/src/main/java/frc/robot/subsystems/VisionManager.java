@@ -147,6 +147,25 @@ public class VisionManager extends SubsystemBase{
         return pose;
     }
 
+    public void changePipeLine(int pipeline){
+        //figure numbers out later
+        limeLight.setPipelineIndex(pipeline);
+    }
+    public double getPoleOffset(){
+        int oldPipe = limeLight.getPipelineIndex();
+
+        changePipeLine(1);
+        //whatever the pipeline index is for color
+        double offset = Math.tan(VisionConstants.LIME_TO_INTAKE_METERS * getLimeYaw().getRadians());
+
+        limeLight.setPipelineIndex(oldPipe);
+        return offset;
+
+
+        
+
+    }
+
 
 
 }   
