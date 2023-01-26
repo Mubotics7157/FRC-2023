@@ -130,6 +130,8 @@ public final class Constants {
     }
 
     public static class VisionConstants{
+      public static final double LIME_TO_INTAKE_METERS = 0.25;
+      //^^^ number is arbitrary
       public static final Transform3d SHUTTER_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
       public static final Transform3d LIME_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
       //TODO: figure out the translations cuz its 0, 0, 0 rn soooooo :P
