@@ -9,8 +9,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
+import frc.robot.commands.elevator.SetElevatorHeight;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.wrist.JogWrist;
+import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -82,17 +84,22 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
+    m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
+    m_driverController.leftBumper().whileTrue(new SetElevatorHeight(50000, elevator, false));
+    m_driverController.leftBumper().onFalse(new SetElevatorHeight(0, elevator, false));
+    m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
 
-    m_driverController.a().whileTrue(new JogWrist(false, wrist));
-    m_driverController.y().whileTrue(new JogWrist(true, wrist));
+    //m_driverController.a().whileTrue(new JogWrist(false, wrist));
+    //m_driverController.y().whileTrue(new JogWrist(true, wrist));
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
 
     m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
     m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
+
+    m_driverController.a().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false));
+    m_driverController.a().onFalse(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
 
 
 

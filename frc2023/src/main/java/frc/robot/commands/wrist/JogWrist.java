@@ -18,13 +18,18 @@ public class JogWrist extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        wrist.setHolding(false);
+    }
+
+    @Override
     public void execute() {
         if(output){
-            wrist.jog(.15);
+            wrist.jog(.5);
 
         }
         else
-            wrist.jog(-.15);
+            wrist.jog(-.5);
     }
 
     @Override

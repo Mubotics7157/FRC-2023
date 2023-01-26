@@ -40,7 +40,8 @@ public class SetElevatorHeight extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        elevator.holdAtWantedState();
+        //elevator.holdAtWantedState();
+        elevator.setPercentOutput(0);
         
     }
 }

@@ -73,6 +73,8 @@ public class Elevator extends SubsystemBase {
         OrangeUtility.sleep(1000);
         SmartDashboard.putNumber("elevator setpoint", 0);
 
+        elevatorController.setOutputRange(-.25, .25, 0);
+
     }
 
     public static Elevator getInstance(){
@@ -159,7 +161,7 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
         //elevatorMotor.enableSoftLimit(null, false)
-        elevatorController.setP(.075);
+        elevatorController.setP(.005);
         elevatorController.setI(0);
         elevatorController.setD(0);
         elevatorController.setFF(0);
