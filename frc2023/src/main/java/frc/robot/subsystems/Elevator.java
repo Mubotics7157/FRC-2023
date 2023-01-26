@@ -159,7 +159,7 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
         //elevatorMotor.enableSoftLimit(null, false)
-        elevatorController.setP(.35);
+        elevatorController.setP(.075);
         elevatorController.setI(0);
         elevatorController.setD(0);
         elevatorController.setFF(0);

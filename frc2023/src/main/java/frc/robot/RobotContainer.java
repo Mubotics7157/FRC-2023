@@ -71,7 +71,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
     SmartDashboard.putNumber("test", 0);
-    elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
+    //elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
 
   }
 

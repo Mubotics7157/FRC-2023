@@ -35,11 +35,10 @@ public class SetWristAngle extends CommandBase{
     @Override
     public void execute() {
 
-        //if(useSD)
-            //this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
+        if(useSD)
+            this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
 
-        //if(Elevator.getInstance().getHeight()>0)
-            //wrist.setSetpoint(setpoint);
+        wrist.setSetpoint(setpoint);
 
             
     }

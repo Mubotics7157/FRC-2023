@@ -77,7 +77,7 @@ public class Wrist extends SubsystemBase {
     @Override
     public void periodic() {
         if(holdAtWantedState)
-            wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 68.57));
+            wristMotor.set(ControlMode.Position,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
 
         logData();
     }
@@ -89,12 +89,17 @@ public class Wrist extends SubsystemBase {
     public void setHolding(boolean hold){
         holdAtWantedState = hold;
 
-        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57));
+        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60));
     }
 
     private Rotation2d getRelativeAngle(){
         Rotation2d reportedAngle = new Rotation2d(wristEncoder.get()*Math.PI*2);
         return reportedAngle;
+    }
+
+
+    public void setSetpoint(Rotation2d requestedAngle){
+        setpoint = requestedAngle;
     }
 
     public void setGains(){
@@ -107,11 +112,11 @@ public class Wrist extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 94.5)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
+        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
     }
 
     private void logData(){
-        SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 68.57)));
+        SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)));
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("Wrist PID setpoint", setpoint.getDegrees());//wristController.getGoal().position);
         SmartDashboard.putNumber("Wrist PID error", Units.radiansToDegrees(wristController.getPositionError()));  
