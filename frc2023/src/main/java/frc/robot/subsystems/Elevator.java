@@ -34,8 +34,6 @@ public class Elevator extends SubsystemBase {
 
     private static Elevator instance = new Elevator();
 
-    private boolean lockElevator;
-
     private ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
 
     private DutyCycleEncoder absoluteEncoder;
@@ -75,7 +73,6 @@ public class Elevator extends SubsystemBase {
         currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
-        lockElevator = false;
 
         elevatorSlave.follow(elevatorMotor);
 
@@ -120,10 +117,8 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean setState(ElevatorSetpoint wantedState){
-        lockElevator = false;
-
+        setState(ElevatorState.SETPOINT);
         setpoint = elevatorHeights.get(wantedState);
-
         elevatorController.setReference(setpoint, ControlType.kPosition);
 
         return atSetpoint();
@@ -134,7 +129,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean setState(double setpoint){
-        lockElevator = false;
+        setState(ElevatorState.SETPOINT);
 
         this.setpoint = setpoint;
 
@@ -147,11 +142,6 @@ public class Elevator extends SubsystemBase {
         jogInput = val;
     }
 
-    public boolean holdAtWantedState(){
-        lockElevator = true;
-        elevatorController.setReference(setpoint, ControlType.kPosition);
-        return atSetpoint();
-    }
     public void zeroElevator(){
         elevatorEncoder.setPosition(0);
     }
@@ -172,7 +162,7 @@ public class Elevator extends SubsystemBase {
         return Math.abs(setpoint - getElevatorHeight());
     }
 
-    private boolean atSetpoint(){
+    public boolean atSetpoint(){
         return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
     }
 
@@ -210,7 +200,6 @@ public class Elevator extends SubsystemBase {
     }
 
     private void logData(){
-        //Shuffleboard.getTab("elevator").add("Lock Elevator?", lockElevator);
         //Shuffleboard.getTab("elevator").add("Elevator Setpoint", setpoint);
         //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
         // SmartDashboard.putNumber("Elevator Setpoint", setpoint);

@@ -3,6 +3,7 @@ package frc.robot.commands.elevator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorState;
 
 public class SetElevatorHeight extends CommandBase {
     
@@ -28,20 +29,12 @@ public class SetElevatorHeight extends CommandBase {
 
     @Override
     public void execute() {
-        
-        atHeight = elevator.setState(height);
-
+        elevator.setState(ElevatorState.SETPOINT);
     }
 
     @Override
     public boolean isFinished() {
-        return atHeight;
+        return elevator.atSetpoint();
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        //elevator.holdAtWantedState();
-        elevator.setPercentOutput(0);
-        
-    }
 }
