@@ -46,6 +46,7 @@ public class Elevator extends SubsystemBase {
         JOG,
         SETPOINT,
         ZERO,
+        STOW,
         OFF
     }
 
@@ -104,6 +105,9 @@ public class Elevator extends SubsystemBase {
             case JOG:
                 setPercentOutput(jogInput);
                 break;
+            case STOW:
+                goToSetpoint();
+                break;
             default:
                 break;
         }
@@ -116,7 +120,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean setState(ElevatorSetpoint wantedState){
-        setState(ElevatorState.SETPOINT);
+        setElevatorState(ElevatorState.SETPOINT);
         setpoint = elevatorHeights.get(wantedState);
         elevatorController.setReference(setpoint, ControlType.kSmartMotion);
 
@@ -132,7 +136,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public boolean setState(double setpoint){
-        setState(ElevatorState.SETPOINT);
+        setElevatorState(ElevatorState.SETPOINT);
 
         this.setpoint = setpoint;
 
@@ -140,6 +144,7 @@ public class Elevator extends SubsystemBase {
 
         return atSetpoint();
     }
+
 
     public void setJogInput(double val){
         jogInput = val;
@@ -197,9 +202,11 @@ public class Elevator extends SubsystemBase {
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
 
+    }
 
-
-
+    private void configElevatorDownwardConstraints(){
+        elevatorController.setSmartMotionMaxVelocity(3500, 0);
+        elevatorController.setSmartMotionMaxAccel(2000, 0);
     }
 
     private void logData(){
@@ -209,6 +216,17 @@ public class Elevator extends SubsystemBase {
         //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
         // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         // SmartDashboard.putString("Elevator State", getCurrentState().toString());
+    }
+
+    public void setElevatorState(ElevatorState state){
+        this.state = state;
+
+        if(state==ElevatorState.STOW){
+            configElevatorDownwardConstraints();
+            setpoint = 0;
+        }
+        else
+            configElevatorMotor();
     }
 
 }

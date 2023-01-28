@@ -128,7 +128,6 @@ public class Wrist extends SubsystemBase {
         //wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
         //wristMotor.configReverseSoftLimitEnable(true);
 
-
     }
 
     public void setWristState(WristState state){

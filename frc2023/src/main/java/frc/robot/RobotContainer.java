@@ -10,6 +10,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
 import frc.robot.commands.elevator.SetElevatorHeight;
+import frc.robot.commands.elevator.StowElevator;
 import frc.robot.commands.intake.RunIntake;
 import frc.robot.commands.wrist.JogWrist;
 import frc.robot.commands.wrist.SetWristAngle;
@@ -89,7 +90,7 @@ public class RobotContainer {
 
     //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
     m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false)));
-    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false)));
     //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
 
     //m_driverController.a().whileTrue(new JogWrist(false, wrist));
