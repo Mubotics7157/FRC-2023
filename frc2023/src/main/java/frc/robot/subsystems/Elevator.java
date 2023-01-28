@@ -96,7 +96,7 @@ public class Elevator extends SubsystemBase {
                 setPercentOutput(0);
                 break;
             case SETPOINT:
-                setState(setpoint);
+                goToSetpoint();
                 break;
             case ZERO:
                 //TODO: add zeroing routine
@@ -127,12 +127,16 @@ public class Elevator extends SubsystemBase {
         this.state = state;
     }
 
+    private void goToSetpoint(){
+        elevatorController.setReference(setpoint, ControlType.kSmartMotion);   
+    }
+
     public boolean setState(double setpoint){
         setState(ElevatorState.SETPOINT);
 
         this.setpoint = setpoint;
 
-        elevatorController.setReference(setpoint, ControlType.kPosition);
+        //elevatorController.setReference(setpoint, ControlType.kPosition);
 
         return atSetpoint();
     }
@@ -182,17 +186,11 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
         //elevatorMotor.enableSoftLimit(null, false)
-        elevatorController.setP(.005);
-        elevatorController.setI(0);
-        elevatorController.setD(0);
-        elevatorController.setFF(0);
-        elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
-        elevatorController.setOutputRange(-1, 1, 0);
+        //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
+        elevatorController.setOutputRange(-.25, 1, 0);
 
-        elevatorController.setSmartMotionMaxAccel(setpoint, 0);
-        elevatorController.setSmartMotionMaxVelocity(setpoint, 0);
         elevatorController.setP(.00003);
-        elevatorController.setFF(.0002);
+        elevatorController.setFF(0.0002);
 
         elevatorController.setSmartMotionMaxVelocity(9500, 0);
         elevatorController.setSmartMotionMaxAccel(8000, 0);
@@ -205,7 +203,9 @@ public class Elevator extends SubsystemBase {
     }
 
     private void logData(){
-        //Shuffleboard.getTab("elevator").add("Elevator Setpoint", setpoint);
+        SmartDashboard.putNumber("Elevator Setpoint", setpoint);
+        SmartDashboard.putString("Elevator State", state.toString());
+        //Shuffleboard.getTab("Elevator").add("Elevator Setpoint", setpoint);
         //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
         // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         // SmartDashboard.putString("Elevator State", getCurrentState().toString());

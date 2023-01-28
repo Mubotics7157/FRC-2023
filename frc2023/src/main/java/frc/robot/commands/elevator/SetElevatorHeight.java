@@ -25,11 +25,13 @@ public class SetElevatorHeight extends CommandBase {
 
         if(useSD)
             this.height = SmartDashboard.getNumber("elevator setpoint", 0);
+            elevator.setState(height);
+
     }
 
     @Override
     public void execute() {
-        elevator.setState(ElevatorState.SETPOINT);
+        //elevator.setState(ElevatorState.SETPOINT);
     }
 
     @Override

@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -84,10 +85,12 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
-    m_driverController.leftBumper().whileTrue(new SetElevatorHeight(50000, elevator, false));
-    m_driverController.leftBumper().onFalse(new SetElevatorHeight(0, elevator, false));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
+    //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
+
+    //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false)));
+    //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
 
     //m_driverController.a().whileTrue(new JogWrist(false, wrist));
     //m_driverController.y().whileTrue(new JogWrist(true, wrist));
