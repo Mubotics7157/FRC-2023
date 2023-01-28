@@ -82,7 +82,6 @@ public class Elevator extends SubsystemBase {
         OrangeUtility.sleep(1000);
         SmartDashboard.putNumber("elevator setpoint", 0);
 
-        elevatorController.setOutputRange(-.25, .25, 0);
 
     }
 
@@ -119,7 +118,7 @@ public class Elevator extends SubsystemBase {
     public boolean setState(ElevatorSetpoint wantedState){
         setState(ElevatorState.SETPOINT);
         setpoint = elevatorHeights.get(wantedState);
-        elevatorController.setReference(setpoint, ControlType.kPosition);
+        elevatorController.setReference(setpoint, ControlType.kSmartMotion);
 
         return atSetpoint();
     }
@@ -175,8 +174,7 @@ public class Elevator extends SubsystemBase {
         }
     }
 
-    private void 
-    configElevatorMotor(){
+    private void configElevatorMotor(){
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
@@ -189,10 +187,21 @@ public class Elevator extends SubsystemBase {
         elevatorController.setD(0);
         elevatorController.setFF(0);
         elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
+        elevatorController.setOutputRange(-1, 1, 0);
 
-        // elevatorController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, 0);
-        // elevatorController.setSmartMotionMaxAccel(setpoint, 0);
-        // elevatorController.setSmartMotionMaxVelocity(setpoint, 0);
+        elevatorController.setSmartMotionMaxAccel(setpoint, 0);
+        elevatorController.setSmartMotionMaxVelocity(setpoint, 0);
+        elevatorController.setP(.00003);
+        elevatorController.setFF(.0002);
+
+        elevatorController.setSmartMotionMaxVelocity(9500, 0);
+        elevatorController.setSmartMotionMaxAccel(8000, 0);
+        elevatorController.setSmartMotionMinOutputVelocity(0, 0);
+        elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
+
+
+
+
     }
 
     private void logData(){
