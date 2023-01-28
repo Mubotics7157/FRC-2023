@@ -1,50 +1,37 @@
 package frc.robot.commands.wrist;
+
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristState;
 
 public class SetWristAngle extends CommandBase{
 
     private Wrist wrist;
     private Rotation2d setpoint;
-    private boolean useSD;
+  
 
-    public SetWristAngle(Rotation2d setpoint,Wrist instance, boolean useSD){
-        this.setpoint = setpoint;
-        this.useSD = useSD;
-
+    public SetWristAngle(Wrist instance, Rotation2d setpoint){
         wrist = instance;
+        this.setpoint = setpoint;
+
         addRequirements(wrist);
-
-       
-
-
     }
 
     @Override
     public void initialize() {
-        wrist.setGains();
-
-         if(useSD)
-            this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
+        
+        wrist.setSetpoint(setpoint);
     }
 
     @Override
     public void execute() {
-
-        if(useSD)
-            this.setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("wrist setpoint", 175));
-
-        wrist.setSetpoint(setpoint);
-
-            
+        
+        wrist.setWristState(WristState.SETPOINT);
     }
 
     @Override
     public void end(boolean interrupted) {
-        //wrist.setHolding(true);
-        
+            wrist.setWristState(WristState.HOLD);
     }
 }
