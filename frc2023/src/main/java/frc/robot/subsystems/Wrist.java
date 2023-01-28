@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -17,7 +19,7 @@ public class Wrist extends SubsystemBase {
 
     public enum WristState{
         OFF,
-        HOLD,
+        STOW,
         JOG,
         SETPOINT
     }
@@ -40,7 +42,7 @@ public class Wrist extends SubsystemBase {
 
         configWristDefault();
 
-        wristState = WristState.OFF;
+        wristState = WristState.STOW;
        
     }
 
@@ -70,6 +72,9 @@ public class Wrist extends SubsystemBase {
             case SETPOINT:
                 setState();
                 break;
+            case STOW:
+                setState();
+                break;
         }
     }
 
@@ -91,11 +96,14 @@ public class Wrist extends SubsystemBase {
     }
 
     private void setState(){
+        //double armFF  = WristConstants.ARM_FF.calculate(setpoint.getRadians(), Math.PI/2,Math.PI);
+        //wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60),DemandType.ArbitraryFeedForward,armFF);
+        //wristMotor.setVoltage(armFF);
         wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
     }
 
     public void setGains(){
-        wristMotor.config_kP(0, .075);
+        wristMotor.config_kP(0, WristConstants.WRIST_CONTROLLER_KP);
     }
 
 
@@ -116,7 +124,7 @@ public class Wrist extends SubsystemBase {
         wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = .075;
+        config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 30000;
         config.motionAcceleration = 15000;
         wristMotor.configAllSettings(config);
@@ -125,13 +133,16 @@ public class Wrist extends SubsystemBase {
 
         //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
         //wristMotor.configForwardSoftLimitEnable(true);
-        //wristMotor.configReverseSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
-        //wristMotor.configReverseSoftLimitEnable(true);
+        wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
+        wristMotor.configForwardSoftLimitEnable(true);
 
     }
 
     public void setWristState(WristState state){
         wristState = state;
+
+        if(state==WristState.STOW)
+            setpoint = Rotation2d.fromDegrees(-76);
     }
 
     private void logData(){

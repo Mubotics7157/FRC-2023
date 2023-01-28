@@ -79,7 +79,6 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        //TODO: ask harshal abt further clarification for regular intake current limit
         
     }
 

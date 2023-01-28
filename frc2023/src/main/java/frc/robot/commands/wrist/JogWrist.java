@@ -31,7 +31,7 @@ public class JogWrist extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        wrist.setWristState(WristState.HOLD);
+        wrist.setWristState(WristState.STOW);
     
     }
 

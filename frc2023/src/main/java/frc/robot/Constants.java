@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -119,10 +120,18 @@ public final class Constants {
       public static final int ABS_ENCODER_PORT = 0;
 
 
-      public static final double WRIST_CONTROLLER_KP = .3;
+      public static final double WRIST_CONTROLLER_KP = 0;//.075
       public static final double WRIST_CONTROLLER_KI = 0;
       public static final double WRIST_CONTROLLER_KD = 0;
       public static final double WRIST_CONTROLLER_KF = 0;
+
+      public static final double WRIST_KS = .13938;
+      public static final double WRIST_KV = 1.08;
+      public static final double WRIST_KG = 1.45;
+      public static final double WRIST_KA = .0020997;
+
+
+      public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
     }
 
     public static class IntakeConstants{
