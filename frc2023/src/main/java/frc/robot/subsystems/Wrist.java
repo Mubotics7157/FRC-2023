@@ -14,19 +14,33 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.util.CommonConversions;
 
 public class Wrist extends SubsystemBase {
+
+    public enum WristState{
+        OFF,
+        HOLD,
+        JOG,
+        SETPOINT
+    }
+
     private WPI_TalonFX wristMotor;
     private DutyCycleEncoder wristEncoder;
     private Rotation2d setpoint = Rotation2d.fromDegrees(0);
     private static Wrist instance = new Wrist();
     private boolean holdAtWantedState;
+    private double jogVal;
+
+    private WristState wristState;
     
     public Wrist(){
+        jogVal = 0;
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
         wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
   
         holdAtWantedState = false;
 
         configWristDefault();
+
+        wristState = WristState.OFF;
        
     }
 
@@ -40,11 +54,34 @@ public class Wrist extends SubsystemBase {
             wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
 
         logData();
+
+        WristState snapWristState;
+        synchronized(this){
+            snapWristState = wristState;
+        }
+
+        switch(snapWristState){
+            case OFF:
+                jog(0);
+                break;
+            case HOLD:
+                setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60));
+                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
+                break;
+            case JOG:
+                jog(jogVal);
+                break;
+            case SETPOINT:
+                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
+                break;
+        }
     }
 
     public void jog(double val){
-        wristMotor.set(ControlMode.PercentOutput, val);
+        jogVal = val;
     }
+
+
 
     public void setHolding(boolean hold){
         setGains();
@@ -92,6 +129,10 @@ public class Wrist extends SubsystemBase {
         //wristMotor.configReverseSoftLimitEnable(true);
 
 
+    }
+
+    public void setWristState(WristState state){
+        wristState = state;
     }
 
     private void logData(){
