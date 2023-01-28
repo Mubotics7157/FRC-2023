@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +39,17 @@ public class Elevator extends SubsystemBase {
     private ShuffleboardTab tab = Shuffleboard.getTab("Elevator");
 
     private DutyCycleEncoder absoluteEncoder;
+
+    private ElevatorState state = ElevatorState.OFF;
+
+    private double jogInput = 0;
+    
+    public enum ElevatorState{
+        JOG,
+        SETPOINT,
+        ZERO,
+        OFF
+    }
 
     public enum ElevatorSetpoint{
         STOW,
@@ -83,6 +95,23 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
+        switch(state){
+            case OFF:
+                setPercentOutput(0);
+                break;
+            case SETPOINT:
+                setState(setpoint);
+                break;
+            case ZERO:
+                //TODO: add zeroing routine
+                break;
+            case JOG:
+                setPercentOutput(jogInput);
+                break;
+            default:
+                break;
+        }
+
         logData();
     }
 
@@ -100,6 +129,10 @@ public class Elevator extends SubsystemBase {
         return atSetpoint();
     }
 
+    public void setState(ElevatorState state){
+        this.state = state;
+    }
+
     public boolean setState(double setpoint){
         lockElevator = false;
 
@@ -108,6 +141,10 @@ public class Elevator extends SubsystemBase {
         elevatorController.setReference(setpoint, ControlType.kPosition);
 
         return atSetpoint();
+    }
+
+    public void setJogInput(double val){
+        jogInput = val;
     }
 
     public boolean holdAtWantedState(){
