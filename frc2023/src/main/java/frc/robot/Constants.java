@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -50,38 +51,33 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = .1016;
 
 
-    public static final int FRONT_LEFT_DRIVE_PORT = 1;
+    public static final int REAR_RIGHT_DRIVE_PORT = 1;
     public static final int FRONT_RIGHT_DRIVE_PORT = 4;
-    public static final int REAR_LEFT_DRIVE_PORT = 7;
-    public static final int REAR_RIGHT_DRIVE_PORT = 10;
+    public static final int FRONT_LEFT_DRIVE_PORT = 7;
+    public static final int REAR_LEFT_DRIVE_PORT = 10;
 
-    public static final int FRONT_LEFT_TURN_PORT = 2;
+    public static final int REAR_RIGHT_TURN_PORT = 2;
     public static final int FRONT_RIGHT_TURN_PORT = 5;
-    public static final int REAR_LEFT_TURN_PORT = 8;
-    public static final int REAR_RIGHT_TURN_PORT = 11;
+    public static final int FRONT_LEFT_TURN_PORT = 8;
+    public static final int REAR_LEFT_TURN_PORT = 11;
 
-    public static final int FRONT_LEFT_ENCODER_PORT = 3;
+    public static final int REAR_RIGHT_ENCODER_PORT = 3;
     public static final int FRONT_RIGHT_ENCODER_PORT = 6;
-    public static final int REAR_LEFT_ENCODER_PORT = 9;
-    public static final int REAR_RIGHT_ENCODER_PORT = 12;
+    public static final int FRONT_LEFT_ENCODER_PORT = 9;
+    public static final int REAR_LEFT_ENCODER_PORT = 12;
 
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = -97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
     public static final double FRONT_RIGHT_ENCODER_OFFSET =  -167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double REAR_LEFT_ENCODER_OFFSET = -168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -107;//88.770;//173.759765625   ;//-79.716796875;//-80.439453125;
-
-    // public static SwerveModule REAR_RIGHT_MODULE = new SwerveModule(FRONT_LEFT_DRIVE_PORT,FRONT_LEFT_TURN_PORT,FRONT_LEFT_ENCODER_PORT,FRONT_LEFT_ENCODER_OFFSET, true);
-    // public static SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_DRIVE_PORT,FRONT_RIGHT_TURN_PORT,FRONT_RIGHT_ENCODER_PORT,FRONT_RIGHT_ENCODER_OFFSET, true);
-    // public static SwerveModule FRONT_LEFT_MODULE = new SwerveModule(REAR_LEFT_DRIVE_PORT,REAR_LEFT_TURN_PORT,REAR_LEFT_ENCODER_PORT,REAR_LEFT_ENCODER_OFFSET, true);
-    // public static SwerveModule REAR_LEFT_MODULE = new SwerveModule(REAR_RIGHT_DRIVE_PORT,REAR_RIGHT_TURN_PORT,REAR_RIGHT_ENCODER_PORT,REAR_RIGHT_ENCODER_OFFSET, true);
+    public static final double FRONT_LEFT_ENCODER_OFFSET = -168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    public static final double REAR_LEFT_ENCODER_OFFSET = -107;
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
-    public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
-    public static final Translation2d FRONT_RIGHT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
+    public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
+    public static final Translation2d FRONT_RIGHT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_RIGHT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
 
 
-    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(FRONT_LEFT_MODULE_POSITION,REAR_LEFT_MODULE_POSITION,FRONT_RIGHT_MODULE_POSITION,REAR_RIGHT_MODULE_POSITION);
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(FRONT_LEFT_MODULE_POSITION,FRONT_RIGHT_MODULE_POSITION,REAR_LEFT_MODULE_POSITION,REAR_RIGHT_MODULE_POSITION);
 
     public static final double TURN_kP = 3/2;
     public static final double TURN_kD = .015;
@@ -95,7 +91,8 @@ public final class Constants {
 
     public static class ElevatorConstants{
       public static final double ELEVATOR_GEARING = 6;
-      public static final int DEVICE_ID_ELEVATOR = 12;
+      public static final int DEVICE_ID_ELEVATOR_MASTER = 12;
+      public static final int DEVICE_ID_ELEVATOR_SLAVE = 14;
 
       public static final double WRIST_PEAK_OUTPUT_FORWARD = .75;
       public static final double WRIST_PEAK_OUTPUT_REVERSE = -.75;
@@ -106,27 +103,37 @@ public final class Constants {
 
       public static final double ZEROING_SPEED = -.05;
 
+      public static final double ELEVATOR_ZERO_HEIGHT = 0;
+
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 68.57;
-      public static final int DEVICE_ID_WRIST = 9;
+      public static final double WRIST_GEARING = 60;
+      public static final int DEVICE_ID_WRIST = 29;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
       public static final double SOFT_LIMIT_REVERSE = 0;
 
-      public static final double WRIST_PEAK_OUTPUT_FORWARD = .5;
-      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.5;
+      public static final double WRIST_PEAK_OUTPUT_FORWARD = 1;
+      public static final double WRIST_PEAK_OUTPUT_REVERSE = -1;
 
       public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
 
       public static final int ABS_ENCODER_PORT = 0;
 
 
-      public static final double WRIST_CONTROLLER_KP = .3;
+      public static final double WRIST_CONTROLLER_KP = .075;
       public static final double WRIST_CONTROLLER_KI = 0;
       public static final double WRIST_CONTROLLER_KD = 0;
       public static final double WRIST_CONTROLLER_KF = 0;
+
+      public static final double WRIST_KS = .13938;
+      public static final double WRIST_KV = 1.08;
+      public static final double WRIST_KG = 1.45;
+      public static final double WRIST_KA = .0020997;
+
+
+      public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
     }
 
     public static class VisionConstants{
@@ -138,6 +145,16 @@ public final class Constants {
  
     }
 
+    public static class IntakeConstants{
+      public static final int DEVICE_ID_INTAKE_SLAVE = 18;
+      public static final int DEVICE_ID_INTAKE_MASTER = 10;
+
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
+
+      public static final int DEVICE_ID_REV_PH = 28;
+    }
+    
 public static class FieldConstants{
   public static final AprilTag tag01= new AprilTag(
     1,

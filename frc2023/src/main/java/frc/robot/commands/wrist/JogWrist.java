@@ -3,33 +3,36 @@ package frc.robot.commands.wrist;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Wrist.WristState;
 
 public class JogWrist extends CommandBase {
-    
-    private boolean output;
-    private Wrist wrist;
 
-    public JogWrist(boolean output, Wrist instance){
-        this.output = output;
+    private Wrist wrist;
+    private double value;
+
+    public JogWrist(Wrist instance, double value){
 
         wrist = instance;
+        this.value = value;
 
         addRequirements(wrist);
     }
 
     @Override
-    public void execute() {
-        if(output){
-            wrist.jog(.75);
+    public void initialize() {
 
-        }
-        else
-            wrist.jog(-.75);
+    }
+
+    @Override
+    public void execute() {
+        wrist.jog(value);
+        wrist.setWristState(WristState.JOG);
     }
 
     @Override
     public void end(boolean interrupted) {
-        wrist.jog(0);
+        wrist.setWristState(WristState.STOW);
+    
     }
 
 

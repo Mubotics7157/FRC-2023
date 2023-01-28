@@ -21,7 +21,7 @@ public class ZeroElevator extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return elevator.isAtZero();
+        return elevator.atZero();
     }
 
     @Override

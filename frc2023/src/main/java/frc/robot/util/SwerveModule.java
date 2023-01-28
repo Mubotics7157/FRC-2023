@@ -34,8 +34,8 @@ public class SwerveModule {
         turnPID = new PIDController(.39, 0, 0); 
         turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
-        driveMotor = new WPI_TalonFX(drivePort);
-        turnMotor = new WPI_TalonFX(turnPort);
+        driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
         turnMotor.configFactoryDefault();
         driveMotor.configFactoryDefault();
@@ -58,7 +58,7 @@ public class SwerveModule {
         turnMotor.config_kP(0, .2);
         turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
 
-        absEncoder = new WPI_CANCoder(encoderPort);
+        absEncoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
     
 
         absEncoder.configFactoryDefault();

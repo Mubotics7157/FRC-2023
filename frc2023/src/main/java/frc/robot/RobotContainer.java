@@ -9,10 +9,18 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
+import frc.robot.commands.elevator.SetElevatorHeight;
+import frc.robot.commands.elevator.StowElevator;
+import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.wrist.JogWrist;
+import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.Wrist;
+import frc.robot.subsystems.Intake.IntakeState;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -34,6 +42,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -49,13 +58,15 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   
   private final Drive drive = Drive.getInstance();
   private final Tracker tracker= Tracker.getInstance();
   private final Elevator elevator = Elevator.getInstance();
+  private final Wrist wrist = Wrist.getInstance();
+  private final Intake intake = Intake.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -64,6 +75,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
     SmartDashboard.putNumber("test", 0);
+    //elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
 
   }
 
@@ -71,12 +83,32 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.75, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.75, elevator));
-  }
+    //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
 
+    //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
+    //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
+
+    //m_driverController.a().whileTrue(new JogWrist(false, wrist));
+    //m_driverController.y().whileTrue(new JogWrist(true, wrist));
+
+    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
+
+    m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
+    m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
+
+    m_driverController.a().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false));
+    m_driverController.a().onFalse(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
+
+
+
+  }
+//Big money yuoung money cash money brash money
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
