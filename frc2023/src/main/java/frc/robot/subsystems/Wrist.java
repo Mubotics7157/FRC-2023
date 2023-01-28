@@ -142,7 +142,7 @@ public class Wrist extends SubsystemBase {
         wristState = state;
 
         if(state==WristState.STOW)
-            setpoint = Rotation2d.fromDegrees(-76);
+            setpoint = Rotation2d.fromDegrees(-7);
     }
 
     private void logData(){
