@@ -150,10 +150,6 @@ public class Elevator extends SubsystemBase {
         return elevatorEncoder.getPosition();
     }
 
-    private ElevatorSetpoint getCurrentState(){
-        return currentState;
-    }
-
     private double getSetpoint(){
         return setpoint;
     }
