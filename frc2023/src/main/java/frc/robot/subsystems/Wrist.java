@@ -64,15 +64,11 @@ public class Wrist extends SubsystemBase {
             case OFF:
                 jog(0);
                 break;
-            case HOLD:
-                setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60));
-                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
-                break;
             case JOG:
                 jog(jogVal);
                 break;
             case SETPOINT:
-                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
+                setState();
                 break;
         }
     }
@@ -92,6 +88,10 @@ public class Wrist extends SubsystemBase {
 
     public void setSetpoint(Rotation2d requestedAngle){
         setpoint = requestedAngle;
+    }
+
+    private void setState(){
+        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
     }
 
     public void setGains(){
