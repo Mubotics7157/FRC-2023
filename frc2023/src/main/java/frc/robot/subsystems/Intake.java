@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeMaster; 
     private CANSparkMax intakeSlave;
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_REV_PH,PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
 
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
@@ -71,15 +71,14 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(false);
-        intakeSlave.setInverted(!intakeMaster.getInverted());
+        intakeMaster.setInverted(true);
+        intakeSlave.setInverted(false);
 
         intakeSlave.follow(intakeMaster);
 
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        //TODO: ask harshal abt further clarification for regular intake current limit
         
     }
 

@@ -7,21 +7,38 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.AlignStrafe;
+import frc.robot.commands.drive.AlignToTarget;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
+import frc.robot.commands.elevator.SetElevatorHeight;
+import frc.robot.commands.elevator.StowElevator;
 import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intake.autoIntake;
 import frc.robot.commands.wrist.JogWrist;
+import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.VisionManager;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Intake.IntakeState;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,6 +56,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -54,7 +73,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   
@@ -63,6 +82,7 @@ public class RobotContainer {
   private final Elevator elevator = Elevator.getInstance();
   private final Wrist wrist = Wrist.getInstance();
   private final Intake intake = Intake.getInstance();
+  private final VisionManager vision = VisionManager.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -71,6 +91,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
     SmartDashboard.putNumber("test", 0);
+    //elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
 
   }
 
@@ -81,18 +102,28 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    m_driverController.leftBumper().whileTrue(new JogElevator(.5, elevator));
-    m_driverController.rightBumper().whileTrue(new JogElevator(-.5, elevator));
+    //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
 
-    m_driverController.a().whileTrue(new JogWrist(false, wrist));
-    m_driverController.y().whileTrue(new JogWrist(true, wrist));
+    //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false), new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
+    //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
+
+    //m_driverController.a().whileTrue(new JogWrist(false, wrist));
+    //m_driverController.y().whileTrue(new JogWrist(true, wrist));
+
+    //m_driverController.y().whileTrue(new AlignToTarget(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, vision));
+    m_driverController.y().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision));
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
 
     m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
     m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
-    //^^^ not needed until intake has jawz :P
+
+    m_driverController.a().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false));
+    m_driverController.a().onFalse(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
+    m_driverController.povDown().onTrue(new InstantCommand(vision::toggleLED));
 
 
 
@@ -105,49 +136,69 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand(String autoToUse) {
 
-    TrajectoryConfig config = new TrajectoryConfig(.75, 1);
-    PIDController xController = new PIDController(1.25, 0, 0);
-    PIDController yController = new PIDController(1.25, 0, 0);
-    
-    xController.setTolerance(.05);
-    yController.setTolerance(.05);
 
-    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0.0, 0.0, new Rotation2d(0)),
-        List.of(
-          new Translation2d(0, .25),
-          new Translation2d(0,.5)
-        ),
-        new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
-        config
+      ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
+        autoToUse,
+        new PathConstraints(0.5, 0.5)
         );
-        /* 
-      try{
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(autoToUse);
-        testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+        HashMap<String, Command> eventMap = new HashMap<>();
+        //eventMap.put("wristy", new PrintCommand("==============================================================================================="));
+        eventMap.put("wristy", new autoIntake());
+        //eventMap.put("intakeDown", new IntakeDown());
+
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+          tracker::getOdometry, // Pose2d supplier
+          tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+          DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+          new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+          new PIDConstants(2.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+          eventMap,
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          drive // The drive subsystem. Used to properly set the requirements of path following commands
+          ); 
+
+          Command fullAuto = autoBuilder.fullAuto(pathGroup);
+     
+
+
+        return new FollowPathWithEvents(fullAuto,pathGroup.get(0).getMarkers(), eventMap);
       }
-      catch(IOException ex){
-        System.out.println();
-      }
+      /* 
+      HashMap<String, Command> eventMap = new HashMap<>();
+      eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+      //eventMap.put("intakeDown", new IntakeDown());
       */
       
   
-
-      SwerveControllerCommand swerveControllerCommand =
-    new SwerveControllerCommand(
-        testTrajectory,
-        tracker::getOdometry, // Functional interface to feed supplierx
-        DriveConstants.DRIVE_KINEMATICS,
-        // Position controllers 
-        xController,
-        yController,
-        drive.getRotationController(),
-        drive::setModuleStates,
-        drive);
-
+      //not PP
+        /* 
+        FollowPathWithEvents command = new FollowPathWithEvents(
+          swerveControllerCommand,
+          pathGroup.getMarkers(),
+          eventMap
+        );
+        */
+        /* 
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+          tracker::getOdometry, // Pose2d supplier
+          tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+          DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+          new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+          new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+          eventMap,
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          drive // The drive subsystem. Used to properly set the requirements of path following commands
+          ); 
+          
         
-        return  swerveControllerCommand;
-  }
+    Command fullAuto = autoBuilder.fullAuto(pathGroup);
+
+
+        return fullAuto;
+        */
 
   public void configurePath(){
     Trajectory testTrajectory = new Trajectory() ;

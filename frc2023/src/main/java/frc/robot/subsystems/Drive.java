@@ -17,22 +17,19 @@ import frc.robot.Constants.SwerveModuleConstants;
 public class Drive extends SubsystemBase {
     
     private static Drive instance = new Drive();
-    public SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, true);
-    public SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, true);
-    public SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, true);
-    public SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, true);
-    WPI_Pigeon2 gyro =new WPI_Pigeon2(30, SwerveModuleConstants.SWERVE_CANIVORE_ID);
-    TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
-    ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
-
-    double maxAngVel = 2 * Math.PI;
+    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
+    private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+    private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
+    private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
     public Drive(){
         rotController.setTolerance(5);
         rotController.enableContinuousInput(-Math.PI, Math.PI);
 
         gyro.reset();
-        //sgyro.setYaw(180);
     }
 
     public static Drive getInstance(){
@@ -80,7 +77,8 @@ public class Drive extends SubsystemBase {
     }
 
     public synchronized void resetHeading(){
-        Tracker.getInstance().resetHeading();    }
+        Tracker.getInstance().resetHeading();    
+    }
 
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
@@ -89,7 +87,7 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
         SwerveModulePosition[] modulePositions = {frontLeftPos,frontRightPos,rearLeftPos,rearRightPos};
-        SmartDashboard.putNumber("front Left relative Position", frontLeftPos.angle.getDegrees());
+        SmartDashboard.putNumber("front Left relative Position", frontLeftPos.distanceMeters);
         return modulePositions;
     }
 
@@ -97,16 +95,4 @@ public class Drive extends SubsystemBase {
         return rotController;
     }
 
-    public void setGains(double kP, double kD){
-        frontLeft.updateP(kP);
-        frontRight.updateP(kP);
-        rearLeft.updateP(kP);
-        rearRight.updateP(kP);
-
-        frontLeft.updateD(kD);
-        frontRight.updateD(kD);
-        rearLeft.updateD(kD);
-        rearRight.updateD(kD);
-
-    }
 }
