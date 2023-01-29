@@ -57,7 +57,6 @@ public class Robot extends TimedRobot {
 
     OrangeUtility.sleep(1000);
 
-    autoChooser.addOption("test 1", "pathplanner/generatedJSON/Test Path.wpilib.json");
     autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight-line.wpilib.json");
     SmartDashboard.putData(autoChooser);
 
@@ -106,7 +105,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("Straight-line");
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

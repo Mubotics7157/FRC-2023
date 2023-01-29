@@ -133,38 +133,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand(String autoToUse) {
 
-    TrajectoryConfig config = new TrajectoryConfig(.75, 1);
-    PIDController xController = new PIDController(1.25, 0, 0);
-    PIDController yController = new PIDController(1.25, 0, 0);
-    
-    xController.setTolerance(.05);
-    yController.setTolerance(.05);
 
-    
-    Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0.0, 0.0, new Rotation2d(0)),
-        List.of(
-          new Translation2d(0, .25),
-          new Translation2d(0,.5)
-        ),
-        new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
-        config
-        );
-        
-        
-      try{
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(autoToUse);
-        testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      }
-      catch(IOException ex){
-        System.out.println();
-      }
-      
-    
-
-      //PathPlannerTrajectory examplePath = PathPlanner.loadPath(autoToUse, new PathConstraints(0.5, 0.5));
-
-      try{
       ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
         autoToUse,
         new PathConstraints(0.5, 0.5)
@@ -179,7 +148,7 @@ public class RobotContainer {
           tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
           new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-          new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          new PIDConstants(0.25, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
           drive::setModuleStates, // Module states consumer used to output to the drive subsystem
           eventMap,
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -190,22 +159,6 @@ public class RobotContainer {
 
 
         return fullAuto;
-      }
-      catch(Exception ex){
-        System.out.print("===========================================================================================");
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        testTrajectory,
-        tracker::getOdometry, // Functional interface to feed supplierx
-        DriveConstants.DRIVE_KINEMATICS,
-        // Position controllers 
-        xController,
-        yController,
-        drive.getRotationController(),
-        drive::setModuleStates,
-        drive);
-
-        return new ExampleCommand(m_exampleSubsystem);
-        //System.out.println();
       }
       /* 
       HashMap<String, Command> eventMap = new HashMap<>();
@@ -241,7 +194,6 @@ public class RobotContainer {
 
         return fullAuto;
         */
-  }
 
   public void configurePath(){
     Trajectory testTrajectory = new Trajectory() ;
