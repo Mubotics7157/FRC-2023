@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AlignToTarget;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
@@ -99,7 +100,8 @@ public class RobotContainer {
     //m_driverController.a().whileTrue(new JogWrist(false, wrist));
     //m_driverController.y().whileTrue(new JogWrist(true, wrist));
 
-    m_driverController.y().whileTrue(new AlignToTarget(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, vision));
+    //m_driverController.y().whileTrue(new AlignToTarget(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, vision));
+    m_driverController.y().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision));
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
