@@ -22,7 +22,7 @@ public class AlignToTarget extends CommandBase{
     private boolean atGoal;
     private double deltaSpeed;
 
-    private DoubleSupplier fwd, str;
+    private DoubleSupplier fwd, str, rot;
 
     public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
@@ -30,9 +30,10 @@ public class AlignToTarget extends CommandBase{
         drive.setModuleStates(states);
     }
 
-    public AlignToTarget(DoubleSupplier fwd, DoubleSupplier str,Drive dInstance, VisionManager vInstance){
+    public AlignToTarget(DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot, Drive dInstance, VisionManager vInstance){
         this.fwd = fwd;
         this.str = str;
+        this.rot = rot;
 
         drive = dInstance;
         vision = vInstance;
@@ -69,6 +70,7 @@ public class AlignToTarget extends CommandBase{
 
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
+        double omega = modifyInputs(rot.getAsDouble(), true);
         
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
         double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
@@ -81,17 +83,23 @@ public class AlignToTarget extends CommandBase{
             atGoal = true;
         }
 
+        if(vision.limeHasTargets()){
         driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+        }
+        else
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, Tracker.getInstance().getOdometry().getRotation()));
 
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
         SmartDashboard.putBoolean("On target", controller.atGoal());
     }
 
+    /* 
     @Override
     public boolean isFinished() {
         return atGoal;
     }
+    */
     @Override
     public void end(boolean interrupted) {
         driveFromChassis(new ChassisSpeeds());
