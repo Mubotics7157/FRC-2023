@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Tracker;
 
 public class DriveTele extends CommandBase {
 
@@ -54,7 +55,7 @@ public class DriveTele extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, drive.getDriveHeading()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getOdometry().getRotation()));
     }
 
     @Override

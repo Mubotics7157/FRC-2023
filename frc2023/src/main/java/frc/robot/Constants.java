@@ -5,11 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -73,6 +76,7 @@ public final class Constants {
     public static final Translation2d FRONT_RIGHT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_RIGHT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,-WHEELBASE_LENGTH/2);
 
+    public static final int DEVICE_ID_PIGEON = 30;
 
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(FRONT_LEFT_MODULE_POSITION,FRONT_RIGHT_MODULE_POSITION,REAR_LEFT_MODULE_POSITION,REAR_RIGHT_MODULE_POSITION);
 
@@ -105,24 +109,41 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 68.57;
+      public static final double WRIST_GEARING = 60;
       public static final int DEVICE_ID_WRIST = 29;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
       public static final double SOFT_LIMIT_REVERSE = 0;
 
-      public static final double WRIST_PEAK_OUTPUT_FORWARD = .5;
-      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.5;
+      public static final double WRIST_PEAK_OUTPUT_FORWARD = 1;
+      public static final double WRIST_PEAK_OUTPUT_REVERSE = -1;
 
       public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
 
       public static final int ABS_ENCODER_PORT = 0;
 
 
-      public static final double WRIST_CONTROLLER_KP = .3;
+      public static final double WRIST_CONTROLLER_KP = .075;
       public static final double WRIST_CONTROLLER_KI = 0;
       public static final double WRIST_CONTROLLER_KD = 0;
       public static final double WRIST_CONTROLLER_KF = 0;
+
+      public static final double WRIST_KS = .13938;
+      public static final double WRIST_KV = 1.08;
+      public static final double WRIST_KG = 1.45;
+      public static final double WRIST_KA = .0020997;
+
+
+      public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
+    }
+
+    public static class VisionConstants{
+      public static final double LIME_TO_INTAKE_METERS = 0.25;
+      //^^^ number is arbitrary
+      public static final Transform3d SHUTTER_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
+      public static final Transform3d LIME_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
+      //TODO: figure out the translations cuz its 0, 0, 0 rn soooooo :P
+ 
     }
 
     public static class IntakeConstants{
@@ -134,6 +155,7 @@ public final class Constants {
 
       public static final int DEVICE_ID_REV_PH = 28;
     }
+
 public static class FieldConstants{
   public static final AprilTag tag01= new AprilTag(
     1,

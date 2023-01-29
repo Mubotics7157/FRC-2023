@@ -14,7 +14,7 @@ public class OrangeUtility {
      * @param mess the string to be parsed
      * @return the double value extracted from the string
      */
-    public static double cleanDoubleParse(String mess)// TODO: encapsulate
+    public static double cleanDoubleParse(String mess)
     // special replaceall
     {
         String result = mess;
@@ -45,7 +45,7 @@ public class OrangeUtility {
      * @param mess the string to be parsed
      * @return the int value extracted from the string
      */
-    public static int cleanIntParse(String mess)// TODO: encapsulate special
+    public static int cleanIntParse(String mess)
     // replaceall
     {
         String result = mess;
