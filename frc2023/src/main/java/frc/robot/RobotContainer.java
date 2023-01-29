@@ -14,6 +14,7 @@ import frc.robot.commands.elevator.JogElevator;
 import frc.robot.commands.elevator.SetElevatorHeight;
 import frc.robot.commands.elevator.StowElevator;
 import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intake.autoIntake;
 import frc.robot.commands.wrist.JogWrist;
 import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
@@ -36,6 +37,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -140,7 +143,8 @@ public class RobotContainer {
         );
 
         HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        //eventMap.put("wristy", new PrintCommand("==============================================================================================="));
+        eventMap.put("wristy", new autoIntake());
         //eventMap.put("intakeDown", new IntakeDown());
 
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
@@ -148,7 +152,7 @@ public class RobotContainer {
           tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
           new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-          new PIDConstants(0.25, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          new PIDConstants(2.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
           drive::setModuleStates, // Module states consumer used to output to the drive subsystem
           eventMap,
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -156,9 +160,10 @@ public class RobotContainer {
           ); 
 
           Command fullAuto = autoBuilder.fullAuto(pathGroup);
+     
 
 
-        return fullAuto;
+        return new FollowPathWithEvents(fullAuto,pathGroup.get(0).getMarkers(), eventMap);
       }
       /* 
       HashMap<String, Command> eventMap = new HashMap<>();
