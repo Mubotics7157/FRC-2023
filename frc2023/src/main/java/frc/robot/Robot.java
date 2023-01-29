@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.VisionManager;
+import frc.robot.util.OrangeUtility;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -53,6 +55,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    OrangeUtility.sleep(1000);
+
     autoChooser.addOption("test 1", "pathplanner/generatedJSON/Test Path.wpilib.json");
     autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight line.wpilib.json");
     SmartDashboard.putData(autoChooser);
@@ -62,6 +66,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("elevator setpoint", 0);
     SmartDashboard.putNumber("wrist setpoint", 0);
     SmartDashboard.putNumber("Intake Angle Degrees", 0);
+    SmartDashboard.putNumber("Align kP", 0);
   }
 
   /**
@@ -87,6 +92,8 @@ public class Robot extends TimedRobot {
       // SmartDashboard.getNumber("gyro controller D", 0)
       // 
       // );
+
+      SmartDashboard.putNumber("yaw", VisionManager.getInstance().getLimeYaw().getDegrees());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

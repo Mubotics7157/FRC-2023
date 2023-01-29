@@ -39,8 +39,8 @@ public class Tracker extends SubsystemBase{
     }
 
     public synchronized void updatePose(){
-        if(VisionManager.getInstance().limeHasTargets())
-            estimator.addVisionMeasurement(VisionManager.getInstance().getLimePose(), VisionManager.getInstance().getLimeLatency());   
+        //if(VisionManager.getInstance().limeHasTargets())
+            //estimator.addVisionMeasurement(VisionManager.getInstance().getLimePose(), VisionManager.getInstance().getLimeLatency());   
         
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }

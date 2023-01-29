@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.drive.AlignToTarget;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.elevator.JogElevator;
 import frc.robot.commands.elevator.SetElevatorHeight;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.VisionManager;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Intake.IntakeState;
 
@@ -67,6 +69,7 @@ public class RobotContainer {
   private final Elevator elevator = Elevator.getInstance();
   private final Wrist wrist = Wrist.getInstance();
   private final Intake intake = Intake.getInstance();
+  private final VisionManager vision = VisionManager.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -89,12 +92,14 @@ public class RobotContainer {
     //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
 
     //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false), new AlignToTarget(drive, vision)));
     m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
     //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
 
     //m_driverController.a().whileTrue(new JogWrist(false, wrist));
     //m_driverController.y().whileTrue(new JogWrist(true, wrist));
+
+    m_driverController.y().onTrue(new AlignToTarget(drive, vision));
 
     m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
@@ -104,6 +109,7 @@ public class RobotContainer {
 
     m_driverController.a().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false));
     m_driverController.a().onFalse(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
+    m_driverController.povDown().onTrue(new InstantCommand(vision::toggleLED));
 
 
 

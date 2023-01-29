@@ -16,6 +16,8 @@ public class AlignToTarget extends CommandBase{
     private Drive drive;
     private VisionManager vision;
     private ProfiledPIDController controller;
+    private boolean atGoal;
+    private double deltaSpeed;
 
     public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
@@ -32,28 +34,36 @@ public class AlignToTarget extends CommandBase{
 
     @Override
     public void initialize() {
-        controller = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , Math.PI));
+        atGoal= false;
+        controller = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
         controller.enableContinuousInput(-Math.PI, Math.PI);
-        controller.setTolerance(Units.degreesToRadians(1));
+        controller.setTolerance(Units.degreesToRadians(3));
+
     }
 
     @Override
     public void execute() {
-        controller.setP(SmartDashboard.getNumber("Align kP", 0));
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
         double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
-        double deltaSpeed = controller.calculate(error);
 
-        driveFromChassis(new ChassisSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY));
+        if(Math.abs(error)>Units.degreesToRadians(3))
+            deltaSpeed = controller.calculate(error);
+        else{
+            deltaSpeed =0;
+            atGoal = true;
+        }
+
+        driveFromChassis(new ChassisSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY));
 
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
+        SmartDashboard.putBoolean("On target", controller.atGoal());
     }
 
     @Override
     public boolean isFinished() {
-        return controller.atGoal() || !vision.limeHasTargets();
+        return atGoal;
     }
     @Override
     public void end(boolean interrupted) {
