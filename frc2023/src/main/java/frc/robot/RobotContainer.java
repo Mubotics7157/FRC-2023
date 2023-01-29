@@ -93,7 +93,7 @@ public class RobotContainer {
     //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
 
     //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false), new AlignToTarget(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, vision)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false), new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision)));
     m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
     //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
 
