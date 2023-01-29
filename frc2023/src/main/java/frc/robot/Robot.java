@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
     OrangeUtility.sleep(1000);
 
     autoChooser.addOption("test 1", "pathplanner/generatedJSON/Test Path.wpilib.json");
-    autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight line.wpilib.json");
+    autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight-line.wpilib.json");
     SmartDashboard.putData(autoChooser);
 
     SmartDashboard.putNumber("Intake Speed", .5);

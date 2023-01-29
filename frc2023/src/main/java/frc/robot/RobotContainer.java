@@ -27,7 +27,15 @@ import frc.robot.subsystems.Intake.IntakeState;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -46,6 +54,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -131,6 +140,7 @@ public class RobotContainer {
     xController.setTolerance(.05);
     yController.setTolerance(.05);
 
+    
     Trajectory testTrajectory = TrajectoryGenerator.generateTrajectory(
         new Pose2d(0.0, 0.0, new Rotation2d(0)),
         List.of(
@@ -140,7 +150,8 @@ public class RobotContainer {
         new Pose2d(0,.75 , Rotation2d.fromDegrees(90)),
         config
         );
-        /* 
+        
+        
       try{
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(autoToUse);
         testTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
@@ -148,12 +159,41 @@ public class RobotContainer {
       catch(IOException ex){
         System.out.println();
       }
-      */
       
-  
+    
 
-      SwerveControllerCommand swerveControllerCommand =
-    new SwerveControllerCommand(
+      //PathPlannerTrajectory examplePath = PathPlanner.loadPath(autoToUse, new PathConstraints(0.5, 0.5));
+
+      try{
+      ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(
+        autoToUse,
+        new PathConstraints(0.5, 0.5)
+        );
+
+        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        //eventMap.put("intakeDown", new IntakeDown());
+
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+          tracker::getOdometry, // Pose2d supplier
+          tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+          DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+          new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+          new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+          eventMap,
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          drive // The drive subsystem. Used to properly set the requirements of path following commands
+          ); 
+
+          Command fullAuto = autoBuilder.fullAuto(pathGroup);
+
+
+        return fullAuto;
+      }
+      catch(Exception ex){
+        System.out.print("===========================================================================================");
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         testTrajectory,
         tracker::getOdometry, // Functional interface to feed supplierx
         DriveConstants.DRIVE_KINEMATICS,
@@ -164,8 +204,43 @@ public class RobotContainer {
         drive::setModuleStates,
         drive);
 
+        return new ExampleCommand(m_exampleSubsystem);
+        //System.out.println();
+      }
+      /* 
+      HashMap<String, Command> eventMap = new HashMap<>();
+      eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+      //eventMap.put("intakeDown", new IntakeDown());
+      */
+      
+  
+      //not PP
+        /* 
+        FollowPathWithEvents command = new FollowPathWithEvents(
+          swerveControllerCommand,
+          pathGroup.getMarkers(),
+          eventMap
+        );
+        */
+        /* 
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+          tracker::getOdometry, // Pose2d supplier
+          tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+          DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+          new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+          new PIDConstants(0.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          drive::setModuleStates, // Module states consumer used to output to the drive subsystem
+          eventMap,
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          drive // The drive subsystem. Used to properly set the requirements of path following commands
+          ); 
+          
         
-        return  swerveControllerCommand;
+    Command fullAuto = autoBuilder.fullAuto(pathGroup);
+
+
+        return fullAuto;
+        */
   }
 
   public void configurePath(){
