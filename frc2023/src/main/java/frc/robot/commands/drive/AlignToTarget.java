@@ -1,5 +1,7 @@
 package frc.robot.commands.drive;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -10,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
 
 public class AlignToTarget extends CommandBase{
@@ -19,17 +22,37 @@ public class AlignToTarget extends CommandBase{
     private boolean atGoal;
     private double deltaSpeed;
 
+    private DoubleSupplier fwd, str;
+
     public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.MAX_TANGENTIAL_VELOCITY);
         drive.setModuleStates(states);
     }
 
-    public AlignToTarget(Drive dInstance, VisionManager vInstance){
+    public AlignToTarget(DoubleSupplier fwd, DoubleSupplier str,Drive dInstance, VisionManager vInstance){
+        this.fwd = fwd;
+        this.str = str;
+
         drive = dInstance;
         vision = vInstance;
         addRequirements(drive);
         addRequirements(vision);
+    }
+
+    private double modifyInputs(double val, boolean isRot){
+        if(isRot){
+            if(Math.abs(val)<.15){
+                val = 0;
+            }
+            return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+        }
+        else{
+            if(Math.abs(val)<.1){
+                val = 0;
+            }
+            return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+        }
     }
 
     @Override
@@ -43,6 +66,10 @@ public class AlignToTarget extends CommandBase{
 
     @Override
     public void execute() {
+
+        double vx =  modifyInputs(fwd.getAsDouble(),false);
+        double vy =  modifyInputs(str.getAsDouble(),false);
+        
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
         double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
@@ -54,7 +81,7 @@ public class AlignToTarget extends CommandBase{
             atGoal = true;
         }
 
-        driveFromChassis(new ChassisSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
 
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
