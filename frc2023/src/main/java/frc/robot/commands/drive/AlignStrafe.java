@@ -92,14 +92,14 @@ public class AlignStrafe extends CommandBase{
         double strError = strTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
-            deltaSpeed = -rotController.calculate(error);
+            deltaSpeed = rotController.calculate(error);
         else{
             deltaSpeed =0;
             atGoal = true;
         }
 
         if(Math.abs(strError) > Units.degreesToRadians(3))
-            strSpeed = strController.calculate(strError);
+            strSpeed = -strController.calculate(strError);
         else
             strSpeed = 0;
 
