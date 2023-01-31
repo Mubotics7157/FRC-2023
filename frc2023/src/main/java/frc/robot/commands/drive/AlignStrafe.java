@@ -85,7 +85,7 @@ public class AlignStrafe extends CommandBase{
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
         
-        Rotation2d onTarget = Rotation2d.fromDegrees(0);
+        Rotation2d onTarget = Rotation2d.fromDegrees(180);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
         Rotation2d strTarget = Rotation2d.fromDegrees(0);

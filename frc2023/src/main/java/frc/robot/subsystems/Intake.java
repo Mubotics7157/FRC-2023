@@ -128,7 +128,7 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
@@ -156,6 +156,14 @@ public class Intake extends SubsystemBase {
         
     }
 
+    public void lockJaw(){
+        solenoid.set(Value.kForward);
+    }
+
+    public void openJaw(){
+        solenoid.set(Value.kReverse);
+    }
+    
 
     public void currentLimit(boolean enable){
         if(enable){
