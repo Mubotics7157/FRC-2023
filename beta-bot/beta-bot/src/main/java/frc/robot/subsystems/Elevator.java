@@ -197,7 +197,7 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-.25, 1, 0);
+        elevatorController.setOutputRange(-.5, 0.75, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);

@@ -149,7 +149,7 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 14;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
       public static final int DEVICE_ID_REV_PH = 9;

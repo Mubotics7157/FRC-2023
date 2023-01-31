@@ -45,6 +45,8 @@ public class Wrist extends SubsystemBase {
         configWristDefault();
 
         wristState = WristState.STOW;
+        
+        SmartDashboard.putNumber("Wrist setpoint", 0);
        
     }
 
@@ -55,7 +57,7 @@ public class Wrist extends SubsystemBase {
     @Override
     public void periodic() {
         if(holdAtWantedState)
-            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
+            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
 
         logData();
 
@@ -99,7 +101,7 @@ public class Wrist extends SubsystemBase {
         //double armFF  = WristConstants.ARM_FF.calculate(setpoint.getRadians(), Math.PI/2,Math.PI);
         //wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60),DemandType.ArbitraryFeedForward,armFF);
         //wristMotor.setVoltage(armFF);
-        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60));
+        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
     }
 
     public void setGains(){
@@ -111,7 +113,7 @@ public class Wrist extends SubsystemBase {
         return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
     }
 
-    private void zeroOnboardEncoder(){
+    public void zeroOnboardEncoder(){
         wristMotor.setSelectedSensorPosition(0);
     }
 
@@ -125,8 +127,8 @@ public class Wrist extends SubsystemBase {
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
-        config.motionCruiseVelocity = 30000;
-        config.motionAcceleration = 15000;
+        config.motionCruiseVelocity = 60000;
+        config.motionAcceleration = 60000;
         wristMotor.configAllSettings(config);
 
         zeroOnboardEncoder();
@@ -146,7 +148,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private void logData(){
-        SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)));
+        //SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)));
         SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
         SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
         SmartDashboard.putBoolean("Wrist Holding", holdAtWantedState);

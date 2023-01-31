@@ -25,13 +25,17 @@ public class SetWristAngle extends CommandBase{
     @Override
     public void initialize() {
         wrist.setWristState(WristState.SETPOINT);
+
+        if(useSD)
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", 0));
+        
         wrist.setSetpoint(setpoint);
     }
 
     @Override
     public void execute() {
         if(useSD)
-            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist Setpoint", 0));
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", 0));
 
         wrist.setSetpoint(setpoint);
     }
