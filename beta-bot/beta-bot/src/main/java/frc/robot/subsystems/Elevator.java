@@ -64,6 +64,7 @@ public class Elevator extends SubsystemBase {
     public Elevator(){
         elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_MASTER, MotorType.kBrushless);
         elevatorSlave = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_SLAVE, MotorType.kBrushless);
+
         elevatorController = elevatorMotor.getPIDController();
         elevatorEncoder = elevatorMotor.getEncoder();
 
@@ -92,6 +93,7 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         switch(state){
             case OFF:
                 setPercentOutput(0);
@@ -187,11 +189,14 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
+
         elevatorMotor.setControlFramePeriodMs(50);
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
+
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
+
         elevatorController.setOutputRange(-.25, 1, 0);
 
         elevatorController.setP(.00003);
@@ -199,9 +204,9 @@ public class Elevator extends SubsystemBase {
 
         elevatorController.setSmartMotionMaxVelocity(9500, 0);
         elevatorController.setSmartMotionMaxAccel(8000, 0);
+
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
-
     }
 
     private void configElevatorDownwardConstraints(){

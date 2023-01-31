@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.ResourceBundle.Control;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -68,6 +70,7 @@ public class Wrist extends SubsystemBase {
                 break;
             case JOG:
                 jog(jogVal);
+                wristMotor.set(ControlMode.PercentOutput, jogVal);
                 break;
             case SETPOINT:
                 setState();
@@ -85,7 +88,7 @@ public class Wrist extends SubsystemBase {
 
 
     public void setHolding(){
-        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60));
+        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 96));
     }
 
     public void setSetpoint(Rotation2d requestedAngle){
@@ -130,8 +133,8 @@ public class Wrist extends SubsystemBase {
 
         //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_FORWARD);
         //wristMotor.configForwardSoftLimitEnable(true);
-        wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
-        wristMotor.configForwardSoftLimitEnable(true);
+        //wristMotor.configForwardSoftLimitThreshold(WristConstants.SOFT_LIMIT_REVERSE);
+        //wristMotor.configForwardSoftLimitEnable(true);
 
     }
 

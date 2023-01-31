@@ -91,8 +91,8 @@ public final class Constants {
 
     public static class ElevatorConstants{
       public static final double ELEVATOR_GEARING = 6;
-      public static final int DEVICE_ID_ELEVATOR_MASTER = 12;
-      public static final int DEVICE_ID_ELEVATOR_SLAVE = 14;
+      public static final int DEVICE_ID_ELEVATOR_MASTER = 10;
+      public static final int DEVICE_ID_ELEVATOR_SLAVE = 11;
 
       public static final double WRIST_PEAK_OUTPUT_FORWARD = .75;
       public static final double WRIST_PEAK_OUTPUT_REVERSE = -.75;
@@ -109,7 +109,7 @@ public final class Constants {
 
     public static class WristConstants{
       public static final double WRIST_GEARING = 60;
-      public static final int DEVICE_ID_WRIST = 29;
+      public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
       public static final double SOFT_LIMIT_REVERSE = 0;
@@ -146,13 +146,13 @@ public final class Constants {
     }
 
     public static class IntakeConstants{
-      public static final int DEVICE_ID_INTAKE_SLAVE = 18;
-      public static final int DEVICE_ID_INTAKE_MASTER = 10;
+      public static final int DEVICE_ID_INTAKE_SLAVE = 21;
+      public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
-      public static final int DEVICE_ID_REV_PH = 28;
+      public static final int DEVICE_ID_REV_PH = 9;
     }
 
 public static class FieldConstants{

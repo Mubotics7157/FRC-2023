@@ -8,27 +8,29 @@ import frc.robot.subsystems.Drive;
 public class DriveTele extends CommandBase {
 
     private Drive drive;
-    private double left;
-    private double right;
+    private DoubleSupplier left;
+    private DoubleSupplier right;
 
+    /* 
     private void applyDeadband(){
-        if(Math.abs(left)<.2)
-            left = 0;
-        if(Math.abs(right)<.2)
-            right = 0;
+        if(Math.abs(left.getAsDouble())<.2)
+            left.getAsDouble() = 0;
+        if(Math.abs(right.getAsDouble())<.2)
+            right.getAsDouble() = 0;
     }
+    */
 
     public DriveTele(DoubleSupplier l, DoubleSupplier r, Drive instance){
-        left = l.getAsDouble();
-        right = r.getAsDouble();
+        left = l;
+        right = r;
         drive = instance;
         addRequirements(drive);
     }
 
     @Override
     public void execute() {
-        applyDeadband();
-        drive.drive(left, right);
+        //applyDeadband();
+        drive.drive(left.getAsDouble(), right.getAsDouble());
     }
 
     @Override

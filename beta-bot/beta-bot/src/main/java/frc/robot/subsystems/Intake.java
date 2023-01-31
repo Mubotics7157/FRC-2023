@@ -60,10 +60,6 @@ public class Intake extends SubsystemBase {
         intakeController.setP(0);
         intakeController.setFF(0);
 
-        //intakeController.setOutputRange(-0.5, 0.5);
-
-        //intakeEncoder.setPosition(0);
-
         //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
         //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
 
@@ -71,8 +67,8 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(true);
-        intakeSlave.setInverted(false);
+        intakeMaster.setInverted(false);
+        intakeSlave.setInverted(!intakeMaster.getInverted());
 
         intakeSlave.follow(intakeMaster);
 
