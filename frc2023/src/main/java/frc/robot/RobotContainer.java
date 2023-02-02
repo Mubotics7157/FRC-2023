@@ -136,12 +136,21 @@ public class RobotContainer {
 
      */
     m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-113), wrist, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(intake::openJaw)));
-    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false), new InstantCommand(intake::lockJaw)));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-20), wrist, false), new InstantCommand(intake::lockJaw)));
 
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision), new SetWristAngle(Rotation2d.fromDegrees(-85), wrist, false), new SetElevatorHeight(23, elevator, false)));
-    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false), new SetElevatorHeight(0, elevator, false)));
+    m_driverController.y().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision));
+
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(/*new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision), */new SetWristAngle(Rotation2d.fromDegrees(-55), wrist, false), new SetElevatorHeight(24.5, elevator, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-20), wrist, false), new SetElevatorHeight(0, elevator, false)));
+
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
+
+    m_driverController.povDown().whileTrue(new InstantCommand(vision::getPoleOffset));
+
+    m_driverController.povRight().onTrue(new InstantCommand(vision::notColor));
+
+    m_driverController.povLeft().onTrue(new InstantCommand(vision::color));
 
     //m_driverController.a().onTrue(new InstantCommand(intake::lockJaw));
 

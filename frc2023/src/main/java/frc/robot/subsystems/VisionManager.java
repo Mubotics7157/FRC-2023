@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -31,6 +32,8 @@ public class VisionManager extends SubsystemBase{
     
     AprilTagFieldLayout aprilTagFieldLayout;
 
+    double offset;
+
     //PhotonPoseEstimator limePoseEstimator;
     //PhotonPoseEstimator shutterPoseEstimator;
     
@@ -38,6 +41,8 @@ public class VisionManager extends SubsystemBase{
     public VisionManager(){
         limeLight = new PhotonCamera("limeLight");
         limeResult = limeLight.getLatestResult();
+
+        offset = 0;
         
         // shutter = new PhotonCamera("GSC");
         // shutterResult = shutter.getLatestResult();
@@ -161,14 +166,29 @@ public class VisionManager extends SubsystemBase{
         //figure numbers out later
         limeLight.setPipelineIndex(pipeline);
     }
+
+    public void color(){
+        limeLight.setPipelineIndex(1);
+    }
+
+    public void notColor(){
+        limeLight.setPipelineIndex(0);
+    }
     public double getPoleOffset(){
         int oldPipe = limeLight.getPipelineIndex();
 
         changePipeLine(1);
+        updateResults();
         //whatever the pipeline index is for color
-        double offset = Math.tan(VisionConstants.LIME_TO_INTAKE_METERS * getLimeYaw().getRadians());
-
+        //double offset = Math.tan(VisionConstants.LIME_TO_INTAKE_METERS * getLimeYaw().getRadians());
+        double bOffset = getLimeYaw().getDegrees();
         limeLight.setPipelineIndex(oldPipe);
+        SmartDashboard.putNumber("offset vision", offset);
+        offset = bOffset;
+        return offset;
+    }
+
+    public double getBetterOffset(){
         return offset;
     }
 

@@ -27,6 +27,9 @@ public class AlignStrafe extends CommandBase{
 
     private double strSpeed;
 
+    private Rotation2d onTarget;
+    private Rotation2d strTarget;
+
     private DoubleSupplier fwd, str, rot;
 
     public void driveFromChassis(ChassisSpeeds speeds){
@@ -66,6 +69,13 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
+        vision.changePipeLine(1);
+        onTarget = Rotation2d.fromDegrees(180);
+        double offset = (.74) * vision.getBetterOffset();
+        SmartDashboard.putNumber("pole offset", offset);
+        strTarget = Rotation2d.fromDegrees(1.4 - offset);
+        vision.changePipeLine(0);
+
         atGoal= false;
         rotController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
         strController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(3 * Math.PI, 4 * Math.PI));
@@ -74,21 +84,25 @@ public class AlignStrafe extends CommandBase{
         rotController.setTolerance(Units.degreesToRadians(3));
 
         strController.enableContinuousInput(-Math.PI, Math.PI);
-        strController.setTolerance(Units.degreesToRadians(3));
+        strController.setTolerance(Units.degreesToRadians(1));
+
+
 
     }
 
     @Override
     public void execute() {
 
+        vision.changePipeLine(0);
+
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
         
-        Rotation2d onTarget = Rotation2d.fromDegrees(180);
+        //Rotation2d onTarget = Rotation2d.fromDegrees(180);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
-        Rotation2d strTarget = Rotation2d.fromDegrees(0);
+        //Rotation2d strTarget = Rotation2d.fromDegrees(0);
         double strError = strTarget.rotateBy(vision.getLimeYaw()).getRadians();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
@@ -99,7 +113,7 @@ public class AlignStrafe extends CommandBase{
         }
 
         if(Math.abs(strError) > Units.degreesToRadians(3))
-            strSpeed = -strController.calculate(strError);
+            strSpeed = strController.calculate(strError);
         else
             strSpeed = 0;
 
