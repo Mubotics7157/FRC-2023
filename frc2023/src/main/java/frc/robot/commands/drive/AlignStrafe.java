@@ -69,12 +69,12 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
-        vision.changePipeLine(1);
+        vision.changePipeline(1);
         onTarget = Rotation2d.fromDegrees(180);
-        double offset = (.74) * vision.getBetterOffset();
+        double offset = (.74) * vision.getTargetYaw().getDegrees();
         SmartDashboard.putNumber("pole offset", offset);
         strTarget = Rotation2d.fromDegrees(1.4 - offset);
-        vision.changePipeLine(0);
+        vision.changePipeline(1);
 
         atGoal= false;
         rotController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
@@ -93,7 +93,7 @@ public class AlignStrafe extends CommandBase{
     @Override
     public void execute() {
 
-        vision.changePipeLine(0);
+        vision.changePipeline(0);
 
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
@@ -103,7 +103,7 @@ public class AlignStrafe extends CommandBase{
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
         //Rotation2d strTarget = Rotation2d.fromDegrees(0);
-        double strError = strTarget.rotateBy(vision.getLimeYaw()).getRadians();
+        double strError = strTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);
@@ -117,7 +117,7 @@ public class AlignStrafe extends CommandBase{
         else
             strSpeed = 0;
 
-        if(vision.limeHasTargets())
+        if(vision.hasTargets())
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         else
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));

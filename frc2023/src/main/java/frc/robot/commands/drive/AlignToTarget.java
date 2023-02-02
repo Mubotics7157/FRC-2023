@@ -73,7 +73,7 @@ public class AlignToTarget extends CommandBase{
         double omega = modifyInputs(rot.getAsDouble(), true);
         
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
-        double error = onTarget.rotateBy(vision.getLimeYaw()).getRadians();
+        double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
 
         if(Math.abs(error)>Units.degreesToRadians(3))
@@ -83,7 +83,7 @@ public class AlignToTarget extends CommandBase{
             atGoal = true;
         }
 
-        if(vision.limeHasTargets()){
+        if(vision.hasTargets()){
         driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         }
         else
