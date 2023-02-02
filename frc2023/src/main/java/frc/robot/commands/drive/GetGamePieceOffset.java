@@ -7,7 +7,7 @@ import frc.robot.subsystems.VisionManager;
 public class GetGamePieceOffset extends CommandBase {
     private VisionManager vision;
     private boolean onPipeline;
-    private double offset = 200;
+    private double offset = 0;
 
     public GetGamePieceOffset(VisionManager instance){
         vision = instance;
@@ -22,6 +22,7 @@ public class GetGamePieceOffset extends CommandBase {
 
     @Override
     public void execute() {
+        vision.changePipeline(1);
         onPipeline = vision.getPipelineIndex() == 1.0;
 
         if(onPipeline && vision.hasTargets()){
@@ -31,10 +32,14 @@ public class GetGamePieceOffset extends CommandBase {
         
     }
 
+    /* 
     @Override
     public boolean isFinished() {
-        return offset!=200;
+        //return offset!=200;
+        return onPipeline;
     }
+    */
+
 
     @Override
     public void end(boolean interrupted) {

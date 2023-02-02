@@ -70,10 +70,10 @@ public class AlignStrafe extends CommandBase{
     @Override
     public void initialize() {
         vision.changePipeline(1);
-        onTarget = Rotation2d.fromDegrees(180);
-        double offset = (.74) * vision.getTargetYaw().getDegrees();
+        onTarget = Rotation2d.fromDegrees(0);
+        double offset = (4/15) * vision.getOffset();
         SmartDashboard.putNumber("pole offset", offset);
-        strTarget = Rotation2d.fromDegrees(1.4 - offset);
+        strTarget = Rotation2d.fromDegrees(0 + offset);
         vision.changePipeline(1);
 
         atGoal= false;
@@ -103,7 +103,7 @@ public class AlignStrafe extends CommandBase{
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
         //Rotation2d strTarget = Rotation2d.fromDegrees(0);
-        double strError = strTarget.rotateBy(vision.getTargetYaw()).getRadians();
+        double strError = -strTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);

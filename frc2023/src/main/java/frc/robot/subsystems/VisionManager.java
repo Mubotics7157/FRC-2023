@@ -135,5 +135,9 @@ public class VisionManager extends SubsystemBase{
         return offset;
     }
 
+    public double getOffset(){
+        return offset;
+    }
+
 
 }   
