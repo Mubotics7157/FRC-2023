@@ -32,9 +32,11 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
 
-  CANSparkMax intakeAngle = new CANSparkMax(14, MotorType.kBrushless);
-  SparkMaxPIDController intakeController = intakeAngle.getPIDController();
-  RelativeEncoder encoder = intakeAngle.getEncoder();
+  CANSparkMax intakeMaster = new CANSparkMax(18, MotorType.kBrushless);
+  CANSparkMax intakeSlave = new CANSparkMax(10, MotorType.kBrushless);
+  
+  SparkMaxPIDController intakeController = intakeMaster.getPIDController();
+  RelativeEncoder encoder = intakeMaster.getEncoder();
   Joystick controller = new Joystick(0);
 
   /**
@@ -49,16 +51,22 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putNumber("controller P", 0);
     SmartDashboard.putNumber("controller FF", 0);
-    SmartDashboard.putNumber("angle", 0);
+    SmartDashboard.putNumber("speed", 0);
 
-    intakeAngle.restoreFactoryDefaults();
-    intakeAngle.setInverted(false);
-    intakeController.setOutputRange(-.5, .5);
-    encoder.setPosition(0);
+
+    intakeMaster.restoreFactoryDefaults();
+    intakeSlave.restoreFactoryDefaults();
+    intakeSlave.follow(intakeMaster);
+    intakeMaster.setInverted(false);
+    intakeSlave.setInverted(intakeMaster.getInverted());
+    intakeController.setOutputRange(-1, 1);
+    //encoder.setPosition(0);
+    /* 
     intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 2000);
     intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
+    */
 
-    encoder.setPositionConversionFactor(2*Math.PI/20);
+    //encoder.setPositionConversionFactor(2*Math.PI/20);
 
 
     
@@ -73,8 +81,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("encoder value", encoder.getPosition());
-    SmartDashboard.putNumber("error", encoder.getPosition() - SmartDashboard.getNumber("angle", 0));
+    SmartDashboard.putNumber("encoder value", encoder.getVelocity());
+    SmartDashboard.putNumber("error", encoder.getVelocity() - SmartDashboard.getNumber("speed", 0));
     intakeController.setP(SmartDashboard.getNumber("controller P", 0));
     intakeController.setFF(SmartDashboard.getNumber("controller FF", 0));
   }
@@ -118,8 +126,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if(controller.getRawButton(1)){
-      intakeController.setReference(Units.degreesToRadians(SmartDashboard.getNumber("angle", 0)),com.revrobotics.CANSparkMax.ControlType.kPosition);
+      intakeController.setReference(SmartDashboard.getNumber("speed", 0), com.revrobotics.CANSparkMax.ControlType.kVelocity);
     }
+    else
+      intakeMaster.set(0);
 
   }
 
