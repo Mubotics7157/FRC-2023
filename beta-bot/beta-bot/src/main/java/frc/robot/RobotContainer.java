@@ -82,13 +82,14 @@ public class RobotContainer {
     //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(-8, elevator, true));
     //m_driverController.leftBumper().onFalse(new SetElevatorHeight(0, elevator, false));
 
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-125), wrist, true), new RunIntake(intake, IntakeState.INTAKE)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-95.5), wrist, false), new RunIntake(intake, IntakeState.INTAKE)));
     m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)/* , new InstantCommand(intake::closeJaws)*/));
 
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-24.5, elevator, true), new SetWristAngle(Rotation2d.fromDegrees(-105), wrist, true)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-24.5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true)));
     m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
 
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
+    m_driverController.a().whileTrue(new RunIntake(intake, IntakeState.INTAKE));
     //m_driverController.rightBumper().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true));
     //m_driverController.rightBumper().onFalse(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false));
 
