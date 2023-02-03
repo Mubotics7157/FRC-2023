@@ -60,8 +60,8 @@ public class Intake extends SubsystemBase {
         intakeMaster.restoreFactoryDefaults();
         intakeSlave.restoreFactoryDefaults();
 
-        intakeController.setP(0);
-        intakeController.setFF(0);
+        intakeController.setP(0.00003);
+        intakeController.setFF(0.00021);
 
         //intakeController.setOutputRange(-0.5, 0.5);
 
@@ -110,33 +110,33 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CUBE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
+                setVelocity(-2000);//(SmartDashboard.getNumber("Intake speed", 0.5));
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(2000);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(-2000);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(2000);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(true);
                 break;
             case INTAKE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(-2000);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(2000);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
@@ -153,6 +153,10 @@ public class Intake extends SubsystemBase {
     public void setMotors(double speed){
         intakeMaster.set(speed);
         intakeSlave.set(speed);
+    }
+
+    public void setVelocity(double RPM){
+        intakeController.setReference(RPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){
