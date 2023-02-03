@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -12,6 +11,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
@@ -42,6 +42,8 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
 
+    private AnalogInput gamePieceSensor;
+
     private static Intake instance = new Intake();
 
     public Intake(){
@@ -67,7 +69,7 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(false);
+        intakeMaster.setInverted(true);
         intakeSlave.setInverted(!intakeMaster.getInverted());
 
         intakeSlave.follow(intakeMaster);
@@ -75,6 +77,7 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
+        gamePieceSensor = new AnalogInput(3);
         
     }
 
@@ -85,6 +88,7 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Cone Distance", getDistanceToGamepiece());
 
         IntakeState snapIntakeState;       
         synchronized(this){
@@ -124,11 +128,11 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
-                setMotors(.1);
+                setMotors(.15);
                 break;
         }
         
@@ -151,6 +155,15 @@ public class Intake extends SubsystemBase {
             solenoid.set(Value.kReverse);
         
     }
+
+    public void closeJaws(){
+        solenoid.set(Value.kReverse);
+    }
+
+    public void openJaws(){
+        solenoid.set(Value.kForward);
+    }
+
 
 
     public void currentLimit(boolean enable){

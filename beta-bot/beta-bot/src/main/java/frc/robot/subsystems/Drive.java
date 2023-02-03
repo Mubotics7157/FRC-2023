@@ -38,9 +38,9 @@ public class Drive extends SubsystemBase{
     }
 
     public void drive(double l, double r){
-        if(Math.abs(l) < 0.2)
+        if(Math.abs(l) < 0.1)
             l = 0;
-        if(Math.abs(r) < 0.2)
+        if(Math.abs(r) < 0.1)
             r = 0;
             
         leftMaster.set(l);

@@ -177,6 +177,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void configElevatorPID(boolean useSD){
+
         if(useSD){
             elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
             elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
@@ -197,7 +198,7 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-.5, 0.75, 0);
+        elevatorController.setOutputRange(-.35, 0.15, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
