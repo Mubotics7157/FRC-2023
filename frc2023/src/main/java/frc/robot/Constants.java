@@ -147,8 +147,8 @@ public final class Constants {
     }
 
     public static class IntakeConstants{
-      public static final int DEVICE_ID_INTAKE_SLAVE = 18;
-      public static final int DEVICE_ID_INTAKE_MASTER = 10;
+      public static final int DEVICE_ID_INTAKE_SLAVE = 10;
+      public static final int DEVICE_ID_INTAKE_MASTER = 18;
 
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
