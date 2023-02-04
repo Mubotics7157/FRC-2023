@@ -47,6 +47,7 @@ public class Wrist extends SubsystemBase {
         wristState = WristState.STOW;
         
         SmartDashboard.putNumber("Wrist setpoint", 0);
+        SmartDashboard.putNumber("mid score", 0);
        
     }
 

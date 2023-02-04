@@ -20,6 +20,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Intake.IntakeState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -82,19 +83,21 @@ public class RobotContainer {
     //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(-8, elevator, true));
     //m_driverController.leftBumper().onFalse(new SetElevatorHeight(0, elevator, false));
 
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-95.5), wrist, false), new RunIntake(intake, IntakeState.INTAKE)));
-    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)/* , new InstantCommand(intake::closeJaws)*/));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-133), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE)));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
 
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-24.5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true)));
-    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-24.5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)));
 
+    m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(0), wrist, true, true)));
+    m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)));
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
     m_driverController.a().whileTrue(new RunIntake(intake, IntakeState.INTAKE));
     //m_driverController.rightBumper().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true));
     //m_driverController.rightBumper().onFalse(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false));
 
     m_driverController.povDown().onTrue(new InstantCommand(wrist::zeroOnboardEncoder, wrist));
-    m_driverController.povUp().onTrue(new InstantCommand(elevator::zeroElevator));
+    m_driverController.povUp().onTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false, false));
     m_driverController.povRight().onTrue(new InstantCommand(intake::closeJaws));
     m_driverController.povLeft().onTrue(new InstantCommand(intake::openJaws));
   }

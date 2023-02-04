@@ -11,13 +11,14 @@ public class SetWristAngle extends CommandBase{
     private Wrist wrist;
     private Rotation2d setpoint;
     private boolean useSD;
-  
+    private boolean mid;
 
-    public SetWristAngle(Rotation2d setpoint,Wrist instance, boolean useSD){
+    public SetWristAngle(Rotation2d setpoint,Wrist instance, boolean useSD, boolean mid){
         wrist = instance;
         this.setpoint = setpoint;
 
         this.useSD = useSD;
+        this.mid = mid;
 
         addRequirements(wrist);
     }
@@ -26,16 +27,22 @@ public class SetWristAngle extends CommandBase{
     public void initialize() {
         wrist.setWristState(WristState.SETPOINT);
 
-        if(useSD)
+        if(useSD && !mid)
             setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", 0));
+        else if(useSD && mid){
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("mid score", 0));
+        }
         
         wrist.setSetpoint(setpoint);
     }
 
     @Override
     public void execute() {
-        if(useSD)
+        if(useSD && !mid)
             setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", 0));
+        else if(useSD && mid){
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("mid score", 0));
+        }
 
         wrist.setSetpoint(setpoint);
     }
