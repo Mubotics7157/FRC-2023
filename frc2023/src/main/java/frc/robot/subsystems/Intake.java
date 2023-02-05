@@ -84,7 +84,7 @@ public class Intake extends SubsystemBase {
 
         gamePieceSensor = new AnalogInput(3);
 
-        configureRollerPID(0, 0, 0, 0);
+        //configureRollerPID(0, 0, 0, 0);
         
     }
 
@@ -97,7 +97,9 @@ public class Intake extends SubsystemBase {
     public void periodic() {
 
         SmartDashboard.putNumber("Cone Distance", getDistanceToGamepiece());
+        SmartDashboard.putNumber("velocity", intakeEncoder.getVelocity());
 
+        double speed = SmartDashboard.getNumber("Intake speed", 0);
         IntakeState snapIntakeState;       
         synchronized(this){
             snapIntakeState = intakeState;
@@ -110,7 +112,7 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CUBE:
                 currentLimit(false);
-                setVelocity(-2000);//(SmartDashboard.getNumber("Intake speed", 0.5));
+                setVelocity(0);//(SmartDashboard.getNumber("Intake speed", 0.5));
                 toggleIntake(false);
                 //value to be determined :P
                 break;
@@ -132,11 +134,11 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE:
                 currentLimit(false);
-                setVelocity(-2000);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(-speed);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setVelocity(2000);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(speed);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
@@ -189,7 +191,7 @@ public class Intake extends SubsystemBase {
     }
 
     private int getDistanceToGamepiece(){
-        return gamePieceSensor.getAverageValue();
+        return gamePieceSensor.getValue();
     }
 
     public double getScoringOffset(){
@@ -198,6 +200,7 @@ public class Intake extends SubsystemBase {
 
     private void setRollerSpeeds(double setpointRPM){
         intakeController.setReference(setpointRPM, ControlType.kVelocity);
+        SmartDashboard.putNumber("intake roller setpoint",setpointRPM );
     }
 
     private void configureRollerPID(double kP, double kI, double kD, double kFF){

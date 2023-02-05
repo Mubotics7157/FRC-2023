@@ -60,13 +60,14 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("straight line", "pathplanner/generatedJSON/Straight-line.wpilib.json");
     SmartDashboard.putData(autoChooser);
 
-    SmartDashboard.putNumber("Intake Speed", .5);
+    SmartDashboard.putNumber("Intake speed", .5);
     SmartDashboard.putNumber("Wrist kP", 0);
     SmartDashboard.putNumber("elevator setpoint", 0);
     SmartDashboard.putNumber("wrist setpoint", 0);
     SmartDashboard.putNumber("Intake Angle Degrees", 0);
     SmartDashboard.putNumber("Align kP", 0);
     SmartDashboard.putNumber("constant multiplier", 0);
+    SmartDashboard.putNumber("Intake FF", 0);
   }
 
   /**

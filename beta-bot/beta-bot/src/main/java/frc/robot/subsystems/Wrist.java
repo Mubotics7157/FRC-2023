@@ -1,14 +1,10 @@
 package frc.robot.subsystems;
 
-import java.util.ResourceBundle.Control;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.revrobotics.CANSparkMax.ControlType;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -32,7 +28,6 @@ public class Wrist extends SubsystemBase {
     private static Wrist instance = new Wrist();
     private boolean holdAtWantedState;
     private double jogVal;
-
     private WristState wristState;
     
     public Wrist(){
@@ -99,9 +94,6 @@ public class Wrist extends SubsystemBase {
     }
 
     private void setState(){
-        //double armFF  = WristConstants.ARM_FF.calculate(setpoint.getRadians(), Math.PI/2,Math.PI);
-        //wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 60),DemandType.ArbitraryFeedForward,armFF);
-        //wristMotor.setVoltage(armFF);
         wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
     }
 

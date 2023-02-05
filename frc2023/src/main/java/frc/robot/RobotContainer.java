@@ -135,7 +135,7 @@ public class RobotContainer {
     m_driverController.leftBumper().onFalse(new SetElevatorHeight(0, elevator, false));
 
      */
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-113), wrist, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(intake::openJaw)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-110), wrist, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(intake::openJaw)));
     m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false), new InstantCommand(intake::lockJaw)));
 
     m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision), new SetWristAngle(Rotation2d.fromDegrees(-85), wrist, false), new SetElevatorHeight(23, elevator, false)));
