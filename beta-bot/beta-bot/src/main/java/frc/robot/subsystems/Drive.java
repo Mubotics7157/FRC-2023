@@ -87,7 +87,6 @@ public class Drive extends SubsystemBase {
         SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
         SwerveModulePosition[] modulePositions = {frontLeftPos,frontRightPos,rearLeftPos,rearRightPos};
-        SmartDashboard.putNumber("front Left relative Position", frontLeftPos.distanceMeters);
         return modulePositions;
     }
 

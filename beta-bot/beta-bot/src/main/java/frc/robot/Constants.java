@@ -155,79 +155,9 @@ public final class Constants {
       public static final int DEVICE_ID_REV_PH = 9;
     }
 
-public static class FieldConstants{
-  public static final AprilTag tag01= new AprilTag(
-    1,
-          new Pose3d(
-              Units.inchesToMeters(610.77),
-              Units.inchesToMeters(42.19),
-              Units.inchesToMeters(18.22),
-              new Rotation3d(0.0, 0.0, Math.PI))
-  );
-
-  public static final AprilTag tag02 = new AprilTag(
-    2,
-          new Pose3d(
-              Units.inchesToMeters(610.77),
-              Units.inchesToMeters(108.19),
-              Units.inchesToMeters(18.22),
-              new Rotation3d(0.0, 0.0, Math.PI))
-  );
-
-  public static final AprilTag tag03 = new AprilTag(
-    3,
-          new Pose3d(
-              Units.inchesToMeters(610.77),
-              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-              Units.inchesToMeters(18.22),
-              new Rotation3d(0.0, 0.0, Math.PI))
-  );
-
-  public static final AprilTag tag04 = new AprilTag(
-    4,
-    new Pose3d(
-        Units.inchesToMeters(636.96),
-        Units.inchesToMeters(265.74),
-        Units.inchesToMeters(27.38),
-        new Rotation3d(0.0, 0.0, Math.PI))
-  );
-
-  public static final AprilTag tag05 = new AprilTag(
-    5,
-          new Pose3d(
-              Units.inchesToMeters(14.25),
-              Units.inchesToMeters(265.74),
-              Units.inchesToMeters(27.38),
-              new Rotation3d())
-  );
-
-  public static final AprilTag tag06 = new AprilTag(
-    6,
-    new Pose3d(
-        Units.inchesToMeters(40.45),
-        Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-        Units.inchesToMeters(18.22),
-        new Rotation3d())
-  );
-
-  public static final AprilTag tag07 = new AprilTag(
-    7,
-          new Pose3d(
-              Units.inchesToMeters(40.45),
-              Units.inchesToMeters(108.19),
-              Units.inchesToMeters(18.22),
-              new Rotation3d())
-  );
-
-  public static final AprilTag tag08 = new AprilTag(
-    8,
-          new Pose3d(
-              Units.inchesToMeters(40.45),
-              Units.inchesToMeters(42.19),
-              Units.inchesToMeters(18.22),
-              new Rotation3d())
-  );
-}
-
-
+    public static final class LidarConstants {
+      public static final double CALIBRATION_OFFSET = 0;
+      public static final int DIO_PORT = 0;
+      public static final double ANGLE_OFFSET = 2;
+  }
 }
