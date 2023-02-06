@@ -6,9 +6,11 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,8 +38,8 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
 
-    private AnalogInput tof;
-
+    private Ultrasonic tof;
+    private  MedianFilter filter;
 
     private static Intake instance = new Intake();
 
@@ -66,13 +68,12 @@ public class Intake extends SubsystemBase {
 
         intakeMaster.setInverted(true);
         intakeSlave.setInverted(!intakeMaster.getInverted());
-
         intakeSlave.follow(intakeMaster);
-
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        tof = new AnalogInput(0);
+        tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
+        filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
 
         SmartDashboard.putNumber("Intake speed", 0);
@@ -174,7 +175,7 @@ public class Intake extends SubsystemBase {
     }
 
     public double getObjDistance(){
-        return tof.getAverageValue();
+        return filter.calculate(tof.getRangeInches());
     }
 
 }

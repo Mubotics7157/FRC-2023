@@ -151,6 +151,11 @@ public final class Constants {
       public static final int DEVICE_ID_SOLENOID_REVERSE = 7;
 
       public static final int DEVICE_ID_REV_PH = 9;
+
+      public static final int ULTRASONIC_PING_PORT = 0;
+      public static final int ULTRASONIC_RESPONSE_PORT = 1;
+
+      public static final int FILTER_SAMPLE_WINDOW = 40;
     }
 
     public static final class LidarConstants {
