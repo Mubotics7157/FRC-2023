@@ -43,6 +43,8 @@ public class Wrist extends SubsystemBase {
         configWristDefault();
 
         wristState = WristState.STOW;
+
+        SmartDashboard.putNumber("Wrist setpoint", 0); 
        
     }
 

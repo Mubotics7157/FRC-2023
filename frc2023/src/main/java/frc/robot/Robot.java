@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("wrist setpoint", 0);
     SmartDashboard.putNumber("Intake Angle Degrees", 0);
     SmartDashboard.putNumber("Align kP", 0);
+    SmartDashboard.putNumber("Pipeline Index", 0);
   }
 
   /**
@@ -92,7 +93,6 @@ public class Robot extends TimedRobot {
       // 
       // );
 
-      SmartDashboard.putNumber("yaw", VisionManager.getInstance().getLimeYaw().getDegrees());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

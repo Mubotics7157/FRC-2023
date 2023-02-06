@@ -10,6 +10,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AlignToTarget;
 import frc.robot.commands.drive.DriveTele;
+import frc.robot.commands.drive.GetGamePieceOffset;
 import frc.robot.commands.elevator.JogElevator;
 import frc.robot.commands.elevator.SetElevatorHeight;
 import frc.robot.commands.elevator.StowElevator;
@@ -90,7 +91,6 @@ public class RobotContainer {
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive));
     //intake.setDefaultCommand(new IdleIntake(intake));
-    SmartDashboard.putNumber("test", 0);
     //elevator.setDefaultCommand(Commands.run(elevator::holdAtWantedState, elevator));
 
   }
@@ -102,29 +102,23 @@ public class RobotContainer {
 
     m_driverController.povUp().whileTrue(new InstantCommand(drive::resetHeading,drive));
 
-    //m_driverController.leftBumper().whileTrue(new JogElevator(.35, elevator));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-113), wrist, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(intake::openJaw)));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-20), wrist, false), new InstantCommand(intake::lockJaw)).andThen(new GetGamePieceOffset(vision)));
 
-    //m_driverController.leftBumper().whileTrue(new SetElevatorHeight(15, elevator, false));
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(15, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false), new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision)));
-    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new StowElevator(elevator), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false)));
-    //m_driverController.rightBumper().whileTrue(new JogElevator(-.35, elevator));
-
-    //m_driverController.a().whileTrue(new JogWrist(false, wrist));
-    //m_driverController.y().whileTrue(new JogWrist(true, wrist));
-
-    //m_driverController.y().whileTrue(new AlignToTarget(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, vision));
     m_driverController.y().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision));
 
-    m_driverController.leftTrigger().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CONE));
-    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CONE));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(/*new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, vision), */new SetWristAngle(Rotation2d.fromDegrees(-55), wrist, false), new SetElevatorHeight(24.5, elevator, false)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-20), wrist, false), new SetElevatorHeight(0, elevator, false)));
 
-    m_driverController.x().whileTrue(new RunIntake(intake, IntakeState.INTAKE_CUBE));
-    m_driverController.b().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE_CUBE));
 
-    m_driverController.a().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, false));
-    m_driverController.a().onFalse(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false));
-    m_driverController.povDown().onTrue(new InstantCommand(vision::toggleLED));
+    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
 
+    m_driverController.povDown().whileTrue(new GetGamePieceOffset(vision));// InstantCommand(vision::getPoleOffset));
+
+
+    //m_driverController.a().onTrue(new InstantCommand(intake::lockJaw));
+
+  
 
 
   }

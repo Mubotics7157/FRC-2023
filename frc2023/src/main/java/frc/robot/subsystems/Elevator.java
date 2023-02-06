@@ -75,12 +75,14 @@ public class Elevator extends SubsystemBase {
 
         setpoint = 0;
 
-        elevatorSlave.follow(elevatorMotor);
+        //elevatorSlave.follow(elevatorMotor);
 
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
 
         OrangeUtility.sleep(1000);
+        
+        elevatorSlave.follow(elevatorMotor);
         SmartDashboard.putNumber("elevator setpoint", 0);
 
 
@@ -212,6 +214,7 @@ public class Elevator extends SubsystemBase {
     private void logData(){
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
+        SmartDashboard.putNumber("elevator encoder", elevatorEncoder.getPosition());
         //Shuffleboard.getTab("Elevator").add("Elevator Setpoint", setpoint);
         //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
         // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
