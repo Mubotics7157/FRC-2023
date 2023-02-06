@@ -100,16 +100,6 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Pose2d getBotPose(){
-        /* 
-        double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-        if(hasTargets()&& poseEntry.length>0){
-        
-        Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[4]));
-        return pose;
-        }
-        else
-            return new Pose2d();
-            */
         if(hasTargets()){
             try{
                 double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);

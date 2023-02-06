@@ -1,20 +1,14 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,7 +36,8 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
 
-    private AnalogInput gamePieceSensor;
+    private AnalogInput tof;
+
 
     private static Intake instance = new Intake();
 
@@ -77,7 +72,8 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        gamePieceSensor = new AnalogInput(3);
+        tof = new AnalogInput(0);
+
 
         SmartDashboard.putNumber("Intake speed", 0);
         SmartDashboard.putNumber("ratio", 1);
@@ -166,9 +162,6 @@ public class Intake extends SubsystemBase {
         solenoid.set(Value.kForward);
     }
 
-
-
-
     public void currentLimit(boolean enable){
         if(enable){
             intakeMaster.setSmartCurrentLimit(2, 10);
@@ -179,4 +172,9 @@ public class Intake extends SubsystemBase {
             intakeSlave.setSmartCurrentLimit(50);
         }
     }
+
+    public double getObjDistance(){
+        return tof.getAverageValue();
+    }
+
 }
