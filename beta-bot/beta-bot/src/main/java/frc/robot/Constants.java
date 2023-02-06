@@ -103,6 +103,9 @@ public final class Constants {
 
       public static final double ELEVATOR_ZERO_HEIGHT = 0;
 
+      public static int DEVICE_ID_ELEVATOR_SWITCH = 0;
+      //TODO: find out what id to use
+
     }
 
     public static class WristConstants{
@@ -118,6 +121,9 @@ public final class Constants {
       public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
 
       public static final int ABS_ENCODER_PORT = 0;
+
+      public static final int DEVICE_ID_MAG_SENSOR = 1;
+      //TODO: find out what the id is
 
 
       public static final double WRIST_CONTROLLER_KP = .075;

@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,7 +20,8 @@ public class Wrist extends SubsystemBase {
         OFF,
         STOW,
         JOG,
-        SETPOINT
+        SETPOINT,
+        ZERO
     }
 
     private WPI_TalonFX wristMotor;
@@ -29,6 +31,8 @@ public class Wrist extends SubsystemBase {
     private boolean holdAtWantedState;
     private double jogVal;
     private WristState wristState;
+
+    private DigitalInput magSensor;
     
     public Wrist(){
         jogVal = 0;
@@ -36,6 +40,8 @@ public class Wrist extends SubsystemBase {
         wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
   
         holdAtWantedState = false;
+
+        magSensor = new DigitalInput(1);
 
         configWristDefault();
 
@@ -76,6 +82,9 @@ public class Wrist extends SubsystemBase {
             case STOW:
                 setState();
                 break;
+            case ZERO:
+                zeroRoutine();
+                break;
         }
     }
 
@@ -91,6 +100,20 @@ public class Wrist extends SubsystemBase {
 
     public void setSetpoint(Rotation2d requestedAngle){
         setpoint = requestedAngle;
+    }
+
+    public boolean zeroRoutine(){
+        if(!magSensor.get()){ //assuming !get() means not triggered
+            wristMotor.set(ControlMode.PercentOutput, 0.1);
+            return false;
+        }
+        
+        else{
+            wristMotor.set(ControlMode.PercentOutput, 0);
+            zeroOnboardEncoder();
+            return true;
+        }
+        //this returns if the wrist has been zeroed
     }
 
     private void setState(){

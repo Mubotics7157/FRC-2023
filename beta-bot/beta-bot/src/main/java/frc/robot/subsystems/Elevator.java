@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +30,8 @@ public class Elevator extends SubsystemBase {
     private double setpoint;
 
     private static Elevator instance = new Elevator();
+
+    private DigitalInput limitSwitch;
 
 
     private DutyCycleEncoder absoluteEncoder;
@@ -66,6 +69,8 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.restoreFactoryDefaults();
         elevatorSlave.restoreFactoryDefaults();
 
+        limitSwitch = new DigitalInput(ElevatorConstants.DEVICE_ID_ELEVATOR_SWITCH);
+
         configElevatorMotor();
         currentState = ElevatorSetpoint.STOW;
 
@@ -97,7 +102,7 @@ public class Elevator extends SubsystemBase {
                 goToSetpoint();
                 break;
             case ZERO:
-                //TODO: add zeroing routine
+                zeroRoutine();
                 break;
             case JOG:
                 setPercentOutput(jogInput);
@@ -140,6 +145,20 @@ public class Elevator extends SubsystemBase {
         //elevatorController.setReference(setpoint, ControlType.kPosition);
 
         return atSetpoint();
+    }
+
+    public boolean zeroRoutine(){
+        if(!limitSwitch.get()){//assuming !get() means not triggered
+            elevatorMotor.set(0.1);
+            return false;
+        }
+
+        else{
+            elevatorMotor.set(0);
+            zeroElevator();
+            return true;
+        }
+        //this returns if the elevator has been zeroed
     }
 
 
