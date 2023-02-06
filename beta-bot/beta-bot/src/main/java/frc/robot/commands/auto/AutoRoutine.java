@@ -29,6 +29,7 @@ public class AutoRoutine {
     }
 
     public Command buildAuto(){
+        tracker.plotAuto(pathGroup.get(0));
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
           tracker::getOdometry, // Pose2d supplier
           tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
@@ -40,7 +41,7 @@ public class AutoRoutine {
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
           drive // The drive subsystem. Used to properly set the requirements of path following commands
           ); 
-          
+
           return autoBuilder.fullAuto(pathGroup);
 
     }
