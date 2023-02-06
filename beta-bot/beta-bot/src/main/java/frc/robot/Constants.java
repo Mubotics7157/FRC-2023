@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.PIDConstants;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -172,5 +174,8 @@ public final class Constants {
 
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
+
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
 }

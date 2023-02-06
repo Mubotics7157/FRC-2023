@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
@@ -34,8 +35,8 @@ public class AutoRoutine {
           tracker::getOdometry, // Pose2d supplier
           tracker::setOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
           DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
-          new PIDConstants(1.25, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-          new PIDConstants(2.5, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+          AutoConstants.X_Y_CONTROLLER,
+          AutoConstants.ROT_CONTROLLER,
           drive::setModuleStates, // Module states consumer used to output to the drive subsystem
           events,
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true

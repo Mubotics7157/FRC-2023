@@ -32,8 +32,7 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeMaster; 
     private CANSparkMax intakeSlave;
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_REV_PH,PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
-
+    private DoubleSolenoid solenoid; 
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
@@ -44,7 +43,8 @@ public class Intake extends SubsystemBase {
     private static Intake instance = new Intake();
 
     public Intake(){
-        
+        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_REV_PH,PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+
         intakeState = IntakeState.OFF;
 
         intakeMaster = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_MASTER, MotorType.kBrushless);
