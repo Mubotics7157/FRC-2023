@@ -92,41 +92,41 @@ public class Intake extends SubsystemBase {
         switch(intakeState){
             case OFF:
                 currentLimit(false);
-                setMotors(0, 0);
+                setMotors(0);
                 break;
             case INTAKE_CUBE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(.5);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(true);
                 break;
             case INTAKE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
-                setMotors(.15, 1);
+                setMotors(.15);
                 break;
         }
         
@@ -136,9 +136,8 @@ public class Intake extends SubsystemBase {
         intakeState = state;
     }
 
-    public void setMotors(double speed, double ratio){
-        intakeMaster.set(speed * ratio);
-        intakeSlave.set(speed);
+    public void setMotors(double speed){
+        intakeMaster.set(speed);
     }
 
     public void toggleIntake(boolean forward){
@@ -161,11 +160,9 @@ public class Intake extends SubsystemBase {
     public void currentLimit(boolean enable){
         if(enable){
             intakeMaster.setSmartCurrentLimit(2, 10);
-            intakeSlave.setSmartCurrentLimit(2, 10);
         }
         else{
             intakeMaster.setSmartCurrentLimit(50);
-            intakeSlave.setSmartCurrentLimit(50);
         }
     }
 
