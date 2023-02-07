@@ -97,48 +97,44 @@ public class Intake extends SubsystemBase {
         
         switch(snapIntakeState){
             case OFF:
-                currentLimit(false);
                 setMotors(0);
                 break;
             case INTAKE_CUBE:
-                currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
+                setMotors(IntakeConstants.CUBE_INTAKE_SPEED);
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
-                currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
                 toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
-                currentLimit(false);
-                setMotors(.5);
+                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
                 toggleIntake(true);
                 break;
             case INTAKE:
-                currentLimit(false);
                 setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
-                currentLimit(false);
                 setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
-                currentLimit(true);
-                setMotors(.15);
+                setMotors(IntakeConstants.IDLE_SPEED);
                 break;
         }
         
     }
 
     public void setIntakeState(IntakeState state){
+        if(state==IntakeState.IDLE)
+            currentLimit(true);
+        else
+            currentLimit(false);
         intakeState = state;
     }
 

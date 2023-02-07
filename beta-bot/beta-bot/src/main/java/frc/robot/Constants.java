@@ -168,6 +168,12 @@ public final class Constants {
       public static final int ULTRASONIC_RESPONSE_PORT = 1;
 
       public static final int FILTER_SAMPLE_WINDOW = 40;
+
+      public static final double CUBE_INTAKE_SPEED = .5;
+      public static final double CONE_INTAKE_SPEED = .5;
+      public static final double CONE_OUTTAKE_SPEED=-.5;
+      public static final double CUBE_OUTTAKE_SPEED=-.5;
+      public static final double IDLE_SPEED = .15;
     }
 
     public static final class LidarConstants {

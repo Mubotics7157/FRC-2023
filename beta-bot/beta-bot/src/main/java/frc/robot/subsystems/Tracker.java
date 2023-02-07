@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -39,8 +40,8 @@ public class Tracker extends SubsystemBase{
     }
 
     public  void updatePose(){
-        //if(VisionManager.getInstance().limeHasTargets())
-            //estimator.addVisionMeasurement(VisionManager.getInstance().getLimePose(), VisionManager.getInstance().getLimeLatency());   
+        //if(VisionManager.getInstance().hasTargets())
+            //estimator.addVisionMeasurement(VisionManager.getInstance().getBotPose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getLatency());   
         
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }
