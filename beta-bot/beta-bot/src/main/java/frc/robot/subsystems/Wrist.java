@@ -37,7 +37,7 @@ public class Wrist extends SubsystemBase {
     public Wrist(){
         jogVal = 0;
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
-        wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
+        //wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
   
         holdAtWantedState = false;
 
@@ -129,7 +129,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private void configWristDefault(){
-        wristEncoder.setDistancePerRotation(2*Math.PI);
+        //wristEncoder.setDistancePerRotation(2*Math.PI);
 
         wristMotor.configFactoryDefault();
 

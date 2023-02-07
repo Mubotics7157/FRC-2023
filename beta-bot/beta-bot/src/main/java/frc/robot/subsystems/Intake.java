@@ -38,7 +38,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
 
-    private Ultrasonic tof;
+    //private Ultrasonic tof;
     private  MedianFilter filter;
 
     private static Intake instance = new Intake();
@@ -72,12 +72,11 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
+        //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
 
-        SmartDashboard.putNumber("Intake speed", 0);
-        SmartDashboard.putNumber("ratio", 1);
+        SmartDashboard.putNumber("Intake speed", 0.5);
         
     }
 
@@ -89,44 +88,52 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
 
-        switch(intakeState){
+        IntakeState snapIntakeState;       
+        synchronized(this){
+            snapIntakeState = intakeState;
+        }
+        
+        SmartDashboard.putString("intake state", snapIntakeState.toString());
+        
+        switch(snapIntakeState){
             case OFF:
                 currentLimit(false);
-                setMotors(0, 0);
+                setMotors(0);
                 break;
             case INTAKE_CUBE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(SmartDashboard.getNumber("Intake speed", 0.5));
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 toggleIntake(true);
                 break;
             case INTAKE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(.5);
+                //setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
-                setMotors(.15, 1);
+                setMotors(.15);
                 break;
         }
         
@@ -136,8 +143,8 @@ public class Intake extends SubsystemBase {
         intakeState = state;
     }
 
-    public void setMotors(double speed, double ratio){
-        intakeMaster.set(speed * ratio);
+    public void setMotors(double speed){
+        intakeMaster.set(speed);
         intakeSlave.set(speed);
     }
 
@@ -170,7 +177,8 @@ public class Intake extends SubsystemBase {
     }
 
     public double getObjDistance(){
-        return filter.calculate(tof.getRangeInches());
+        //return filter.calculate(tof.getRangeInches());
+        return 0;
     }
 
 }

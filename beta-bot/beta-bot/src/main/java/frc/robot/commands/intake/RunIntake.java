@@ -22,8 +22,12 @@ public class RunIntake extends CommandBase {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         intake.setIntakeState(state); 
+
+    }
+    @Override
+    public void execute() {
     }
 
     @Override
