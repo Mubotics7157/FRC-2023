@@ -114,7 +114,7 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CONE:
                 currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(.5);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
@@ -124,8 +124,7 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE:
                 currentLimit(false);
-                setMotors(.5);
-                //setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
@@ -145,7 +144,6 @@ public class Intake extends SubsystemBase {
 
     public void setMotors(double speed){
         intakeMaster.set(speed);
-        intakeSlave.set(speed);
     }
 
     public void toggleIntake(boolean forward){
@@ -168,11 +166,9 @@ public class Intake extends SubsystemBase {
     public void currentLimit(boolean enable){
         if(enable){
             intakeMaster.setSmartCurrentLimit(2, 10);
-            intakeSlave.setSmartCurrentLimit(2, 10);
         }
         else{
             intakeMaster.setSmartCurrentLimit(50);
-            intakeSlave.setSmartCurrentLimit(50);
         }
     }
 
