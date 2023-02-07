@@ -63,12 +63,7 @@ public class Wrist extends SubsystemBase {
 
         logData();
 
-        WristState snapWristState;
-        synchronized(this){
-            snapWristState = wristState;
-        }
-
-        switch(snapWristState){
+        switch(wristState){
             case OFF:
                 jog(0);
                 break;

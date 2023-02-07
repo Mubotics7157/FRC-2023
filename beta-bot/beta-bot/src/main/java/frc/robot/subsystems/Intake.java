@@ -89,12 +89,7 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
 
-        IntakeState snapIntakeState;       
-        synchronized(this){
-            snapIntakeState = intakeState;
-        }
-        
-        switch(snapIntakeState){
+        switch(intakeState){
             case OFF:
                 currentLimit(false);
                 setMotors(0, 0);

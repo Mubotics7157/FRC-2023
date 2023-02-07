@@ -72,11 +72,11 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("right rear error", rrError);
     }
     
-    public synchronized Rotation2d getDriveHeading(){
+    public Rotation2d getDriveHeading(){
         return gyro.getRotation2d();
     }
 
-    public synchronized void resetHeading(){
+    public void resetHeading(){
         Tracker.getInstance().resetHeading();    
     }
 

@@ -38,14 +38,14 @@ public class Tracker extends SubsystemBase{
             ));
     }
 
-    public synchronized void updatePose(){
+    public  void updatePose(){
         //if(VisionManager.getInstance().limeHasTargets())
             //estimator.addVisionMeasurement(VisionManager.getInstance().getLimePose(), VisionManager.getInstance().getLimeLatency());   
         
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }
 
-    public synchronized void adjustDeviation(double x, double y, double r){
+    public  void adjustDeviation(double x, double y, double r){
         estimator.setVisionMeasurementStdDevs(
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
                 x, //x 
@@ -73,27 +73,27 @@ public class Tracker extends SubsystemBase{
         SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
     }
 
-    public synchronized void setOdometry(Pose2d pose){
+    public void setOdometry(Pose2d pose){
         odometry.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
     }
 
-    public synchronized Pose2d getOdometry(){
+    public Pose2d getOdometry(){
         return odometry.getPoseMeters();
     }
 
-    public synchronized void resetHeading(){
+    public void resetHeading(){
         odometry.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(odometry.getPoseMeters().getTranslation(), Rotation2d.fromDegrees(0)));
     }
 
-    public synchronized Pose2d getPose(){
+    public Pose2d getPose(){
         return estimator.getEstimatedPosition();
     }
 
-    public synchronized void setPose(Pose2d pose){
+    public void setPose(Pose2d pose){
         estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
     }
 
-    public synchronized void resetPoseHeading(){
+    public void resetPoseHeading(){
         estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(estimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(0)));
     }
 

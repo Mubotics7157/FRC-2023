@@ -26,13 +26,10 @@ public class SwerveModule {
     WPI_TalonFX driveMotor;
     WPI_CANCoder absEncoder;
 
-    PIDController turnPID;
 
 
 
        public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
-        turnPID = new PIDController(.39, 0, 0); 
-        turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
         driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
         turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
@@ -132,13 +129,6 @@ public class SwerveModule {
        // return getAbsHeading();
         return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*12.8)));
         //new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),12.8));
-    }
-
-    public void updateP(double val){
-        turnPID.setP(val);
-    }
-    public void updateD(double val){
-        turnPID.setD(val);
     }
 
     public void flip(double angle){

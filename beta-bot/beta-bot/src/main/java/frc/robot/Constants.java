@@ -26,7 +26,7 @@ public final class Constants {
     public static final double driveKA = 0.25953;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
-    public static final double TURNING_KP = .25;
+    public static final double TURNING_KP = .2;
 
     public static final double CLOSED_LOOP_RAMP_RATE  = .2;
     public static final double OPEN_LOOP_RAMP_RATE  = .25;
