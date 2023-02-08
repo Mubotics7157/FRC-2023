@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
 
-        SmartDashboard.putNumber("elevator setpoint", 0);
+        SmartDashboard.putNumber("elevator setpoint", -26);
         zeroElevator();
 
 

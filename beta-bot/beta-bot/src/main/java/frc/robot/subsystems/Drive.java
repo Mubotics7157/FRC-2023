@@ -16,6 +16,8 @@ import frc.robot.Constants.SwerveModuleConstants;
 
 public class Drive extends SubsystemBase {
     
+    private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+    private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     private static Drive instance = new Drive();
     private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
     private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
@@ -79,7 +81,24 @@ public class Drive extends SubsystemBase {
         gyro.reset();
         //Tracker.getInstance().resetHeading();    
     }
+    
+    public synchronized void changeMax(){
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+    }
 
+    public synchronized void changeSlow(){
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
+    }
+
+    public synchronized double getTan(){
+        return driveSpeed;
+    }
+
+    public synchronized double getAng(){
+        return driveAngle;
+    }
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
         SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
