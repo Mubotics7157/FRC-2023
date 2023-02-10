@@ -18,6 +18,9 @@ public class LED extends CommandBase{
     CANdleConfiguration config;
     RainbowAnimation rainbowAnim;
     StrobeAnimation strobeAnim;
+    StrobeAnimation redStrobe;
+    StrobeAnimation purpleStrobe;
+    StrobeAnimation yellowStrobe;
     LarsonAnimation larsonAnim;
 
 
@@ -32,6 +35,9 @@ public class LED extends CommandBase{
         candle.clearAnimation(0);
         rainbowAnim = new RainbowAnimation(1, 0.85, 300);
         strobeAnim = new StrobeAnimation(0, 255, 0, 0, 0, 300);
+        redStrobe = new StrobeAnimation(255, 0, 0, 0, 0, 300);
+        yellowStrobe = new StrobeAnimation(255, 100, 0, 0 , 0, 300);
+        purpleStrobe = new StrobeAnimation(255, 0, 50);
         larsonAnim = new LarsonAnimation(255, 25, 0, 0, 0.5, 300, BounceMode.Back, 25);
         config.statusLedOffWhenActive = true;
         config.disableWhenLOS = false;
@@ -50,6 +56,26 @@ public class LED extends CommandBase{
     public void setStrobe(){
         candle.animate(strobeAnim);
     }
+
+    public void strobeCurrentIntake(){
+        if(Intake.getInstance().isClosed())
+            candle.animate(yellowStrobe);
+        else
+            candle.animate(purpleStrobe);
+    }
+
+    public void setRedStrobe(){
+        candle.animate(redStrobe);
+    }
+
+    public void setPurpleStrobe(){
+        candle.animate(purpleStrobe);
+    }
+
+    public void setYellowStrobe(){
+        candle.animate(yellowStrobe);
+    }
+
 
     public void setPewPew(){
         candle.animate(larsonAnim);
