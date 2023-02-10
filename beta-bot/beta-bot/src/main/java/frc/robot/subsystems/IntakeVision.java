@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -16,10 +21,23 @@ public class IntakeVision extends SubsystemBase{
     private static IntakeVision instance = new IntakeVision();
 
     private double offset;
-    //private MedianFilter filter = new MedianFilter(20);
+    private InterpolatingTreeMap<Double,Double> offsetMap = new InterpolatingTreeMap<>();
+    private MedianFilter filter = new MedianFilter(20);
 
     public IntakeVision(){
         tableLime = NetworkTableInstance.getDefault().getTable("limelight-intake");
+
+        // offsetMap.put(-12.4, -3.37);
+        // offsetMap.put(-4.1, -.71);
+        // offsetMap.put(1.3, 2.56);
+        // offsetMap.put(1.8, 1.64);
+        // offsetMap.put(5.9, 3.99);
+
+        // offsetMap.put(11.8,3.99 );
+
+        offsetMap.put(-11.19, -2.66);
+        offsetMap.put(.237, 1.33);
+        offsetMap.put(10.14, 15.31);
     }
 
     public static IntakeVision getInstance(){
@@ -109,8 +127,8 @@ public class IntakeVision extends SubsystemBase{
     }
 
     public void setObjectOffset(){
-        offset = getTargetYaw().getDegrees() * IntakeConstants.OFFSET_COEFFICIENT;
-        //return offset;
+        offset = filter.calculate(getTargetYaw().getDegrees());
+        offset = offsetMap.get(offset);
     }
 
     public double getOffset(){
