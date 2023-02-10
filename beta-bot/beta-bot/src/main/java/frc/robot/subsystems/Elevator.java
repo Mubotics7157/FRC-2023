@@ -81,7 +81,7 @@ public class Elevator extends SubsystemBase {
         //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
         //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
 
-        SmartDashboard.putNumber("elevator setpoint", 0);
+        SmartDashboard.putNumber("elevator setpoint", -26);
         zeroElevator();
 
 
@@ -212,13 +212,13 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-1, 0.35, 0);
+        elevatorController.setOutputRange(-1, .35, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
 
         elevatorController.setSmartMotionMaxVelocity(9500, 0);
-        elevatorController.setSmartMotionMaxAccel(8000, 0);
+        elevatorController.setSmartMotionMaxAccel(10000, 0);
 
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);

@@ -28,12 +28,12 @@ public final class Constants {
     public static final double driveKA = 0.25953;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
-    public static final double TURNING_KP = .25;
+    public static final double TURNING_KP = .2;
 
     public static final double CLOSED_LOOP_RAMP_RATE  = .2;
     public static final double OPEN_LOOP_RAMP_RATE  = .25;
 
-    public static final double TURN_GEAR_RATIO  = 12.8;
+    public static final double TURN_GEAR_RATIO  = 21.34;
     public static final double DRIVE_GEAR_RATIO  = 6.75;
 
     public static final String SWERVE_CANIVORE_ID = "swerve";
@@ -50,25 +50,31 @@ public final class Constants {
     public static final double WHEEL_DIAMETER_METERS = .1016;
 
 
-    public static final int REAR_RIGHT_DRIVE_PORT = 1;
-    public static final int FRONT_RIGHT_DRIVE_PORT = 4;
-    public static final int FRONT_LEFT_DRIVE_PORT = 7;
-    public static final int REAR_LEFT_DRIVE_PORT = 10;
+    public static final int REAR_RIGHT_DRIVE_PORT = 10;
+    public static final int FRONT_RIGHT_DRIVE_PORT = 7;
+    public static final int FRONT_LEFT_DRIVE_PORT = 4;
+    public static final int REAR_LEFT_DRIVE_PORT = 1;
 
-    public static final int REAR_RIGHT_TURN_PORT = 2;
-    public static final int FRONT_RIGHT_TURN_PORT = 5;
-    public static final int FRONT_LEFT_TURN_PORT = 8;
-    public static final int REAR_LEFT_TURN_PORT = 11;
+    public static final int REAR_RIGHT_TURN_PORT = 11;
+    public static final int FRONT_RIGHT_TURN_PORT = 8;
+    public static final int FRONT_LEFT_TURN_PORT = 5;
+    public static final int REAR_LEFT_TURN_PORT = 2;
 
-    public static final int REAR_RIGHT_ENCODER_PORT = 3;
-    public static final int FRONT_RIGHT_ENCODER_PORT = 6;
-    public static final int FRONT_LEFT_ENCODER_PORT = 9;
-    public static final int REAR_LEFT_ENCODER_PORT = 12;
+    public static final int REAR_RIGHT_ENCODER_PORT = 12;
+    public static final int FRONT_RIGHT_ENCODER_PORT = 9;
+    public static final int FRONT_LEFT_ENCODER_PORT = 6;
+    public static final int REAR_LEFT_ENCODER_PORT = 3;
 
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET =  -167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_LEFT_ENCODER_OFFSET = -107;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = 10.107010016401127;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET =  127.0007175492034;//-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = -49.65367268041238;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    public static final double REAR_LEFT_ENCODER_OFFSET = -154.42226306232428;//-107;
+/* 
+    public static final double REAR_LEFT_ENCODER_OFFSET = 9.7503662109375;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = 124.07684326171876; //-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = -47.72186279296875;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = -154.852294921875;//-107;
+*/
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
@@ -155,15 +161,23 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 6;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 7;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
-      public static final int DEVICE_ID_REV_PH = 9;
+      public static final int DEVICE_ID_REV_PH = 28;
 
       public static final int ULTRASONIC_PING_PORT = 0;
       public static final int ULTRASONIC_RESPONSE_PORT = 1;
 
       public static final int FILTER_SAMPLE_WINDOW = 40;
+
+      public static final double CUBE_INTAKE_SPEED = .25;
+      public static final double CONE_INTAKE_SPEED = .75;
+
+      public static final double CONE_OUTTAKE_SPEED=-.5;
+      public static final double CUBE_OUTTAKE_SPEED=-.5;
+
+      public static final double IDLE_SPEED = .15;
     }
 
     public static final class LidarConstants {

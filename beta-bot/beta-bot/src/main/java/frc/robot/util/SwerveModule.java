@@ -26,13 +26,10 @@ public class SwerveModule {
     WPI_TalonFX driveMotor;
     WPI_CANCoder absEncoder;
 
-    PIDController turnPID;
 
 
 
        public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
-        turnPID = new PIDController(.39, 0, 0); 
-        turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
         driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
         turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
@@ -54,7 +51,7 @@ public class SwerveModule {
         turnMotor.setSelectedSensorPosition(0);
         turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
         turnMotor.setNeutralMode(NeutralMode.Brake);
-        turnMotor.setInverted(false);
+        turnMotor.setInverted(true);
         turnMotor.config_kP(0, .2);
         turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
 
@@ -70,7 +67,7 @@ public class SwerveModule {
 
         OrangeUtility.sleep(1000);
         System.out.println(getAbsHeading());
-        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*12.8)));
+        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public void setState(SwerveModuleState state){
@@ -97,9 +94,9 @@ public class SwerveModule {
         // double output = turnPID.calculate(getAbsHeading().getRadians(), turnSetpointRad.getRadians());
 // 
         // turnMotor.set(ControlMode.PercentOutput,output);
-        SmartDashboard.putNumber("wanted steps", turnSetpointRad.getDegrees()/(360/(2048*12.8)));
+        SmartDashboard.putNumber("wanted steps", turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
 
-        turnMotor.set(ControlMode.Position, turnSetpointRad.getDegrees()/(360/(2048*12.8)));
+        turnMotor.set(ControlMode.Position, turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
         
     }
 
@@ -117,7 +114,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*12.8)));
+        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public double getDriveVelocity(){
@@ -130,15 +127,8 @@ public class SwerveModule {
 
     public Rotation2d getRelativeHeading(){
        // return getAbsHeading();
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*12.8)));
-        //new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),12.8));
-    }
-
-    public void updateP(double val){
-        turnPID.setP(val);
-    }
-    public void updateD(double val){
-        turnPID.setD(val);
+        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        //new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),21.43));
     }
 
     public void flip(double angle){

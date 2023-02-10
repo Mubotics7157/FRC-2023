@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
 
-    private Ultrasonic tof;
+    //private Ultrasonic tof;
     private  MedianFilter filter;
 
     private static Intake instance = new Intake();
@@ -72,12 +72,11 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
-        tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
+        //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
 
-        SmartDashboard.putNumber("Intake speed", 0);
-        SmartDashboard.putNumber("ratio", 1);
+        SmartDashboard.putNumber("Intake speed", 0.5);
         
     }
 
@@ -94,56 +93,53 @@ public class Intake extends SubsystemBase {
             snapIntakeState = intakeState;
         }
         
+        SmartDashboard.putString("intake state", snapIntakeState.toString());
+        
         switch(snapIntakeState){
             case OFF:
-                currentLimit(false);
-                setMotors(0, 0);
+                setMotors(0);
                 break;
             case INTAKE_CUBE:
-                currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(IntakeConstants.CUBE_INTAKE_SPEED);
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
-                currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
                 toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
-                currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
                 toggleIntake(true);
                 break;
             case INTAKE:
-                currentLimit(false);
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
-                currentLimit(false);
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5), SmartDashboard.getNumber("ratio", 0));
+                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
-                currentLimit(true);
-                setMotors(.15, 1);
+                setMotors(IntakeConstants.IDLE_SPEED);
                 break;
         }
         
     }
 
     public void setIntakeState(IntakeState state){
+        if(state==IntakeState.IDLE)
+            currentLimit(true);
+        else
+            currentLimit(false);
         intakeState = state;
     }
 
-    public void setMotors(double speed, double ratio){
-        intakeMaster.set(speed * ratio);
-        intakeSlave.set(speed);
+    public void setMotors(double speed){
+        intakeMaster.set(speed);
     }
 
     public void toggleIntake(boolean forward){
@@ -166,16 +162,15 @@ public class Intake extends SubsystemBase {
     public void currentLimit(boolean enable){
         if(enable){
             intakeMaster.setSmartCurrentLimit(2, 10);
-            intakeSlave.setSmartCurrentLimit(2, 10);
         }
         else{
             intakeMaster.setSmartCurrentLimit(50);
-            intakeSlave.setSmartCurrentLimit(50);
         }
     }
 
     public double getObjDistance(){
-        return filter.calculate(tof.getRangeInches());
+        //return filter.calculate(tof.getRangeInches());
+        return 0;
     }
 
 }

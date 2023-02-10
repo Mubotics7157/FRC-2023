@@ -68,10 +68,6 @@ public class RotAlign extends CommandBase{
     @Override
     public void execute() {
 
-        double vx =  modifyInputs(fwd.getAsDouble(),false);
-        double vy =  modifyInputs(str.getAsDouble(),false);
-        double omega = modifyInputs(rot.getAsDouble(), true);
-        
         Rotation2d onTarget = Rotation2d.fromDegrees(0);
         double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
@@ -84,22 +80,22 @@ public class RotAlign extends CommandBase{
         }
 
         if(vision.hasTargets()){
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         }
         else
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, Tracker.getInstance().getOdometry().getRotation()));
+            atGoal = true;
 
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
         SmartDashboard.putBoolean("On target", controller.atGoal());
     }
 
-    /* 
+     
     @Override
     public boolean isFinished() {
         return atGoal;
     }
-    */
+    
     @Override
     public void end(boolean interrupted) {
         driveFromChassis(new ChassisSpeeds());

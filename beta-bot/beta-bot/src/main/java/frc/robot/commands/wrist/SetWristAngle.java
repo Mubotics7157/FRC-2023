@@ -28,9 +28,9 @@ public class SetWristAngle extends CommandBase{
         wrist.setWristState(WristState.SETPOINT);
 
         if(useSD && !mid)
-            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", 0));
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("Wrist setpoint", -117));
         else if(useSD && mid){
-            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("mid score", 0));
+            setpoint = Rotation2d.fromDegrees(SmartDashboard.getNumber("mid score", -135));
         }
         
         wrist.setSetpoint(setpoint);

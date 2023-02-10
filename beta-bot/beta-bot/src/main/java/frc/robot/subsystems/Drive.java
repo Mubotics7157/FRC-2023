@@ -16,12 +16,14 @@ import frc.robot.Constants.SwerveModuleConstants;
 
 public class Drive extends SubsystemBase {
     
+    private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+    private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     private static Drive instance = new Drive();
     private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
     private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
     private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
     private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
-    private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+    private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
@@ -38,8 +40,7 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Gyro Angle", -gyro.getAngle());
-        SmartDashboard.putNumber("gyro yaw", Rotation2d.fromDegrees(gyro.getYaw()).getDegrees());
+        SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
 
         SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
 
@@ -72,14 +73,32 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("right rear error", rrError);
     }
     
-    public synchronized Rotation2d getDriveHeading(){
+    public Rotation2d getDriveHeading(){
         return gyro.getRotation2d();
     }
 
     public synchronized void resetHeading(){
-        Tracker.getInstance().resetHeading();    
+        gyro.reset();
+        //Tracker.getInstance().resetHeading();    
+    }
+    
+    public synchronized void changeMax(){
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
 
+    public synchronized void changeSlow(){
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
+    }
+
+    public synchronized double getTan(){
+        return driveSpeed;
+    }
+
+    public synchronized double getAng(){
+        return driveAngle;
+    }
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
         SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());

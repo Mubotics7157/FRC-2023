@@ -16,13 +16,15 @@ public class DriveTele extends CommandBase {
             if(Math.abs(val)<.15){
                 val = 0;
             }
-            return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+            //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+            return val*drive.getAng();
         }
         else{
             if(Math.abs(val)<.1){
                 val = 0;
             }
-            return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+            //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+            return val*drive.getTan();
         }
     }
     
