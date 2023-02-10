@@ -1,25 +1,28 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 
-public class VisionManager extends SubsystemBase{
+public class IntakeVision extends SubsystemBase{
     
-    NetworkTable tableLime;
+    private NetworkTable tableLime;
 
-    private double[] testArray = {0, 0, 0, 0, 0, 0};
-    private static VisionManager instance = new VisionManager();
+    private static IntakeVision instance = new IntakeVision();
 
-    public VisionManager(){
-        tableLime = NetworkTableInstance.getDefault().getTable("limelight-polecam");
+    private double offset;
+    //private MedianFilter filter = new MedianFilter(20);
+
+    public IntakeVision(){
+        tableLime = NetworkTableInstance.getDefault().getTable("limelight-intake");
     }
 
-    public static VisionManager getInstance(){
+    public static IntakeVision getInstance(){
         return instance;
     }
 
@@ -40,14 +43,14 @@ public class VisionManager extends SubsystemBase{
             return Rotation2d.fromDegrees(0);
     }
 
-    public double getTargetPitch(){
+    public Rotation2d getTargetPitch(){
         double targets = tableLime.getEntry("tv").getDouble(0);
         double pitch = tableLime.getEntry("ty").getDouble(0);
         if(targets != 0){
-            return pitch;
+            return Rotation2d.fromDegrees(pitch);
         }
         else
-            return 0;
+            return Rotation2d.fromDegrees(0);
     }
 
     public double getTargets(){
@@ -93,29 +96,26 @@ public class VisionManager extends SubsystemBase{
     }
     
     public void logData(){
-        SmartDashboard.putNumber("Lime Target yaw", getTargetYaw().getDegrees());
-        SmartDashboard.putNumber("Lime Target pitch", getTargetPitch());
-        SmartDashboard.putNumber("Lime Targets", getTargets());
-    }
-
-    public Pose2d getBotPose(){
-        if(hasTargets()){
-            try{
-                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-                Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-                return pose;
-            }
-            catch(Exception e){
-                return new Pose2d();
-            }
-        }
-        else
-            return new Pose2d();
+        SmartDashboard.putNumber("Intake Target yaw", getTargetYaw().getDegrees());
+        SmartDashboard.putNumber("Intake Target pitch", getTargetPitch().getDegrees());
+        SmartDashboard.putNumber("Intake Targets", getTargets());
+        SmartDashboard.putNumber("Intake offset", offset);
+    
     }
 
     public double getLatency(){
         double latency = tableLime.getEntry("tl").getDouble(0);
         return latency;
     }
+
+    public void setObjectOffset(){
+        offset = getTargetYaw().getDegrees() * IntakeConstants.OFFSET_COEFFICIENT;
+        //return offset;
+    }
+
+    public double getOffset(){
+        return offset;
+    }
+
 
 }   

@@ -177,7 +177,9 @@ public final class Constants {
       public static final double CONE_OUTTAKE_SPEED=-.5;
       public static final double CUBE_OUTTAKE_SPEED=-.5;
 
-      public static final double IDLE_SPEED = .15;
+      public static final double IDLE_SPEED = .25;
+
+      public static final double OFFSET_COEFFICIENT = 3.6 / 12;
     }
 
     public static final class LidarConstants {

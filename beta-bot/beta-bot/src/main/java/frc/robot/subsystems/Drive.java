@@ -32,6 +32,10 @@ public class Drive extends SubsystemBase {
         rotController.enableContinuousInput(-Math.PI, Math.PI);
 
         gyro.reset();
+
+        SmartDashboard.putNumber("align P", 0.25);
+        SmartDashboard.putNumber("strafe P", 0.25);
+        SmartDashboard.putNumber("offset strafe", 0);
     }
 
     public static Drive getInstance(){

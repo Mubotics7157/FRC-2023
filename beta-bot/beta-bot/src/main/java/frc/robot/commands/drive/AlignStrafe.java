@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.IntakeVision;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
 
@@ -67,14 +68,16 @@ public class AlignStrafe extends CommandBase{
     @Override
     public void initialize() {
         atGoal= false;
-        rotController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
-        strController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(3 * Math.PI, 4 * Math.PI));
+        rotController = new ProfiledPIDController(SmartDashboard.getNumber("align P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
+        strController = new ProfiledPIDController(SmartDashboard.getNumber("strafe P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2, 2));
 
         rotController.enableContinuousInput(-Math.PI, Math.PI);
         rotController.setTolerance(Units.degreesToRadians(3));
+        rotController.setGoal(Units.degreesToRadians(0));
 
         strController.enableContinuousInput(-Math.PI, Math.PI);
-        strController.setTolerance(Units.degreesToRadians(3));
+        strController.setTolerance(Units.degreesToRadians(.1));
+        strController.setGoal(Units.degreesToRadians(0));
 
     }
 
@@ -85,21 +88,21 @@ public class AlignStrafe extends CommandBase{
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
         
-        Rotation2d onTarget = Rotation2d.fromDegrees(180);
+        Rotation2d onTarget = Rotation2d.fromDegrees(0);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
-        Rotation2d strTarget = Rotation2d.fromDegrees(0);
+        Rotation2d strTarget = Rotation2d.fromDegrees(0 + SmartDashboard.getNumber("offset strafe", 0));
         double strError = strTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
-        if(Math.abs(error)>Units.degreesToRadians(3))
+        if(Math.abs(error) > Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);
         else{
             deltaSpeed =0;
             atGoal = true;
         }
 
-        if(Math.abs(strError) > Units.degreesToRadians(3))
-            strSpeed = -strController.calculate(strError);
+        if(Math.abs(strError) > Units.degreesToRadians(1.5))
+            strSpeed = strController.calculate(strError);
         else
             strSpeed = 0;
 
@@ -111,8 +114,9 @@ public class AlignStrafe extends CommandBase{
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("strafe speed", strSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
-        SmartDashboard.putNumber("strafe error", Units.degreesToRadians(strError));
+        SmartDashboard.putNumber("strafe error", Units.radiansToDegrees(strError));
         SmartDashboard.putBoolean("On target", rotController.atGoal());
+        SmartDashboard.putBoolean("strafe on target", strController.atGoal());
     }
 
     /* 
