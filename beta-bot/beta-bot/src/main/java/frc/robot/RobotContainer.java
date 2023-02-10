@@ -46,14 +46,14 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(led::setYellow)));
-    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(led::setOrange)/* , new InstantCommand(intake::closeJaws)*/));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(led::strobeCurrentIntake)));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(led::setYellow)));
     //ground intake tipped CONES
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-26, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-118), wrist, true, true), new InstantCommand(drive::changeSlow)));
-    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-26, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-110), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setStrobe)));
+    m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
     //high score CONES
-    m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow)));
-    m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax)));
+    m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setYellowStrobe)));
+    m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
     //mid score CONES
     m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
     //poop
@@ -70,11 +70,11 @@ public class RobotContainer {
     m_driverController.povDown().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, poleCam));
     //m_driverController.povUp().onTrue(new SetWristAngle(Rotation2d.fromDegrees(0), wrist, false, false));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
-    m_driverController.povRight().onTrue(new InstantCommand(intake::closeJaws));
-    m_driverController.povLeft().onTrue(new InstantCommand(intake::openJaws));
+    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
+    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
-    m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE), new InstantCommand(led::setPurple)));
-    m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(led::setOrange)/* , new InstantCommand(intake::closeJaws)*/));
+    m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
+    m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
     //intake CUBES (slower intake speed)
     
     m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));

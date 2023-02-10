@@ -21,7 +21,6 @@ public class IntakeVision extends SubsystemBase{
     private static IntakeVision instance = new IntakeVision();
 
     private double offset;
-    private InterpolatingTreeMap<Double,Double> offsetMap = new InterpolatingTreeMap<>();
     private MedianFilter filter = new MedianFilter(20);
 
     public IntakeVision(){
@@ -35,9 +34,7 @@ public class IntakeVision extends SubsystemBase{
 
         // offsetMap.put(11.8,3.99 );
 
-        offsetMap.put(-11.19, -2.66);
-        offsetMap.put(.237, 1.33);
-        offsetMap.put(10.14, 15.31);
+  
     }
 
     public static IntakeVision getInstance(){
@@ -114,7 +111,7 @@ public class IntakeVision extends SubsystemBase{
     }
     
     public void logData(){
-        SmartDashboard.putNumber("Intake Target yaw", getTargetYaw().getDegrees());
+        SmartDashboard.putNumber("Intake Target yaw", filter.calculate(getTargetYaw().getDegrees()));
         SmartDashboard.putNumber("Intake Target pitch", getTargetPitch().getDegrees());
         SmartDashboard.putNumber("Intake Targets", getTargets());
         SmartDashboard.putNumber("Intake offset", offset);
@@ -128,7 +125,7 @@ public class IntakeVision extends SubsystemBase{
 
     public void setObjectOffset(){
         offset = filter.calculate(getTargetYaw().getDegrees());
-        offset = offsetMap.get(offset);
+        //offset = offsetMap.get(offset);
     }
 
     public double getOffset(){
