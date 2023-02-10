@@ -122,11 +122,11 @@ public class AlignStrafe extends CommandBase{
 
         if(Math.abs(strError) > Units.degreesToRadians(0.4)){
             strSpeed = strController.calculate(strError);
-            LED.getInstance().setRed();
+            LED.getInstance().setRedStrobe();
         }
         else{
             strSpeed = 0;
-            LED.getInstance().setRainbow();
+            LED.getInstance().setGreen();
         }
 
         if(vision.hasTargets())

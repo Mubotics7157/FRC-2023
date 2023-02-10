@@ -159,6 +159,17 @@ public class Intake extends SubsystemBase {
         solenoid.set(Value.kForward);
     }
 
+    public boolean isClosed(){
+        if(solenoid.get() == Value.kForward){
+            return false;
+        }
+        else if(solenoid.get() == Value.kReverse){
+            return true;
+        }
+        else
+            return false;
+    }
+
     public void currentLimit(boolean enable){
         if(enable){
             intakeMaster.setSmartCurrentLimit(2, 10);
