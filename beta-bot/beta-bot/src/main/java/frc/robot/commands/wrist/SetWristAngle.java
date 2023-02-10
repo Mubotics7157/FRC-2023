@@ -3,6 +3,7 @@ package frc.robot.commands.wrist;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IntakeVision;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Wrist.WristState;
 
@@ -50,6 +51,16 @@ public class SetWristAngle extends CommandBase{
     @Override
     public boolean isFinished() {
         return wrist.atSetpoint();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        //if(setpoint.getDegrees() == -7)
+            //IntakeVision.getInstance().setObjectOffset();
+
+        if(setpoint.getDegrees() == -7){
+            IntakeVision.getInstance().setObjectOffset();
+        }
     }
 
 }
