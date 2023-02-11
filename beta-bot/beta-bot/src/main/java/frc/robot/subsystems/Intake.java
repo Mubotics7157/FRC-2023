@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
     private static Intake instance = new Intake();
 
     public Intake(){
-        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_REV_PH,PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_CTRE, IntakeConstants.PENUMATIC_TYPE, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
 
         intakeState = IntakeState.OFF;
 
@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase {
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
 
-        SmartDashboard.putNumber("Intake speed", 0.5);
+        SmartDashboard.putNumber("Intake Speed", 0.5);
         
     }
 

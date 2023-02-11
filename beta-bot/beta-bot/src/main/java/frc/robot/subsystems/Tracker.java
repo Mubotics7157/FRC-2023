@@ -70,6 +70,8 @@ public class Tracker extends SubsystemBase{
         SmartDashboard.putNumber("odom y", getOdometry().getY());
         SmartDashboard.putNumber("odometry r", getOdometry().getRotation().getDegrees());
 
+        
+
         SmartDashboard.putNumber("estim x", getPose().getX());
         SmartDashboard.putNumber("estim y", getPose().getY());
         SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());

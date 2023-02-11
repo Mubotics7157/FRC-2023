@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -16,6 +18,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.auto.RunIntake;
+import frc.robot.commands.auto.SetElevatorHeight;
+import frc.robot.commands.auto.SetWristAngle;
+import frc.robot.subsystems.Intake.IntakeState;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -105,7 +116,7 @@ public final class Constants {
 
       public static final double ELEVATOR_KP = .08;
 
-      public static final double ELEVATOR_HEIGHT_TOLERANCE = 0;
+      public static final double ELEVATOR_HEIGHT_TOLERANCE = 1;
 
       public static final double ZEROING_SPEED = -.05;
 
@@ -164,7 +175,8 @@ public final class Constants {
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
-      public static final int DEVICE_ID_REV_PH = 28;
+      public static final int DEVICE_ID_CTRE = 28;
+      public static final PneumaticsModuleType PENUMATIC_TYPE = PneumaticsModuleType.CTREPCM;
 
       public static final int ULTRASONIC_PING_PORT = 0;
       public static final int ULTRASONIC_RESPONSE_PORT = 1;
@@ -177,7 +189,7 @@ public final class Constants {
       public static final double CONE_OUTTAKE_SPEED=-0.9;
       public static final double CUBE_OUTTAKE_SPEED=-0.9;
 
-      public static final double IDLE_SPEED = .35;
+      public static final double IDLE_SPEED = .65;
 
       public static final double OFFSET_COEFFICIENT = 3.6 / 12;
     }
@@ -193,5 +205,6 @@ public final class Constants {
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
+
   }
 }

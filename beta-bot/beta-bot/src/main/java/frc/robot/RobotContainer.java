@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -53,10 +55,10 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, true, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(led::strobeCurrentIntake)));
-    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(led::setCurrentIntake)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE), new InstantCommand(led::strobeCurrentIntake)));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(led::setCurrentIntake), new RunIntake(intake, IntakeState.OFF)));
     //ground intake tipped CONES
-    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-26, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-107), wrist, false, false), new InstantCommand(drive::changeVerySlow), new InstantCommand(led::setStrobe)));
+    m_driverController.leftBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-26, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-113), wrist, true, false), new InstantCommand(drive::changeVerySlow), new InstantCommand(led::setStrobe)));
     m_driverController.leftBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
     //high score CONES
     m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setYellowStrobe)));
@@ -69,7 +71,7 @@ public class RobotContainer {
 
     //m_driverController.rightBumper().whileTrue(new SetWristAngle(Rotation2d.fromDegrees(-72), wrist, true));
     //m_driverController.rightBumper().onFalse(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false));
-    m_driverController.x().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-40), wrist, false, false), new SetElevatorHeight(-.25, elevator, false), new RunIntake(intake, IntakeState.INTAKE)));
+    m_driverController.x().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-40), wrist, false, false), new SetElevatorHeight(-.25, elevator, false)));
     m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
     //cube testing shot
 
@@ -91,9 +93,35 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CONE)));
-    eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
+
+    eventMap.put("score-preload", new SequentialCommandGroup(new ParallelCommandGroup(
+    new SetElevatorHeight(-26, elevator, false),
+    new SetWristAngle(Rotation2d.fromDegrees(-111), wrist, false, false)),
+    //go up to score ^^
+    new WaitCommand(0.75),
+    new RunIntake(intake, IntakeState.OUTTAKE), 
+    //shoot ^^
+    new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false),
+    new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false))
+    //stow ^^
+    ));
+
+    eventMap.put("kadoomer", new ParallelCommandGroup(/*new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CONE)*/));
+    eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new RunIntake(intake, IntakeState.OFF)*/));
+
+    eventMap.put("score-1", new SequentialCommandGroup(new ParallelCommandGroup(
+    new SetElevatorHeight(-26, elevator, false),
+    new SetWristAngle(Rotation2d.fromDegrees(-115), wrist, false, false)),
+    //go up to score ^^
+    new WaitCommand(0.75),
+    new RunIntake(intake, IntakeState.OUTTAKE), 
+    //shoot ^^
+    new ParallelCommandGroup(new SetElevatorHeight(-.25, elevator, false),
+    new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false))
+    //stow ^^
+    ));
+
     //ooga-wooga
-    return new AutoRoutine("intense", new PathConstraints(3.5, 3.5), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    return new AutoRoutine("intense", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }

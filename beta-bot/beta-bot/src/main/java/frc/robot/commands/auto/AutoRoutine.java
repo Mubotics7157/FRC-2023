@@ -23,6 +23,7 @@ public class AutoRoutine {
 
     public AutoRoutine(String autoPath, PathConstraints constraints, HashMap<String,Command> events){
         pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(autoPath,constraints);
+        
         this.events = events;
         tracker = Tracker.getInstance();
         drive = Drive.getInstance();

@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_REV_PH , PneumaticsModuleType.REVPH);
+  Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_CTRE , IntakeConstants.PENUMATIC_TYPE);
 
   /**
    * This function is run when the robot is first started up and should be used for any

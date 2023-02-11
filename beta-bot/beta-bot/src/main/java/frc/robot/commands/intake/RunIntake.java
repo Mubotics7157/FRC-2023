@@ -3,11 +3,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Intake.IntakeState;
 
-public class RunIntake extends CommandBase {
+public class RunIntake extends InstantCommand {
     
     private Intake intake;
     private IntakeState state;
@@ -26,23 +27,16 @@ public class RunIntake extends CommandBase {
         intake.setIntakeState(state); 
 
     }
-    @Override
-    public void execute() {
-    }
-
+    
     @Override
     public void end(boolean interrupted) {
         //intake.setMotors(0);
         
-        if(state == IntakeState.INTAKE || state == IntakeState.INTAKE_CONE || state == IntakeState.INTAKE_CUBE)
-            intake.setIntakeState(IntakeState.IDLE);
-        else
-            intake.setIntakeState(IntakeState.OFF);
-            
+       // if(state == IntakeState.INTAKE || state == IntakeState.INTAKE_CONE || state == IntakeState.INTAKE_CUBE)
+         //   intake.setIntakeState(IntakeState.IDLE);
+        //else
+            //intake.setIntakeState(IntakeState.OFF);
         
-            
-
-        //intake.setIntakeState(IntakeState.OFF);
     }
 
 }

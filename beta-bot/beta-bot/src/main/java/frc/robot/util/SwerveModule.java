@@ -26,6 +26,8 @@ public class SwerveModule {
     WPI_TalonFX driveMotor;
     WPI_CANCoder absEncoder;
 
+    double prevVel = 0;
+
 
 
 

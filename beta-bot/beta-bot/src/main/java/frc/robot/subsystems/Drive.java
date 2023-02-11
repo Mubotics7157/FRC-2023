@@ -60,7 +60,10 @@ public class Drive extends SubsystemBase {
 
 
         SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
+
+        SmartDashboard.putNumber("drive velocity", rearLeft.getDriveVelocity());
     }
+
 
     public void setModuleStates(SwerveModuleState[] states){
         frontLeft.setState(states[0]);
@@ -112,6 +115,8 @@ public class Drive extends SubsystemBase {
     public synchronized double getAng(){
         return driveAngle;
     }
+
+
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
         SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
