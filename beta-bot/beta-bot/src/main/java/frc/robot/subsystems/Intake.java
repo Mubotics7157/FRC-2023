@@ -167,7 +167,7 @@ public class Intake extends SubsystemBase {
             return true;
         }
         else
-            return false;
+            return true;
     }
 
     public void currentLimit(boolean enable){

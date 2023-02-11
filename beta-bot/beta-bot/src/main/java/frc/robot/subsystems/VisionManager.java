@@ -65,15 +65,14 @@ public class VisionManager extends SubsystemBase{
             return true;
     }
 
-    public void toggleLimeLight(){
-        if(tableLime.getEntry("ledMode").getDouble(0) == 1){
-            tableLime.getEntry("ledMode").setNumber(1);
-        }
-        else if(tableLime.getEntry("ledMode").getDouble(0) == 0){
-            tableLime.getEntry("ledMode").setNumber(1);
-        }
+    public void toggleLimeLight(int on){
+        
+            tableLime.getEntry("ledMode").setNumber(on);
+        
+        
     }
 
+    
     public void togglePipeLine(){
         //switch to object detection to reflective tape
         if(tableLime.getEntry("pipeline").getDouble(0) == 1){

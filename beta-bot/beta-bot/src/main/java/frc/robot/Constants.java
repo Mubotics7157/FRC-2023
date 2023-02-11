@@ -177,7 +177,7 @@ public final class Constants {
       public static final double CONE_OUTTAKE_SPEED=-0.9;
       public static final double CUBE_OUTTAKE_SPEED=-0.9;
 
-      public static final double IDLE_SPEED = 0;
+      public static final double IDLE_SPEED = .35;
 
       public static final double OFFSET_COEFFICIENT = 3.6 / 12;
     }

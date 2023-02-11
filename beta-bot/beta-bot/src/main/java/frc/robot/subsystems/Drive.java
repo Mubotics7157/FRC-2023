@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,6 +38,8 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("align P", 0.25);
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
+
+        PathPlannerServer.startServer(5811);
     }
 
     public static Drive getInstance(){
@@ -94,6 +98,11 @@ public class Drive extends SubsystemBase {
     public synchronized void changeSlow(){
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
+    }
+
+    public synchronized void changeVerySlow(){
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 4;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4;
     }
 
     public synchronized double getTan(){

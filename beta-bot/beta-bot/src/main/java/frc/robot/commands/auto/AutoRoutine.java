@@ -24,7 +24,6 @@ public class AutoRoutine {
     public AutoRoutine(String autoPath, PathConstraints constraints, HashMap<String,Command> events){
         pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup(autoPath,constraints);
         this.events = events;
-
         tracker = Tracker.getInstance();
         drive = Drive.getInstance();
     }
@@ -39,7 +38,7 @@ public class AutoRoutine {
           AutoConstants.ROT_CONTROLLER,
           drive::setModuleStates, // Module states consumer used to output to the drive subsystem
           events,
-          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
           drive // The drive subsystem. Used to properly set the requirements of path following commands
           ); 
 

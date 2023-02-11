@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.IntakeVision;
@@ -31,6 +32,7 @@ public class AlignStrafe extends CommandBase{
     private double strSpeed;
 
     private double offset = 0;
+
 
     private DoubleSupplier fwd, str, rot;
     private InterpolatingTreeMap<Double,Double> offsetMap = new InterpolatingTreeMap<>();
@@ -77,10 +79,11 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
+        VisionManager.getInstance().toggleLimeLight(0);;
         atGoal= false;
         //rotController = new ProfiledPIDController(SmartDashboard.getNumber("align P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
         //strController = new ProfiledPIDController(SmartDashboard.getNumber("strafe P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2, 2));
-        offset = IntakeVision.getInstance().getOffset();
+    
         rotController.setP(SmartDashboard.getNumber("align P", 0.25));
         strController.setP(SmartDashboard.getNumber("strafe P", 0.25));
 
@@ -89,28 +92,42 @@ public class AlignStrafe extends CommandBase{
         rotController.setGoal(Units.degreesToRadians(0));
 
         strController.enableContinuousInput(-Math.PI, Math.PI);
-        strController.setTolerance(Units.degreesToRadians(.1));
+        strController.setTolerance(Units.degreesToRadians(.4));
         strController.setGoal(Units.degreesToRadians(0));
 
-        offsetMap.put(-11.19, -2.66);
-        offsetMap.put(.237, 1.33);
-        offsetMap.put(12.0, 5.7);
-        offsetMap.put(7.7, 5.01);
-        offset = offsetMap.get(offset);
+        //offsetMap.put(-11.57, -3.58); //=========
+        
+        //offsetMap.put(-11.19, -2.66);
+        //offsetMap.put(.237, 1.33);
+
+        // Left Overflow
+        offsetMap.put(17.0, 3.98);
+        offsetMap.put(10.0, 3.98);
+        offsetMap.put(9.0, 3.98);
+        offsetMap.put(4.0, 0.0);
+        offsetMap.put(0.0, 0.0);
+        offsetMap.put(-4.0, 0.0);
+        offsetMap.put(-9.0, -5.2);
+        offsetMap.put(-10.0, -5.2);
+        offsetMap.put(-18.0, -5.2);
+
+        //offsetMap.put(11.77, 4.81); //==-==
+        //offsetMap.put(12.0, 5.7);
+        //offsetMap.put(7.7, 5.01);
 
     }
 
     @Override
     public void execute() {
-
+        offset = offsetMap.get(IntakeVision.getInstance().getOffset());
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
         
-        Rotation2d onTarget = Rotation2d.fromDegrees(0);
+        Rotation2d onTarget = Rotation2d.fromDegrees(180);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
-        Rotation2d strTarget = Rotation2d.fromDegrees(offset);
+        Rotation2d strTarget = Rotation2d.fromDegrees(-offset);
         double strError = strTarget.rotateBy(vision.getTargetYaw()).getRadians();
 
         if(Math.abs(error) > Units.degreesToRadians(3))
@@ -130,7 +147,7 @@ public class AlignStrafe extends CommandBase{
         }
 
         if(vision.hasTargets())
-            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, -strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         else
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         
@@ -138,6 +155,7 @@ public class AlignStrafe extends CommandBase{
         SmartDashboard.putNumber("strafe speed", strSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
         SmartDashboard.putNumber("strafe error", Units.radiansToDegrees(strError));
+        SmartDashboard.putNumber("strafe controller error", Units.radiansToDegrees(strController.getPositionError()));
         SmartDashboard.putBoolean("On target", rotController.atGoal());
         SmartDashboard.putBoolean("strafe on target", strController.atGoal());
         SmartDashboard.putNumber("actual vision offset", offset);
@@ -151,6 +169,8 @@ public class AlignStrafe extends CommandBase{
     */
     @Override
     public void end(boolean interrupted) {
+        VisionManager.getInstance().toggleLimeLight(1);
         driveFromChassis(new ChassisSpeeds());
+        LED.getInstance().setCurrentIntake();
     }
 }
