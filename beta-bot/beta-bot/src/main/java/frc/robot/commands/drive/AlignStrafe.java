@@ -120,6 +120,7 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void execute() {
+        try{
         offset = offsetMap.get(IntakeVision.getInstance().getOffset());
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
@@ -147,10 +148,7 @@ public class AlignStrafe extends CommandBase{
             LED.getInstance().setGreen();
         }
 
-        if(vision.hasTargets())
-            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, -strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
-        else
-            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, -strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("strafe speed", strSpeed);
@@ -160,14 +158,18 @@ public class AlignStrafe extends CommandBase{
         SmartDashboard.putBoolean("On target", rotController.atGoal());
         SmartDashboard.putBoolean("strafe on target", strController.atGoal());
         SmartDashboard.putNumber("actual vision offset", offset);
+        }
+        catch(NullPointerException e){
+            atGoal = true;
+        }
     }
 
-    /* 
+    
     @Override
     public boolean isFinished() {
         return atGoal;
     }
-    */
+    
     @Override
     public void end(boolean interrupted) {
         VisionManager.getInstance().setTargetLLState(VisionState.TAG);

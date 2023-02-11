@@ -8,9 +8,6 @@ import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.drive.RotAlign;
-import frc.robot.commands.elevator.SetElevatorHeight;
-import frc.robot.commands.intake.RunIntake;
-import frc.robot.commands.wrist.SetWristAngle;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -64,15 +61,15 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
     //mid score CONES
-    m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setYellowStrobe)));
-    m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
+    //m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setYellowStrobe)));
+    //m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
     //poop
-    m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
+    //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
     //eat
-    m_driverController.a().whileTrue(new RunIntake(intake, IntakeState.INTAKE));
+    //m_driverController.a().whileTrue(new RunIntake(intake, IntakeState.INTAKE));
 
-    m_driverController.x().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-40), wrist, false, false), new SetElevatorHeight(-.25, elevator, false), new RunIntake(intake, IntakeState.INTAKE)));
-    m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
+    //m_driverController.x().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-40), wrist, false, false), new SetElevatorHeight(-.25, elevator, false), new RunIntake(intake, IntakeState.INTAKE)));
+    //m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
     //cube testing shot
 
     m_driverController.povDown().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, poleCam) );
@@ -80,19 +77,19 @@ public class RobotContainer {
     m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
     m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
-    m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
-    m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
+    //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
+    //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
     //intake CUBES (slower intake speed)
     
-    m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));
-    m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
+    //m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));
+    //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
   }
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CONE)));
-    eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
+    //eventMap.put("kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CONE)));
+    //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
     return new AutoRoutine("intense", new PathConstraints(3.5, 3.5), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
