@@ -19,6 +19,7 @@ import frc.robot.subsystems.IntakeVision;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
+import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignStrafe extends CommandBase{
     private Drive drive;
@@ -79,7 +80,7 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
-        VisionManager.getInstance().toggleLimeLight(0);;
+        VisionManager.getInstance().setTargetLLState(VisionState.TAPE);
         atGoal= false;
         //rotController = new ProfiledPIDController(SmartDashboard.getNumber("align P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
         //strController = new ProfiledPIDController(SmartDashboard.getNumber("strafe P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2, 2));
@@ -169,7 +170,7 @@ public class AlignStrafe extends CommandBase{
     */
     @Override
     public void end(boolean interrupted) {
-        VisionManager.getInstance().toggleLimeLight(1);
+        VisionManager.getInstance().setTargetLLState(VisionState.TAG);
         driveFromChassis(new ChassisSpeeds());
         LED.getInstance().setCurrentIntake();
     }

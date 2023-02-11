@@ -25,8 +25,6 @@ public class Elevator extends SubsystemBase {
     private RelativeEncoder elevatorEncoder;
     private CANSparkMax elevatorSlave;
 
-    private LinkedHashMap <ElevatorSetpoint,Integer> elevatorHeights = new LinkedHashMap<>();
-    private ElevatorSetpoint currentState;
     private double setpoint;
 
     private static Elevator instance = new Elevator();
@@ -48,17 +46,6 @@ public class Elevator extends SubsystemBase {
         OFF
     }
 
-    public enum ElevatorSetpoint{
-        STOW,
-        GROUND_INTAKE,
-        CONE_LOW,
-        CONE_MID,
-        CONE_HIGH,
-        CUBE_LOW,
-        CUBE_MID,
-        CUBE_HIGH
-    }
-
     public Elevator(){
         elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_MASTER, MotorType.kBrushless);
         elevatorSlave = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_SLAVE, MotorType.kBrushless);
@@ -72,14 +59,11 @@ public class Elevator extends SubsystemBase {
         limitSwitch = new DigitalInput(ElevatorConstants.DEVICE_ID_ELEVATOR_SWITCH);
 
         configElevatorMotor();
-        currentState = ElevatorSetpoint.STOW;
 
         setpoint = 0;
 
         elevatorSlave.follow(elevatorMotor);
 
-        //elevatorHeights.put(ElevatorSetpoint.STOW, 0);
-        //elevatorHeights.put(ElevatorSetpoint.GROUND_INTAKE, 0);
 
         SmartDashboard.putNumber("elevator setpoint", -26);
         zeroElevator();
@@ -93,7 +77,6 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-
         switch(state){
             case OFF:
                 setPercentOutput(0);
@@ -113,7 +96,6 @@ public class Elevator extends SubsystemBase {
             default:
                 break;
         }
-
         logData();
     }
 
@@ -121,9 +103,10 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.set(val);
     }
 
-    public boolean setState(ElevatorSetpoint wantedState){
+    public boolean setElevatorHeight(double setpoint){
+        this.setpoint = setpoint;
         setElevatorState(ElevatorState.SETPOINT);
-        setpoint = elevatorHeights.get(wantedState);
+        configElevatorMotor();
         elevatorController.setReference(setpoint, ControlType.kSmartMotion);
 
         return atSetpoint();
@@ -137,15 +120,6 @@ public class Elevator extends SubsystemBase {
         elevatorController.setReference(setpoint, ControlType.kSmartMotion);   
     }
 
-    public boolean setState(double setpoint){
-        setElevatorState(ElevatorState.SETPOINT);
-
-        this.setpoint = setpoint;
-
-        //elevatorController.setReference(setpoint, ControlType.kPosition);
-
-        return atSetpoint();
-    }
 
     public boolean zeroRoutine(){
         if(!limitSwitch.get()){//assuming !get() means not triggered
@@ -233,10 +207,6 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
         SmartDashboard.putNumber("bruddah", elevatorEncoder.getPosition());
-        //Shuffleboard.getTab("Elevator").add("Elevator Setpoint", setpoint);
-        //Shuffleboard.getTab("elevator").add("Elevator State", getCurrentState().toString());
-        // SmartDashboard.putNumber("Elevator Setpoint", setpoint);
-        // SmartDashboard.putString("Elevator State", getCurrentState().toString());
     }
 
     public void setElevatorState(ElevatorState state){

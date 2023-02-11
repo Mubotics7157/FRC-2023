@@ -1,120 +1,78 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
+import frc.robot.util.Limelight;
 
 public class VisionManager extends SubsystemBase{
     
-    NetworkTable tableLime;
-
-    private double[] testArray = {0, 0, 0, 0, 0, 0};
     private static VisionManager instance = new VisionManager();
+    private Limelight targetLL;
+    private Limelight intakeLL;
+    
+    private MedianFilter coneFilter;
+    private double coneOffset;
+
+    public enum VisionState{
+        TAG,
+        TAPE,
+        OFF
+    }
 
     public VisionManager(){
-        tableLime = NetworkTableInstance.getDefault().getTable("limelight-polecam");
+        targetLL = new Limelight(VisionConstants.TARGET_LL_NAME);
+        intakeLL = new Limelight(VisionConstants.INTAKE_LL_NAME);
+
+        coneFilter = new MedianFilter(VisionConstants.FILTER_SAMPLE_WINDOW);
+        coneOffset = 0;
     }
 
     public static VisionManager getInstance(){
         return instance;
     }
 
+    public Rotation2d getNodeAngle(){
+        return targetLL.getTargetYaw();
+    }
+
+    public double getConeOffset(){
+        return coneFilter.calculate(intakeLL.getTargetYaw().getDegrees());
+    }
+
+    public Pose2d getFieldRelativePose(){
+        return targetLL.getBotPose();
+    }
+
+    public Rotation2d getOffset(){
+        return Rotation2d.fromDegrees(coneOffset);
+    }
+
 
     @Override
     public void periodic() {
         logData();
-    }
-    
-
-    public Rotation2d getTargetYaw(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        double yaw = tableLime.getEntry("tx").getDouble(0);
-        if(targets != 0){
-            return Rotation2d.fromDegrees(yaw);
-        }
-        else
-            return Rotation2d.fromDegrees(0);
+        coneOffset = getConeOffset();
     }
 
-    public double getTargetPitch(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        double pitch = tableLime.getEntry("ty").getDouble(0);
-        if(targets != 0){
-            return pitch;
-        }
-        else
-            return 0;
-    }
-
-    public double getTargets(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-        return targets;
-    }
-
-    public boolean hasTargets(){
-        double targets = tableLime.getEntry("tv").getDouble(0);
-
-        if(targets == 0){
-            return false;
-        }
-        else
-            return true;
-    }
-
-    public void toggleLimeLight(int on){
-        
-            tableLime.getEntry("ledMode").setNumber(on);
-        
-        
-    }
-
-    
-    public void togglePipeLine(){
-        //switch to object detection to reflective tape
-        if(tableLime.getEntry("pipeline").getDouble(0) == 1){
-            tableLime.getEntry("pipeline").setDouble(0);
-        }
-        else if(tableLime.getEntry("pipeline").getDouble(0) == 0){
-            tableLime.getEntry("pipeline").setDouble(1);
-        }
-    }
-
-    public void changePipeline(int index){
-        tableLime.getEntry("pipeline").setDouble(index);
-    }
-
-    public double getPipelineIndex(){
-        return tableLime.getEntry("pipeline").getDouble(0);
-    }
-    
     public void logData(){
-        SmartDashboard.putNumber("Lime Target yaw", getTargetYaw().getDegrees());
-        SmartDashboard.putNumber("Lime Target pitch", getTargetPitch());
-        SmartDashboard.putNumber("Lime Targets", getTargets());
+        SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
+        SmartDashboard.putNumber("Intake Targets", intakeLL.getTargets());
+        SmartDashboard.putNumber("Intake offset", coneOffset);
     }
 
-    public Pose2d getBotPose(){
-        if(hasTargets()){
-            try{
-                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-                Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-                return pose;
-            }
-            catch(Exception e){
-                return new Pose2d();
-            }
+    public void setTargetLLState(VisionState state){
+        switch(state){
+            case TAG:
+                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
+            case TAPE:
+                targetLL.setPipelineIndex(VisionConstants.TAPE_PIPELINE_INDEX);
+            default:
+                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
         }
-        else
-            return new Pose2d();
     }
-
-    public double getLatency(){
-        double latency = tableLime.getEntry("tl").getDouble(0);
-        return latency;
-    }
-
+    
 }   

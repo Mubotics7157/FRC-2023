@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 
+import java.util.TreeMap;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -31,13 +33,12 @@ public class Wrist extends SubsystemBase {
     private boolean holdAtWantedState;
     private double jogVal;
     private WristState wristState;
-
     private DigitalInput magSensor;
+
     
     public Wrist(){
         jogVal = 0;
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
-        //wristEncoder = new DutyCycleEncoder(WristConstants.ABS_ENCODER_PORT);
   
         holdAtWantedState = false;
 
@@ -87,13 +88,8 @@ public class Wrist extends SubsystemBase {
         jogVal = val;
     }
 
-
-
-    public void setHolding(){
-        setpoint = new Rotation2d(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 96));
-    }
-
     public void setSetpoint(Rotation2d requestedAngle){
+        setWristState(WristState.SETPOINT);
         setpoint = requestedAngle;
     }
 
@@ -159,11 +155,6 @@ public class Wrist extends SubsystemBase {
     }
 
     private void logData(){
-        //SmartDashboard.putNumber("Wrist Angle", Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)));
-        SmartDashboard.putNumber("Wrist Onboard Sensor Position", wristMotor.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Wrist Falcon Temp", wristMotor.getTemperature());
-        SmartDashboard.putBoolean("Wrist Holding", holdAtWantedState);
-
     }
 
 }

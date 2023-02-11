@@ -67,27 +67,27 @@ public class RotAlign extends CommandBase{
 
     @Override
     public void execute() {
+        try{
+            Rotation2d onTarget = Rotation2d.fromDegrees(0);
+            double error = onTarget.rotateBy(vision.getNodeAngle()).getRadians();
 
-        Rotation2d onTarget = Rotation2d.fromDegrees(0);
-        double error = onTarget.rotateBy(vision.getTargetYaw()).getRadians();
+            if(Math.abs(error)>Units.degreesToRadians(3))
+                deltaSpeed = controller.calculate(error);
+            else{
+                deltaSpeed =0;
+                atGoal = true;
+            }
 
+            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
 
-        if(Math.abs(error)>Units.degreesToRadians(3))
-            deltaSpeed = controller.calculate(error);
-        else{
-            deltaSpeed =0;
-            atGoal = true;
+            SmartDashboard.putNumber("controller output", deltaSpeed);
+            SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
+            SmartDashboard.putBoolean("On target", controller.atGoal());
         }
 
-        if(vision.hasTargets()){
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
-        }
-        else
+        catch(NullPointerException e){
             atGoal = true;
-
-        SmartDashboard.putNumber("controller output", deltaSpeed);
-        SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
-        SmartDashboard.putBoolean("On target", controller.atGoal());
+        }
     }
 
      

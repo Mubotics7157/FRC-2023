@@ -154,6 +154,18 @@ public final class Constants {
       public static final Transform3d SHUTTER_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
       public static final Transform3d LIME_TRANS = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
       //TODO: figure out the translations cuz its 0, 0, 0 rn soooooo :P
+
+      public static final int LIMELIGHT_ON = 0;
+      public static final int LIMELIGHT_OFF = 1;
+
+      public static final int TAPE_PIPELINE_INDEX = 0;
+      public static final int TAG_PIPELINE_INDEX = 1;
+      public static final int CONE_PIPELINE_INDEX = 0;
+
+      public static final String INTAKE_LL_NAME = "limelight-intake";
+      public static final String TARGET_LL_NAME = "limelight-polecam";
+
+      public static final int FILTER_SAMPLE_WINDOW = 20;
  
     }
 
