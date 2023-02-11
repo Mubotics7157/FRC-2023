@@ -206,4 +206,15 @@ public final class Constants {
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
+
+  public static final class SuperStructureConstants{
+    public static final double ELEVATOR_CONE_HIGH = 0;
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(0);
+
+    public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(0);
+
+    public static final double ELEVATOR_INTAKE_CUBE = 0;
+    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(0);
+  }
 }
