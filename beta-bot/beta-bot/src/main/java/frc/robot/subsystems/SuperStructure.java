@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.SuperStructureConstants;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Wrist.WristState;
@@ -16,8 +17,8 @@ public class SuperStructure extends SubsystemBase {
 
     public enum SuperStructureState{
         CONE_HIGH,
-        CUBE_HIGH,
         CONE_MID,
+        CUBE_HIGH,
         CUBE_MID,
         CUBE_INTAKE,
         CONE_INTAKE,
@@ -36,6 +37,7 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         switch(scoringState){
             case CONE_HIGH:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
                 break;
             case CONE_MID:
                 break;
@@ -47,6 +49,7 @@ public class SuperStructure extends SubsystemBase {
             case CUBE_INTAKE:
                 break;
             case FALLEN_CONE:
+            goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
         }
     }
