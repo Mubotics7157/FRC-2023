@@ -129,7 +129,7 @@ public class AlignStrafe extends CommandBase{
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
         Rotation2d strTarget = Rotation2d.fromDegrees(-offset);
-        double strError = strTarget.rotateBy(vision.getTargetYaw()).getRadians();
+        double strError = strTarget.rotateBy(vision.getNodeAngle()).getRadians();
 
         if(Math.abs(error) > Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);

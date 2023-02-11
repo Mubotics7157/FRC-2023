@@ -40,7 +40,12 @@ public class VisionManager extends SubsystemBase{
     }
 
     public double getConeOffset(){
-        return coneFilter.calculate(intakeLL.getTargetYaw().getDegrees());
+        try{
+            return coneFilter.calculate(intakeLL.getTargetYaw().getDegrees());
+        }
+        catch(NullPointerException e){
+            return 0;
+        }
     }
 
     public Pose2d getFieldRelativePose(){

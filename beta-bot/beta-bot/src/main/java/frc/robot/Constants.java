@@ -208,13 +208,19 @@ public final class Constants {
   }
 
   public static final class SuperStructureConstants{
-    public static final double ELEVATOR_CONE_HIGH = 0;
+    public static final double ELEVATOR_CONE_HIGH = -26;
     public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(0);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(0);
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);
+
+    public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
+    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
-    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(0);
+    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-123);
+
+    public static final double ELEVATOR_CUBE_HIGH = 0;
+    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
   }
 }
