@@ -64,6 +64,13 @@ public class LED extends CommandBase{
             candle.animate(purpleStrobe);
     }
 
+    public void setCurrentIntake(){
+        if(Intake.getInstance().isClosed())
+            setYellow();
+        else
+            setPurple();
+    }
+
     public void setRedStrobe(){
         candle.animate(redStrobe);
     }
