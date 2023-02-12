@@ -16,6 +16,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -176,7 +178,9 @@ public final class Constants {
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
-      public static final int DEVICE_ID_REV_PH = 28;
+      public static final int DEVICE_ID_PCM = 28;
+
+      public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
       public static final int ULTRASONIC_PING_PORT = 0;
       public static final int ULTRASONIC_RESPONSE_PORT = 1;

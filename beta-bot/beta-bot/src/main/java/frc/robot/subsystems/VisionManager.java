@@ -73,10 +73,13 @@ public class VisionManager extends SubsystemBase{
         switch(state){
             case TAG:
                 targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
+                break;
             case TAPE:
                 targetLL.setPipelineIndex(VisionConstants.TAPE_PIPELINE_INDEX);
+                break;
             default:
                 targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
+                break;
         }
     }
 

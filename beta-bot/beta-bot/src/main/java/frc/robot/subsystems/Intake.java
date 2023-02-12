@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
     private static Intake instance = new Intake();
 
     public Intake(){
-        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_REV_PH,PneumaticsModuleType.REVPH, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_PCM, IntakeConstants.PNEUMATICS_MODULE_TYPE, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
 
         intakeState = IntakeState.OFF;
 
@@ -106,22 +106,22 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE:
                 setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
-                toggleIntake(false);
+                //toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
-                toggleIntake(true);
+                //toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
-                toggleIntake(true);
+                //toggleIntake(true);
                 break;
             case INTAKE:
-                setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case IDLE:
                 setMotors(IntakeConstants.IDLE_SPEED);
@@ -135,6 +135,7 @@ public class Intake extends SubsystemBase {
             currentLimit(true);
         else
             currentLimit(false);
+            
         intakeState = state;
     }
 

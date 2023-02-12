@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -32,11 +33,14 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
 
-  CANSparkMax intakeMaster = new CANSparkMax(18, MotorType.kBrushless);
-  CANSparkMax intakeSlave = new CANSparkMax(10, MotorType.kBrushless);
+  CANSparkMax intakeMaster = new CANSparkMax(20, MotorType.kBrushless);
+  CANSparkMax intakeSlave = new CANSparkMax(21, MotorType.kBrushless);
   
   SparkMaxPIDController intakeController = intakeMaster.getPIDController();
   RelativeEncoder encoder = intakeMaster.getEncoder();
+
+  SparkMaxPIDController slaveController = intakeSlave.getPIDController();
+  RelativeEncoder slaveEncoder = intakeSlave.getEncoder();
   Joystick controller = new Joystick(0);
 
   /**
@@ -51,15 +55,21 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putNumber("controller P", 0);
     SmartDashboard.putNumber("controller FF", 0);
+    SmartDashboard.putNumber("slave controller P", 0);
+    SmartDashboard.putNumber("slave controller FF", 0);
     SmartDashboard.putNumber("speed", 0);
 
 
     intakeMaster.restoreFactoryDefaults();
     intakeSlave.restoreFactoryDefaults();
-    intakeSlave.follow(intakeMaster);
+    //intakeSlave.follow(intakeMaster);
     intakeMaster.setInverted(false);
+    intakeSlave.setInverted(true);
     intakeSlave.setInverted(intakeMaster.getInverted());
+    intakeMaster.setIdleMode(IdleMode.kBrake);
+    intakeSlave.setIdleMode(intakeMaster.getIdleMode());
     intakeController.setOutputRange(-1, 1);
+    slaveController.setOutputRange(-1, 1);
     //encoder.setPosition(0);
     /* 
     intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 2000);
@@ -82,9 +92,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("encoder value", encoder.getVelocity());
-    SmartDashboard.putNumber("error", encoder.getVelocity() - SmartDashboard.getNumber("speed", 0));
+    SmartDashboard.putNumber("slave value", slaveEncoder.getVelocity());
+    //SmartDashboard.putNumber("error", encoder.getVelocity() - SmartDashboard.getNumber("speed", 0));
     intakeController.setP(SmartDashboard.getNumber("controller P", 0));
     intakeController.setFF(SmartDashboard.getNumber("controller FF", 0));
+
+    slaveController.setP(SmartDashboard.getNumber("slave controller P", 0));
+    slaveController.setFF(SmartDashboard.getNumber("slave controller FF", 0));
   }
 
   /**
@@ -127,9 +141,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     if(controller.getRawButton(1)){
       intakeController.setReference(SmartDashboard.getNumber("speed", 0), com.revrobotics.CANSparkMax.ControlType.kVelocity);
+      slaveController.setReference(SmartDashboard.getNumber("speed", 0), com.revrobotics.CANSparkMax.ControlType.kVelocity);
     }
-    else
+    else{
       intakeMaster.set(0);
+      intakeSlave.set(0);
+    }
 
   }
 

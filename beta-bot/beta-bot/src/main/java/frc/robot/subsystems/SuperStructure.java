@@ -8,6 +8,8 @@ import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Wrist.WristState;
 
 public class SuperStructure extends SubsystemBase {
+
+    private static SuperStructure instance = new SuperStructure();
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
@@ -23,6 +25,7 @@ public class SuperStructure extends SubsystemBase {
         CUBE_INTAKE,
         CONE_INTAKE,
         FALLEN_CONE,
+        OPEN_DOOR,
         STOWED,
         ZERO
     }
@@ -54,9 +57,15 @@ public class SuperStructure extends SubsystemBase {
             case FALLEN_CONE:
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
+            case OPEN_DOOR:
+                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
         }
     }
 
+    public static SuperStructure getInstance(){
+        return instance;
+    }
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
@@ -89,7 +98,6 @@ public class SuperStructure extends SubsystemBase {
         wrist.setWristState(WristState.STOW);
         elevator.setState(ElevatorState.STOW);
         intake.setIntakeState(IntakeState.OFF);
-
     }
 
     public void idleIntake(){

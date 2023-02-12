@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.OpenDoor;
 import frc.robot.commands.Outtake;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
@@ -31,6 +32,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -46,7 +49,7 @@ public class RobotContainer {
   private final IntakeVision intakeCam = IntakeVision.getInstance();
   private final VisionManager poleCam = VisionManager.getInstance();
   private final LED led = LED.getInstance();
-  private final SuperStructure superStructure = new SuperStructure();
+  private final SuperStructure superStructure = SuperStructure.getInstance();
 
   public RobotContainer() {
     configureBindings();
@@ -58,7 +61,7 @@ public class RobotContainer {
 
     //ground intake tipped CONES
     m_driverController.leftTrigger().whileTrue(new frc.robot.commands.Intake(superStructure, true));
-    m_driverController.leftTrigger().onFalse(new Stow(superStructure));
+    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure)));
     //high score CONES
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -67,7 +70,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
-
+    //m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
 
     //poop
     //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
@@ -96,9 +99,18 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    //eventMap.put("kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CONE)));
+    eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new Outtake(IntakeState.OUTTAKE)));
+    eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
+    eventMap.put("stow", new Stow(superStructure));
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-    return new AutoRoutine("intense", new PathConstraints(3.5, 3.5), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+
+    HashMap<String, Command> climbMap = new HashMap<>();
+    climbMap.put("cook",new OpenDoor(superStructure, 0.5));
+    climbMap.put("uncook", new Stow(superStructure));
+    //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
+    //ooga-wooga
+
+    return new AutoRoutine("Climb jawn", new PathConstraints(2, 2), climbMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }
