@@ -79,5 +79,9 @@ public class VisionManager extends SubsystemBase{
                 targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
         }
     }
+
+    public void togglePipeline(){
+        targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.TAPE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.TAPE_PIPELINE_INDEX);
+    }
     
 }   

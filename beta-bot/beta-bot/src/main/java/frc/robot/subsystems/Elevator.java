@@ -105,16 +105,13 @@ public class Elevator extends SubsystemBase {
 
     public boolean setElevatorHeight(double setpoint){
         this.setpoint = setpoint;
-        setElevatorState(ElevatorState.SETPOINT);
+        setState(ElevatorState.SETPOINT);
         configElevatorMotor();
         elevatorController.setReference(setpoint, ControlType.kSmartMotion);
 
         return atSetpoint();
     }
 
-    public void setState(ElevatorState state){
-        this.state = state;
-    }
 
     private void goToSetpoint(){
         elevatorController.setReference(setpoint, ControlType.kSmartMotion);   
@@ -209,7 +206,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("bruddah", elevatorEncoder.getPosition());
     }
 
-    public void setElevatorState(ElevatorState state){
+    public void setState(ElevatorState state){
         this.state = state;
 
         if(state==ElevatorState.STOW){

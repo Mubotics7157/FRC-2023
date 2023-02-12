@@ -18,7 +18,7 @@ public class Intake extends CommandBase {
     @Override
     public void initialize() {
         if(intakeCone)
-            superStructure.setState(SuperStructureState.CONE_INTAKE);
+            superStructure.setState(SuperStructureState.FALLEN_CONE);
         else
             superStructure.setState(SuperStructureState.CUBE_INTAKE);
     }

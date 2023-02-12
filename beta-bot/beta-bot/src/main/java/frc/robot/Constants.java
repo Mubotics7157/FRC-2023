@@ -209,7 +209,10 @@ public final class Constants {
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -26;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(0);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-111);
+
+    public static final double ELEVATOR_CONE_MID = -15;
+    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);

@@ -155,6 +155,7 @@ public class Wrist extends SubsystemBase {
     }
 
     private void logData(){
+        SmartDashboard.putString("Wrist State", wristState.toString());
     }
 
 }

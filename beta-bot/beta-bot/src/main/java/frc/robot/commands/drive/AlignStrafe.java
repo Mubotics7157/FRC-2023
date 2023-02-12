@@ -13,6 +13,7 @@ import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.IntakeVision;
@@ -82,8 +83,6 @@ public class AlignStrafe extends CommandBase{
     public void initialize() {
         VisionManager.getInstance().setTargetLLState(VisionState.TAPE);
         atGoal= false;
-        //rotController = new ProfiledPIDController(SmartDashboard.getNumber("align P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
-        //strController = new ProfiledPIDController(SmartDashboard.getNumber("strafe P", 0.25), 0, 0, new TrapezoidProfile.Constraints(2, 2));
     
         rotController.setP(SmartDashboard.getNumber("align P", 0.25));
         strController.setP(SmartDashboard.getNumber("strafe P", 0.25));
@@ -96,11 +95,6 @@ public class AlignStrafe extends CommandBase{
         strController.setTolerance(Units.degreesToRadians(.4));
         strController.setGoal(Units.degreesToRadians(0));
 
-        //offsetMap.put(-11.57, -3.58); //=========
-        
-        //offsetMap.put(-11.19, -2.66);
-        //offsetMap.put(.237, 1.33);
-
         // Left Overflow
         offsetMap.put(17.0, 3.98);
         offsetMap.put(10.0, 3.98);
@@ -112,9 +106,7 @@ public class AlignStrafe extends CommandBase{
         offsetMap.put(-10.0, -5.2);
         offsetMap.put(-18.0, -5.2);
 
-        //offsetMap.put(11.77, 4.81); //==-==
-        //offsetMap.put(12.0, 5.7);
-        //offsetMap.put(7.7, 5.01);
+        new WaitCommand(.2);
 
     }
 

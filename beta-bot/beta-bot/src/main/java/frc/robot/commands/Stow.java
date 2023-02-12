@@ -9,6 +9,7 @@ public class Stow extends CommandBase {
 
     public Stow(SuperStructure instance){
         superStructure = instance;
+        addRequirements(superStructure);
     }
 
     @Override

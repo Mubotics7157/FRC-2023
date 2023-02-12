@@ -2,7 +2,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Outtake;
 import frc.robot.commands.ScoreConeHigh;
+import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.Stow;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.drive.AlignStrafe;
@@ -61,8 +63,12 @@ public class RobotContainer {
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
     //mid score CONES
-    //m_driverController.rightBumper().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(-17, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-122), wrist, false, false), new InstantCommand(drive::changeSlow), new InstantCommand(led::setYellowStrobe)));
-    //m_driverController.rightBumper().onFalse(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new InstantCommand(drive::changeMax), new InstantCommand(led::setYellow)));
+    m_driverController.rightBumper().whileTrue(new ScoreConeMid(superStructure));
+    m_driverController.rightBumper().onFalse(new Stow(superStructure));
+
+    m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
+
+
     //poop
     //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
     //eat
@@ -76,6 +82,8 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
     m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
+
+    m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));

@@ -40,16 +40,19 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
                 break;
             case CONE_MID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
                 break;
             case STOWED:
                 stowAll();
                 break;
             case CONE_INTAKE:
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
                 break;
             case CUBE_INTAKE:
+                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
             case FALLEN_CONE:
-            goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
         }
     }
@@ -60,23 +63,22 @@ public class SuperStructure extends SubsystemBase {
 
     }
 
-    public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint, int intakeSetpoint){
+    public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
 
-        if(wrist.atSetpoint())
-            intake.setIntakeState(IntakeState.INTAKE_CONE);
+        intake.setIntakeState(IntakeState.INTAKE_CONE);
 
     }
 
-    public void intakeCube(double elevatorSetpoint, Rotation2d wristSetpoint, int intakeSetpoint){
+    public void intakeCube(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
         intake.setIntakeState(IntakeState.INTAKE_CUBE);
 
     }
 
-    public void shoot(int intakeSetpoint, boolean cone){
+    public void shoot(boolean cone){
         if(cone)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
         else

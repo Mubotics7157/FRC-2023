@@ -4,9 +4,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Constants.VisionConstants;
 
 public class Limelight {
     private String name;
+
     NetworkTable tableLime;
 
     public Limelight(String name){
@@ -24,7 +26,9 @@ public class Limelight {
 
     public void setLEDs(boolean on){
         if(on)
-            tableLime.getEntry("ledMode").setNumber(1);
+            tableLime.getEntry("ledMode").setNumber(VisionConstants.LIMELIGHT_ON);
+        else
+            tableLime.getEntry("ledMode").setNumber(VisionConstants.LIMELIGHT_OFF);
 
     }
 
@@ -32,7 +36,6 @@ public class Limelight {
         if(hasTargets())
             return Rotation2d.fromDegrees(tableLime.getEntry("tx").getDouble(0));
         else{
-            System.out.println("========no targets found========");
             throw new NullPointerException();
         }
     }
@@ -41,7 +44,6 @@ public class Limelight {
         if(hasTargets())
             return Rotation2d.fromDegrees(tableLime.getEntry("ty").getDouble(0));
         else{
-            System.out.println("========no targets found========");
             throw new NullPointerException();
         }
     }
@@ -60,7 +62,6 @@ public class Limelight {
         }
 
         else{
-            System.out.println("========no targets found========");
             throw new NullPointerException();
         }
     }
