@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.server.PathPlannerServer;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -14,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.SwerveModuleConstants;
 
 public class Drive extends SubsystemBase {
     
@@ -48,18 +45,18 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
-
-        SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
-
-        SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
-        SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
-        SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
-
-        SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
-
-
-        SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
+        // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
+// 
+        // SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
+// 
+        // SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
+        // SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
+        // SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
+// 
+        // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
+// 
+// 
+        // SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
     }
 
     public void setModuleStates(SwerveModuleState[] states){
@@ -85,31 +82,34 @@ public class Drive extends SubsystemBase {
         return gyro.getRotation2d();
     }
 
-    public synchronized void resetHeading(){
-        gyro.reset();
-        //Tracker.getInstance().resetHeading();    
+    public double getDrivePitch(){
+        return gyro.getPitch();
+    }
+
+    public void resetHeading(){
+        Tracker.getInstance().resetHeading();    
     }
     
-    public synchronized void changeMax(){
+    public void changeMax(){
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
 
-    public synchronized void changeSlow(){
+    public void changeSlow(){
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
     }
 
-    public synchronized void changeVerySlow(){
+    public void changeVerySlow(){
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 4;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4;
     }
 
-    public synchronized double getTan(){
+    public double getTan(){
         return driveSpeed;
     }
 
-    public synchronized double getAng(){
+    public double getAng(){
         return driveAngle;
     }
     public SwerveModulePosition[] getModulePositions(){

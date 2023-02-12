@@ -107,7 +107,7 @@ public final class Constants {
 
       public static final double ELEVATOR_KP = .08;
 
-      public static final double ELEVATOR_HEIGHT_TOLERANCE = 0;
+      public static final double ELEVATOR_HEIGHT_TOLERANCE = 1.5;
 
       public static final double ZEROING_SPEED = -.05;
 

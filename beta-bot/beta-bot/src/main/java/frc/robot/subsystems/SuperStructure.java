@@ -13,6 +13,7 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
+    private LED led = LED.getInstance();
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
     private SetpointState setpointState = SetpointState.OFF;
@@ -61,6 +62,9 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
         }
+
+        if(scoringState!=SuperStructureState.STOWED && !atSetpoint())
+            idleIntake();
     }
 
     public static SuperStructure getInstance(){
@@ -114,5 +118,10 @@ public class SuperStructure extends SubsystemBase {
 
     public void setState(SuperStructureState state){
         scoringState = state;
+
+        if(state==SuperStructureState.CONE_INTAKE || state == SuperStructureState.FALLEN_CONE || state == SuperStructureState.CUBE_INTAKE)
+            led.setCurrentIntake();
+        else if(state!=SuperStructureState.OPEN_DOOR)
+            led.setStrobe();
     }
 }

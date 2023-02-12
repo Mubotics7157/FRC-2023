@@ -173,7 +173,7 @@ public class Intake extends SubsystemBase {
 
     public void currentLimit(boolean enable){
         if(enable){
-            intakeMaster.setSmartCurrentLimit(2, 10);
+            intakeMaster.setSmartCurrentLimit(10, 20);
         }
         else{
             intakeMaster.setSmartCurrentLimit(50);

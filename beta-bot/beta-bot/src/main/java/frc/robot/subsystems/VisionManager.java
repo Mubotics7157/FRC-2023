@@ -56,6 +56,10 @@ public class VisionManager extends SubsystemBase{
         return Rotation2d.fromDegrees(coneOffset);
     }
 
+    public double getTargetLatency(){
+        return targetLL.getLatency();
+    }
+
 
     @Override
     public void periodic() {

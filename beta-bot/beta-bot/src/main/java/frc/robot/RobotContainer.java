@@ -70,7 +70,8 @@ public class RobotContainer {
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
-    //m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
+    m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
+
 
     //poop
     //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
@@ -108,6 +109,8 @@ public class RobotContainer {
     HashMap<String, Command> climbMap = new HashMap<>();
     climbMap.put("cook",new OpenDoor(superStructure, 0.5));
     climbMap.put("uncook", new Stow(superStructure));
+
+    //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 

@@ -1,6 +1,4 @@
-
 package frc.robot.subsystems;
-
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
@@ -41,8 +39,12 @@ public class Tracker extends SubsystemBase{
     }
 
     public  void updatePose(){
-        //if(VisionManager.getInstance().hasTargets())
-            //estimator.addVisionMeasurement(VisionManager.getInstance().getBotPose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getLatency());   
+        try{
+            estimator.addVisionMeasurement(VisionManager.getInstance().getFieldRelativePose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getTargetLatency());
+        }
+        catch(Exception e){
+            System.out.println("======Could not add vision measurement======");
+        }
         
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }
@@ -50,9 +52,9 @@ public class Tracker extends SubsystemBase{
     public  void adjustDeviation(double x, double y, double r){
         estimator.setVisionMeasurementStdDevs(
             new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-                x, //x 
-                y, //y
-                r  //theta
+                x,
+                y,
+                r 
         ));
     }
 
@@ -102,9 +104,4 @@ public class Tracker extends SubsystemBase{
     public void plotAuto(Trajectory trajectory){
         m_field.getObject("traj").setTrajectory(trajectory);
     }
-
-
-
-
-
 }
