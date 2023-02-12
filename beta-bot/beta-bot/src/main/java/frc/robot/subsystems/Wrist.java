@@ -117,7 +117,7 @@ public class Wrist extends SubsystemBase {
 
 
     public boolean atSetpoint(){
-        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 60)) - Units.radiansToDegrees(setpoint.getRadians())) < 7;
+        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 96)) - Units.radiansToDegrees(setpoint.getRadians())) < 3;
     }
 
     public void zeroOnboardEncoder(){

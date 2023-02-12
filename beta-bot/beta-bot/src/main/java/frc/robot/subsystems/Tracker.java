@@ -43,7 +43,7 @@ public class Tracker extends SubsystemBase{
             estimator.addVisionMeasurement(VisionManager.getInstance().getFieldRelativePose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getTargetLatency());
         }
         catch(Exception e){
-            System.out.println("======Could not add vision measurement======");
+            //System.out.println("======Could not add vision measurement======");
         }
         
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());

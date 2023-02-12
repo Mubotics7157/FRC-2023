@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.TreeMap;
+
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +18,7 @@ public class VisionManager extends SubsystemBase{
     
     private MedianFilter coneFilter;
     private double coneOffset;
+    private TreeMap<Double,Double> offsetMap = new TreeMap<>();
 
     public enum VisionState{
         TAG,
@@ -29,6 +32,8 @@ public class VisionManager extends SubsystemBase{
 
         coneFilter = new MedianFilter(VisionConstants.FILTER_SAMPLE_WINDOW);
         coneOffset = 0;
+
+        initAlignmentMap();
     }
 
     public static VisionManager getInstance(){
@@ -56,8 +61,16 @@ public class VisionManager extends SubsystemBase{
         return Rotation2d.fromDegrees(coneOffset);
     }
 
+    public Rotation2d getAdjustedOffset(){
+        return Rotation2d.fromDegrees(offsetMap.get(Math.round(coneOffset)));
+    }
+
     public double getTargetLatency(){
         return targetLL.getLatency();
+    }
+
+    public boolean foundNode(){
+        return targetLL.hasTargets();
     }
 
 
@@ -71,6 +84,7 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake Targets", intakeLL.getTargets());
         SmartDashboard.putNumber("Intake offset", coneOffset);
+        SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
     }
 
     public void setTargetLLState(VisionState state){
@@ -90,5 +104,45 @@ public class VisionManager extends SubsystemBase{
     public void togglePipeline(){
         targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.TAPE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.TAPE_PIPELINE_INDEX);
     }
+
+    private void initAlignmentMap(){
+        offsetMap.put(0.0, -5.2);
+        offsetMap.put(-1.0, -5.2);
+        offsetMap.put(-2.0, -5.2);
+        offsetMap.put(-3.0, -5.2);
+        offsetMap.put(-4.0, -5.2);
+        offsetMap.put(-5.0, -5.2);
+        offsetMap.put(-6.0, -5.2);
+        offsetMap.put(-7.0, -5.2);
+        offsetMap.put(-8.0, -5.2);
+        offsetMap.put(-9.0, -5.2);
+        offsetMap.put(-10.0, -5.2);
+        offsetMap.put(-11.0, -5.2);
+        offsetMap.put(-12.0, -5.2);
+        offsetMap.put(-13.0, -5.2);
+        offsetMap.put(-14.0, -5.2);
+        offsetMap.put(-15.0, -5.2);
+        offsetMap.put(-16.0, -5.2);
+        offsetMap.put(-17.0, -5.2);
+
+        offsetMap.put(1.0, 3.98);
+        offsetMap.put(2.0, 3.98);
+        offsetMap.put(3.0, 3.98);
+        offsetMap.put(4.0, 3.98);
+        offsetMap.put(5.0, 3.98);
+        offsetMap.put(6.0, 3.98);
+        offsetMap.put(7.0, 3.98);
+        offsetMap.put(8.0, 3.98);
+        offsetMap.put(9.0, 3.98);
+        offsetMap.put(10.0,3.98);
+        offsetMap.put(11.0,3.98);
+        offsetMap.put(12.0,3.98);
+        offsetMap.put(13.0,3.98);
+        offsetMap.put(14.0,3.98);
+        offsetMap.put(15.0,3.98);
+        offsetMap.put(16.0,3.98);
+        offsetMap.put(17.0,3.98);
+    }
+
     
 }   

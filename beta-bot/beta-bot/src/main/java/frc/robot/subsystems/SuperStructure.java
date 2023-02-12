@@ -48,6 +48,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case STOWED:
                 stowAll();
+                led.setCurrentIntake();
                 break;
             case CONE_INTAKE:
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
@@ -57,9 +58,11 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case FALLEN_CONE:
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                break;
+                led.setYellowStrobe();
             case OPEN_DOOR:
                 goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            default:
                 break;
         }
 
@@ -119,9 +122,25 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
         scoringState = state;
 
-        if(state==SuperStructureState.CONE_INTAKE || state == SuperStructureState.FALLEN_CONE || state == SuperStructureState.CUBE_INTAKE)
-            led.setCurrentIntake();
-        else if(state!=SuperStructureState.OPEN_DOOR)
-            led.setStrobe();
+        switch(state){
+            case CONE_HIGH:
+                led.setStrobe();
+                break;
+            case CUBE_INTAKE:
+                led.setPurpleStrobe();
+                break;
+            case CONE_INTAKE:
+                led.setYellowStrobe();
+                break;
+            case FALLEN_CONE:
+                led.setYellowStrobe();
+                break;
+            case STOWED:
+                led.setCurrentIntake();
+                break;
+            default:
+                led.setStrobe();
+                break;
+        }
     }
 }
