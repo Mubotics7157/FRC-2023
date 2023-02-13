@@ -9,7 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -76,6 +78,8 @@ public class Tracker extends SubsystemBase{
         SmartDashboard.putNumber("estim x", getPose().getX());
         SmartDashboard.putNumber("estim y", getPose().getY());
         SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("dist", getDistanceToTarget());
     }
 
     public void setOdometry(Pose2d pose){
@@ -107,6 +111,9 @@ public class Tracker extends SubsystemBase{
     }
 
     public double getDistanceToTarget(){
-        return VisionConstants.NODE_POSITION.minus(getOdometry()).getY();
+        // if(DriverStation.getAlliance()==Alliance.Blue)
+            // return VisionConstants.BLUE_NODE_POSITION.minus(getOdometry()).getX();
+        // else
+            return VisionConstants.RED_NODE_POSITION.minus(getOdometry()).getX();
     }
 }

@@ -174,7 +174,8 @@ public final class Constants {
       public static final double CAM_MOUNTING_PITCH_RADIANS = Units.degreesToRadians(-15);
       public static final double CAM_HEIGHT_METERS = Units.inchesToMeters(46.5);
 
-      public static final Pose2d NODE_POSITION = new Pose2d(new Translation2d(0, Units.inchesToMeters(20.19)),Rotation2d.fromDegrees(0));
+      public static final Pose2d RED_NODE_POSITION = new Pose2d(new Translation2d(16.16,4.97),Rotation2d.fromDegrees(0));
+      public static final Pose2d BLUE_NODE_POSITION = new Pose2d(new Translation2d(Units.inchesToMeters(54.25)-Units.inchesToMeters(39.75),4.97),Rotation2d.fromDegrees(0));
  
     }
 
