@@ -9,7 +9,7 @@ import frc.robot.Constants.VisionConstants;
 public class Limelight {
     private String name;
 
-    NetworkTable tableLime;
+    private NetworkTable tableLime;
 
     public Limelight(String name){
         this.name = name; 
@@ -82,4 +82,6 @@ public class Limelight {
     public String getPipelineName(){
         return name;
     }
+
+
 }

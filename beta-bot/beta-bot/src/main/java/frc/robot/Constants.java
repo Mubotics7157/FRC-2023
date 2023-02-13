@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -168,6 +169,12 @@ public final class Constants {
       public static final String TARGET_LL_NAME = "limelight-polecam";
 
       public static final int FILTER_SAMPLE_WINDOW = 20;
+
+      public static final int TARGET_HEIGHT_METERS = 0;
+      public static final double CAM_MOUNTING_PITCH_RADIANS = 0;
+      public static final double CAM_HEIGHT_METERS = 0;
+
+      public static final Pose2d NODE_POSITION = new Pose2d(new Translation2d(0, Units.inchesToMeters(20.19)),Rotation2d.fromDegrees(0));
  
     }
 
@@ -192,10 +199,19 @@ public final class Constants {
 
       public static final double CONE_OUTTAKE_SPEED=-0.9;
       public static final double CUBE_OUTTAKE_SPEED=-0.9;
+      public static final double CUBE_INTAKE_SETPOINT= .25;
+      public static final double CONE_INTAKE_SETPOINT= .75;
+      public static final double CONE_OUTTAKE_SETPOINT=-0.9;
+      public static final double CUBE_OUTTAKE_SETPOINT=-0.9;
+      public static final double IDLE_SETPOINT = 0;
 
-      public static final double IDLE_SPEED = .35;
+      public static final double IDLE_SPEED = .65;
 
-      public static final double OFFSET_COEFFICIENT = 3.6 / 12;
+      public static final double TOP_ROLLER_KP = 0.00007;
+      public static final double TOP_ROLLER_KF = .000186;
+      public static final double BOT_ROLLER_KF = .000332;
+      public static final double BOT_ROLLER_KP = .00007;
+
     }
 
     public static final class LidarConstants {
@@ -213,13 +229,13 @@ public final class Constants {
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -26;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-109);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-107);
 
     public static final double ELEVATOR_CONE_MID = -15;
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-90);//-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);

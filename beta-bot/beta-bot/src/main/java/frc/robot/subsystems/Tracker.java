@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
+import frc.robot.Constants.VisionConstants;
 
 public class Tracker extends SubsystemBase{
 
@@ -103,5 +104,9 @@ public class Tracker extends SubsystemBase{
 
     public void plotAuto(Trajectory trajectory){
         m_field.getObject("traj").setTrajectory(trajectory);
+    }
+
+    public double getDistanceToTarget(){
+        return VisionConstants.NODE_POSITION.minus(getOdometry()).getY();
     }
 }

@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -19,6 +20,7 @@ public class VisionManager extends SubsystemBase{
     private MedianFilter coneFilter;
     private double coneOffset;
     private TreeMap<Double,Double> offsetMap = new TreeMap<>();
+    private double lastKnownDistance = 0;
 
     public enum VisionState{
         TAG,
@@ -62,7 +64,9 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Rotation2d getAdjustedOffset(){
-        return Rotation2d.fromDegrees(offsetMap.get(Math.round(coneOffset)));
+        double roundedOffset = Math.round(coneOffset);
+
+        return Rotation2d.fromDegrees(offsetMap.get(roundedOffset));
     }
 
     public double getTargetLatency(){
@@ -82,9 +86,8 @@ public class VisionManager extends SubsystemBase{
 
     public void logData(){
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
-        SmartDashboard.putNumber("Intake Targets", intakeLL.getTargets());
         SmartDashboard.putNumber("Intake offset", coneOffset);
-        SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
+        //SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
     }
 
     public void setTargetLLState(VisionState state){
@@ -144,5 +147,21 @@ public class VisionManager extends SubsystemBase{
         offsetMap.put(17.0,3.98);
     }
 
-    
+    public double getDistanceToTarget(){
+        try{
+            double targetPitch = targetLL.getTargetPitch().getRadians();
+            double distance = (VisionConstants.TARGET_HEIGHT_METERS - VisionConstants.CAM_HEIGHT_METERS) / Math.tan(VisionConstants.CAM_MOUNTING_PITCH_RADIANS + targetPitch);
+                if(distance<5){
+                    lastKnownDistance = distance;
+                    return distance;
+                }
+                else 
+                    return lastKnownDistance;
+        }
+        catch(Exception e){
+            return lastKnownDistance;
+        }
+ 
+    }
+
 }   
