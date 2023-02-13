@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -43,6 +44,8 @@ public class Intake extends SubsystemBase {
     private  MedianFilter filter;
 
     private static Intake instance = new Intake();
+
+    private InterpolatingTreeMap<Double,Double> distanceMap = new InterpolatingTreeMap<>();
 
     public Intake(){
         solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_PCM, IntakeConstants.PNEUMATICS_MODULE_TYPE, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
@@ -87,6 +90,10 @@ public class Intake extends SubsystemBase {
         return instance;
     }
 
+    public void initMap(){
+        distanceMap.put(0.0, 0.0);
+    }
+
 
     @Override
     public void periodic() {
@@ -127,7 +134,7 @@ public class Intake extends SubsystemBase {
             case OUTTAKE:
                 //setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(-3000);
-                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
+                setSpeed(distanceMap.get(VisionManager.getInstance().getDistanceToTarget()));
                 break;
             case IDLE:
                 setMotors(IntakeConstants.IDLE_SPEED);
