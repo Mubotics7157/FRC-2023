@@ -39,35 +39,9 @@ public class SuperStructure extends SubsystemBase {
 
     @Override
     public void periodic() {
-        switch(scoringState){
-            case CONE_HIGH:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
-                break;
-            case CONE_MID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
-                break;
-            case STOWED:
-                stowAll();
-                led.setCurrentIntake();
-                break;
-            case CONE_INTAKE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
-                break;
-            case CUBE_INTAKE:
-                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                break;
-            case FALLEN_CONE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                led.setYellowStrobe();
-            case OPEN_DOOR:
-                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                break;
-            default:
-                break;
-        }
 
-        if(scoringState!=SuperStructureState.STOWED && !atSetpoint())
-            idleIntake();
+        //if(scoringState!=SuperStructureState.STOWED && !atSetpoint())
+            //idleIntake();
     }
 
     public static SuperStructure getInstance(){
@@ -142,5 +116,33 @@ public class SuperStructure extends SubsystemBase {
                 led.setStrobe();
                 break;
         }
+
+                switch(scoringState){
+            case CONE_HIGH:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
+                break;
+            case CONE_MID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
+                break;
+            case STOWED:
+                stowAll();
+                led.setCurrentIntake();
+                break;
+            case CONE_INTAKE:
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
+                break;
+            case CUBE_INTAKE:
+                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            case FALLEN_CONE:
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                led.setYellowStrobe();
+            case OPEN_DOOR:
+                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            default:
+                break;
+        }
+
     }
 }

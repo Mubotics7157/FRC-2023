@@ -65,17 +65,17 @@ public class Drive extends SubsystemBase {
         rearLeft.setState(states[2]);
         rearRight.setState(states[3]);
 
-        double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
-        SmartDashboard.putNumber("left front error", flError);
+        //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
+        //SmartDashboard.putNumber("left front error", flError);
 
-        double frError = states[1].angle.rotateBy(frontRight.getState().angle).getDegrees();
-        SmartDashboard.putNumber("right front error", frError);
+        //double frError = states[1].angle.rotateBy(frontRight.getState().angle).getDegrees();
+        //SmartDashboard.putNumber("right front error", frError);
 
-        double rlError = states[2].angle.rotateBy(rearLeft.getState().angle).getDegrees();
-        SmartDashboard.putNumber("left rear error", rlError);
+        //double rlError = states[2].angle.rotateBy(rearLeft.getState().angle).getDegrees();
+        //SmartDashboard.putNumber("left rear error", rlError);
 
-        double rrError = states[3].angle.rotateBy(rearRight.getState().angle).getDegrees();
-        SmartDashboard.putNumber("right rear error", rrError);
+        //double rrError = states[3].angle.rotateBy(rearRight.getState().angle).getDegrees();
+        //SmartDashboard.putNumber("right rear error", rrError);
     }
     
     public Rotation2d getDriveHeading(){
