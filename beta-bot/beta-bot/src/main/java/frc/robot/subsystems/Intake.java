@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -33,8 +35,8 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeSlave;
 
     private DoubleSolenoid solenoid; 
-    private SparkMaxPIDController intakeController;
-    private RelativeEncoder intakeEncoder;
+    private SparkMaxPIDController topController;
+    private RelativeEncoder topEncoder;
     private IntakeState intakeState;
 
     //private Ultrasonic tof;
@@ -50,14 +52,14 @@ public class Intake extends SubsystemBase {
         intakeMaster = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_MASTER, MotorType.kBrushless);
         intakeSlave = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_SLAVE, MotorType.kBrushless);
 
-        intakeController = intakeMaster.getPIDController();
-        intakeEncoder = intakeMaster.getEncoder();
+        topController = intakeMaster.getPIDController();
+        topEncoder = intakeMaster.getEncoder();
 
         intakeMaster.restoreFactoryDefaults();
         intakeSlave.restoreFactoryDefaults();
 
-        intakeController.setP(0);
-        intakeController.setFF(0);
+        topController.setP(IntakeConstants.TOP_ROLLER_KP);
+        topController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
         //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
         //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
@@ -77,6 +79,7 @@ public class Intake extends SubsystemBase {
 
 
         SmartDashboard.putNumber("Intake speed", 0.5);
+        SmartDashboard.putNumber("Outtake Setpoint", 1000);
         
     }
 
@@ -111,6 +114,7 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CONE:
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
+                //setSpeed(2000);
                 //toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
@@ -121,7 +125,9 @@ public class Intake extends SubsystemBase {
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
+                //setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
+                //setSpeed(-3000);
+                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
                 break;
             case IDLE:
                 setMotors(IntakeConstants.IDLE_SPEED);
@@ -141,6 +147,10 @@ public class Intake extends SubsystemBase {
 
     public void setMotors(double speed){
         intakeMaster.set(speed);
+    }
+
+    private void setSpeed(double speedRPM){
+        topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){

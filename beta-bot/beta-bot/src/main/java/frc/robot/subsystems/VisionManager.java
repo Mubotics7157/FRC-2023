@@ -87,6 +87,7 @@ public class VisionManager extends SubsystemBase{
     public void logData(){
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake offset", coneOffset);
+        SmartDashboard.putNumber("distance to target", getDistanceToTarget());
         //SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
     }
 
