@@ -3,6 +3,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.Outtake;
+import frc.robot.commands.Score;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.Stow;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -36,6 +38,10 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  private final CommandJoystick m_operatorController =
+      new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+
   private final Drive drive = Drive.getInstance();
   private final Elevator elevator = Elevator.getInstance();
   private final Wrist wrist = Wrist.getInstance();
@@ -57,11 +63,17 @@ public class RobotContainer {
     m_driverController.leftTrigger().whileTrue(new frc.robot.commands.Intake(superStructure, true));
     m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure)));
     //high score CONES
-    m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    //m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    m_driverController.leftBumper().whileTrue(new Score(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
+
+    m_operatorController.button(1).onTrue(new InstantCommand(superStructure::setScoreHigh));
+    m_operatorController.button(2).onTrue(new InstantCommand(superStructure::setScoreMid));
+    //^^ buttons need to be figured out
+
     //mid score CONES
-    m_driverController.rightBumper().whileTrue(new ScoreConeMid(superStructure));
-    m_driverController.rightBumper().onFalse(new Stow(superStructure));
+    //m_driverController.rightBumper().whileTrue(new ScoreConeMid(superStructure));
+   // m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
     //m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));

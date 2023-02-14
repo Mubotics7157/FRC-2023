@@ -15,6 +15,8 @@ public class SuperStructure extends SubsystemBase {
     private Wrist wrist = Wrist.getInstance();
     private LED led = LED.getInstance();
     
+    private boolean isMid = false;
+    
     private SuperStructureState scoringState = SuperStructureState.STOWED;
     private SetpointState setpointState = SetpointState.OFF;
 
@@ -47,6 +49,19 @@ public class SuperStructure extends SubsystemBase {
     public static SuperStructure getInstance(){
         return instance;
     }
+
+    public boolean getScoringHeight(){
+        return isMid;
+    }
+
+    public void setScoreMid(){
+        isMid = true;
+    }
+
+    public void setScoreHigh(){
+        isMid = false;
+    }
+    
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
@@ -96,7 +111,7 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
         scoringState = state;
 
-        switch(state){
+        switch(scoringState){
             case CONE_HIGH:
                 led.setStrobe();
                 break;
