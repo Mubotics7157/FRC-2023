@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import org.apache.commons.collections4.functors.NullIsExceptionPredicate;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
