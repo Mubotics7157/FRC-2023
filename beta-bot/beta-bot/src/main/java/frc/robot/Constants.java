@@ -167,6 +167,7 @@ public final class Constants {
 
       public static final String INTAKE_LL_NAME = "limelight-intake";
       public static final String TARGET_LL_NAME = "limelight-polecam";
+      public static final String REAR_PC_NAME = "shutter";
 
       public static final int FILTER_SAMPLE_WINDOW = 20;
 

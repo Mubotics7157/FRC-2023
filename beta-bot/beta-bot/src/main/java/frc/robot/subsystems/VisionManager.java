@@ -1,10 +1,22 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
 import java.util.TreeMap;
 
+import org.apache.commons.collections4.functors.NullIsExceptionPredicate;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +28,10 @@ public class VisionManager extends SubsystemBase{
     private static VisionManager instance = new VisionManager();
     private Limelight targetLL;
     private Limelight intakeLL;
+
+    private PhotonCamera shutterPC;
+    private PhotonPoseEstimator photonEstimator;
+    private AprilTagFieldLayout aprilTagFieldLayout;
     
     private MedianFilter coneFilter;
     private double coneOffset;
@@ -31,6 +47,20 @@ public class VisionManager extends SubsystemBase{
     public VisionManager(){
         targetLL = new Limelight(VisionConstants.TARGET_LL_NAME);
         intakeLL = new Limelight(VisionConstants.INTAKE_LL_NAME);
+        shutterPC = new PhotonCamera(VisionConstants.REAR_PC_NAME);
+
+        try{
+            aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        }
+        catch(Exception e){
+            System.out.print("how did we get here?");
+        }
+
+        photonEstimator = new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
+            shutterPC,
+            VisionConstants.SHUTTER_TRANS);
 
         coneFilter = new MedianFilter(VisionConstants.FILTER_SAMPLE_WINDOW);
         coneOffset = 0;
@@ -57,6 +87,32 @@ public class VisionManager extends SubsystemBase{
 
     public Pose2d getFieldRelativePose(){
         return targetLL.getBotPose();
+    }
+
+    private Optional<EstimatedRobotPose> getEstimatedShutterPose() {
+        //only to be used inside visionmanager :P
+        photonEstimator.setReferencePose(Tracker.getInstance().getOdometry());
+        return photonEstimator.update();
+    }
+
+    public Pose2d getShutterPose(){
+        if(shutterPC.getLatestResult().hasTargets()){
+            Pose2d pose = getEstimatedShutterPose().get().estimatedPose.toPose2d();
+            return pose;
+        }
+        else{
+            throw new NullPointerException();
+        }
+
+    }
+
+    public double getShutterTimestamp(){
+        if(shutterPC.getLatestResult().hasTargets()){
+            return getEstimatedShutterPose().get().timestampSeconds;
+        }
+        else{
+            throw new NullPointerException();
+        }
     }
 
     public Rotation2d getOffset(){

@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -44,6 +48,13 @@ public class Tracker extends SubsystemBase{
     public  void updatePose(){
         try{
             estimator.addVisionMeasurement(VisionManager.getInstance().getFieldRelativePose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getTargetLatency());
+        }
+        catch(Exception e){
+            //System.out.println("======Could not add vision measurement======");
+        }
+
+        try{
+            estimator.addVisionMeasurement(VisionManager.getInstance().getShutterPose(), VisionManager.getInstance().getShutterTimestamp());
         }
         catch(Exception e){
             //System.out.println("======Could not add vision measurement======");
