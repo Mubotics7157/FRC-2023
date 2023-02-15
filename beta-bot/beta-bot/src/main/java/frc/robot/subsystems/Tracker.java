@@ -54,12 +54,12 @@ public class Tracker extends SubsystemBase{
         }
 
         try{
-            estimator.addVisionMeasurement(VisionManager.getInstance().getShutterPose(), VisionManager.getInstance().getShutterTimestamp());
+            estimator.addVisionMeasurement(VisionManager.getInstance().getFieldRelativePoseShutter(), VisionManager.getInstance().getPoseTimestampShutter());
         }
         catch(Exception e){
             //System.out.println("======Could not add vision measurement======");
         }
-        
+
         estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }
 
