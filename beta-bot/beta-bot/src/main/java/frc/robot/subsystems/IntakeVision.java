@@ -1,25 +1,43 @@
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.IntakeConstants;
 
-public class VisionManager extends SubsystemBase{
+public class IntakeVision extends SubsystemBase{
     
-    NetworkTable tableLime;
-    private double[] testArray = {0, 0, 0, 0, 0, 0};
-    private static VisionManager instance = new VisionManager();
-    private double offset;
+    private NetworkTable tableLime;
 
-    public VisionManager(){
-        tableLime = NetworkTableInstance.getDefault().getTable("limelight");
+    private static IntakeVision instance = new IntakeVision();
+
+    private double offset;
+    private MedianFilter filter = new MedianFilter(20);
+
+    public IntakeVision(){
+        tableLime = NetworkTableInstance.getDefault().getTable("limelight-intake");
+
+        // offsetMap.put(-12.4, -3.37);
+        // offsetMap.put(-4.1, -.71);
+        // offsetMap.put(1.3, 2.56);
+        // offsetMap.put(1.8, 1.64);
+        // offsetMap.put(5.9, 3.99);
+
+        // offsetMap.put(11.8,3.99 );
+
+  
     }
 
-    public static VisionManager getInstance(){
+    public static IntakeVision getInstance(){
         return instance;
     }
 
@@ -40,14 +58,14 @@ public class VisionManager extends SubsystemBase{
             return Rotation2d.fromDegrees(0);
     }
 
-    public double getTargetPitch(){
+    public Rotation2d getTargetPitch(){
         double targets = tableLime.getEntry("tv").getDouble(0);
         double pitch = tableLime.getEntry("ty").getDouble(0);
         if(targets != 0){
-            return pitch;
+            return Rotation2d.fromDegrees(pitch);
         }
         else
-            return 0;
+            return Rotation2d.fromDegrees(0);
     }
 
     public double getTargets(){
@@ -93,36 +111,11 @@ public class VisionManager extends SubsystemBase{
     }
     
     public void logData(){
-        SmartDashboard.putNumber("Target yaw", getTargetYaw().getDegrees());
-        SmartDashboard.putNumber("Target pitch", getTargetPitch());
-        SmartDashboard.putNumber("Targets", getTargets());
-        SmartDashboard.putNumber("offset", offset);
+        SmartDashboard.putNumber("Intake Target yaw", filter.calculate(getTargetYaw().getDegrees()));
+        SmartDashboard.putNumber("Intake Target pitch", getTargetPitch().getDegrees());
+        SmartDashboard.putNumber("Intake Targets", getTargets());
+        SmartDashboard.putNumber("Intake offset", offset);
     
-    }
-
-    public Pose2d getBotPose(){
-        /* 
-        double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-        if(hasTargets()&& poseEntry.length>0){
-        
-        Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[4]));
-        return pose;
-        }
-        else
-            return new Pose2d();
-            */
-        if(hasTargets()){
-            try{
-                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(testArray);
-                Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-                return pose;
-            }
-            catch(Exception e){
-                return new Pose2d();
-            }
-        }
-        else
-            return new Pose2d();
     }
 
     public double getLatency(){
@@ -130,17 +123,13 @@ public class VisionManager extends SubsystemBase{
         return latency;
     }
 
-    public double saveObjectOffset(){
-        offset = getTargetYaw().getDegrees();
-        return offset;
+    public void setObjectOffset(){
+        offset = filter.calculate(getTargetYaw().getDegrees());
+        //offset = offsetMap.get(offset);
     }
 
     public double getOffset(){
         return offset;
-    }
-
-    public double configureOffset(){
-        return Intake.getInstance().getScoringOffset();
     }
 
 

@@ -27,9 +27,6 @@ public class AlignStrafe extends CommandBase{
 
     private double strSpeed;
 
-    private Rotation2d onTarget;
-    private Rotation2d strTarget;
-
     private DoubleSupplier fwd, str, rot;
 
     public void driveFromChassis(ChassisSpeeds speeds){
@@ -69,13 +66,6 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
-        vision.changePipeline(1);
-        onTarget = Rotation2d.fromDegrees(0);
-        double offset = (4/15) * vision.getOffset();
-        SmartDashboard.putNumber("pole offset", offset);
-        strTarget = Rotation2d.fromDegrees(0 + offset);
-        vision.changePipeline(1);
-
         atGoal= false;
         rotController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
         strController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(3 * Math.PI, 4 * Math.PI));
@@ -84,16 +74,12 @@ public class AlignStrafe extends CommandBase{
         rotController.setTolerance(Units.degreesToRadians(3));
 
         strController.enableContinuousInput(-Math.PI, Math.PI);
-        strController.setTolerance(Units.degreesToRadians(1));
-
-
+        strController.setTolerance(Units.degreesToRadians(3));
 
     }
 
     @Override
     public void execute() {
-
-        vision.changePipeline(0);
 
         double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
@@ -102,8 +88,10 @@ public class AlignStrafe extends CommandBase{
         Rotation2d onTarget = Rotation2d.fromDegrees(180);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
-        //Rotation2d strTarget = Rotation2d.fromDegrees(0);
-        double strError = -strTarget.rotateBy(vision.getTargetYaw()).getRadians();
+        if(vision.foundNode()){
+
+        Rotation2d strTarget = Rotation2d.fromDegrees(0);
+        double strError = strTarget.rotateBy(vision.getNodeAngle()).getRadians();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);
@@ -113,11 +101,11 @@ public class AlignStrafe extends CommandBase{
         }
 
         if(Math.abs(strError) > Units.degreesToRadians(3))
-            strSpeed = strController.calculate(strError);
+            strSpeed = -strController.calculate(strError);
         else
             strSpeed = 0;
 
-        if(vision.hasTargets())
+        if(vision.foundNode())
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         else
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
@@ -127,6 +115,7 @@ public class AlignStrafe extends CommandBase{
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
         SmartDashboard.putNumber("strafe error", Units.degreesToRadians(strError));
         SmartDashboard.putBoolean("On target", rotController.atGoal());
+    }
     }
 
     /* 

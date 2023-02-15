@@ -15,7 +15,7 @@ public class LED extends SubsystemBase{
 
 
     public LED(){
-        candle = new CANdle(20);
+        candle = new CANdle(31);
         config = new CANdleConfiguration();
         candle.configFactoryDefault();
         config.stripType = LEDStripType.RGB;

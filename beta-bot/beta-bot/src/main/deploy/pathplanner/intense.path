@@ -1,0 +1,94 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 14.80472651207726,
+        "y": 5.03242413082159
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 12.62146087180094,
+        "y": 4.661043893042628
+      },
+      "holonomicAngle": 0.6820603931726468,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "score-preload"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 9.369070304585177,
+        "y": 4.58226626684709
+      },
+      "prevControl": {
+        "x": 9.128925687348724,
+        "y": 4.307815275719715
+      },
+      "nextControl": {
+        "x": 9.60874219573874,
+        "y": 4.856176999594018
+      },
+      "holonomicAngle": -178.65211271980135,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 14.788467579788229,
+        "y": 5.020166046038226
+      },
+      "prevControl": {
+        "x": 13.696834759650065,
+        "y": 4.930134473243326
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "score-1"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 1.36727272727272,
+      "names": [
+        "stow"
+      ]
+    },
+    {
+      "position": 0.3054545454545653,
+      "names": [
+        "intake"
+      ]
+    }
+  ]
+}

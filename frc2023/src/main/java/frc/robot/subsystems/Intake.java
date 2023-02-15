@@ -4,14 +4,15 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
@@ -41,6 +42,8 @@ public class Intake extends SubsystemBase {
     private SparkMaxPIDController intakeController;
     private RelativeEncoder intakeEncoder;
     private IntakeState intakeState;
+    private AnalogInput gamePieceSensor;
+
 
     private static Intake instance = new Intake();
 
@@ -79,6 +82,9 @@ public class Intake extends SubsystemBase {
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
 
+        gamePieceSensor = new AnalogInput(3);
+
+        //configureRollerPID(0, 0, 0, 0);
         
     }
 
@@ -90,6 +96,10 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
 
+        SmartDashboard.putNumber("Cone Distance", getDistanceToGamepiece());
+        SmartDashboard.putNumber("velocity", intakeEncoder.getVelocity());
+
+        double speed = SmartDashboard.getNumber("Intake speed", 0);
         IntakeState snapIntakeState;       
         synchronized(this){
             snapIntakeState = intakeState;
@@ -102,7 +112,7 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CUBE:
                 currentLimit(false);
-                setVelocity(-2000);//(SmartDashboard.getNumber("Intake speed", 0.5));
+                setVelocity(0);//(SmartDashboard.getNumber("Intake speed", 0.5));
                 toggleIntake(false);
                 //value to be determined :P
                 break;
@@ -124,11 +134,11 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE:
                 currentLimit(false);
-                setVelocity(-2000);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(-speed);//setMotors(SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case OUTTAKE:
                 currentLimit(false);
-                setVelocity(2000);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
+                setVelocity(speed);//setMotors(-SmartDashboard.getNumber("Intake Speed", 0.5));
                 break;
             case IDLE:
                 currentLimit(true);
@@ -179,4 +189,25 @@ public class Intake extends SubsystemBase {
             intakeSlave.setSmartCurrentLimit(50);
         }
     }
+
+    private int getDistanceToGamepiece(){
+        return gamePieceSensor.getValue();
+    }
+
+    public double getScoringOffset(){
+        return getDistanceToGamepiece() * SmartDashboard.getNumber("constant multiplier", 0);
+    }
+
+    private void setRollerSpeeds(double setpointRPM){
+        intakeController.setReference(setpointRPM, ControlType.kVelocity);
+        SmartDashboard.putNumber("intake roller setpoint",setpointRPM );
+    }
+
+    private void configureRollerPID(double kP, double kI, double kD, double kFF){
+        intakeController.setP(kP);
+        intakeController.setI(kI);
+        intakeController.setD(kD);
+        intakeController.setFF(kFF);
+    }
 }
+
