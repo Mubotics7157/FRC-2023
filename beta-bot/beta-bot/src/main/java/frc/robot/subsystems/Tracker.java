@@ -5,6 +5,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -22,9 +23,18 @@ import frc.robot.Constants.VisionConstants;
 
 public class Tracker extends SubsystemBase{
 
-    SwerveDrivePoseEstimator estimator = new SwerveDrivePoseEstimator(DriveConstants.DRIVE_KINEMATICS, Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d());
+    SwerveDrivePoseEstimator estimator = new SwerveDrivePoseEstimator(DriveConstants.DRIVE_KINEMATICS, Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(),
+    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
+        .02,
+        .02,
+        .01
+    ),
+    new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
+        .1,
+        .1,
+        .05
+    ));
 
-    SwerveDriveOdometry odometry = new SwerveDriveOdometry(DriveConstants.DRIVE_KINEMATICS, Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions());
 
     private final Field2d m_field = new Field2d();
 
@@ -32,24 +42,18 @@ public class Tracker extends SubsystemBase{
 
     public Tracker(){
         SmartDashboard.putData("Field", m_field);
-        
-        estimator.setVisionMeasurementStdDevs(
-            new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-                0.02, //x 
-                0.02, //y
-                0.01  //theta
-            ));
     }
 
     public  void updatePose(){
-        try{
-            estimator.addVisionMeasurement(VisionManager.getInstance().getFieldRelativePose(), Timer.getFPGATimestamp()-VisionManager.getInstance().getTargetLatency());
-        }
-        catch(Exception e){
-            //System.out.println("======Could not add vision measurement======");
-        }
         
-        estimator.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+        estimator.updateWithTime(Timer.getFPGATimestamp(),Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+    }
+
+    public void addVisionMeasurement(Pose2d visionPose,double latency){
+        //System.out.println(Timer.getFPGATimestamp()-timestamp);
+        //System.out.println(visionPose.getX() + " " + visionPose.getY());
+        //if(getPose().minus(visionPose).getX()<1 && getPose().minus(visionPose).getY()<1)
+            estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
     }
 
     public  void adjustDeviation(double x, double y, double r){
@@ -68,12 +72,7 @@ public class Tracker extends SubsystemBase{
     @Override
     public void periodic() {
         m_field.setRobotPose(estimator.getEstimatedPosition());
-        odometry.update(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
         updatePose();
-
-        SmartDashboard.putNumber("odom x", getOdometry().getX());
-        SmartDashboard.putNumber("odom y", getOdometry().getY());
-        SmartDashboard.putNumber("odometry r", getOdometry().getRotation().getDegrees());
 
         SmartDashboard.putNumber("estim x", getPose().getX());
         SmartDashboard.putNumber("estim y", getPose().getY());
@@ -83,15 +82,15 @@ public class Tracker extends SubsystemBase{
     }
 
     public void setOdometry(Pose2d pose){
-        odometry.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
     }
 
     public Pose2d getOdometry(){
-        return odometry.getPoseMeters();
+        return estimator.getEstimatedPosition();
     }
 
     public void resetHeading(){
-        odometry.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(odometry.getPoseMeters().getTranslation(), Rotation2d.fromDegrees(0)));
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(estimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(0)));
     }
 
     public Pose2d getPose(){

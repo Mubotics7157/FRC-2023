@@ -9,6 +9,7 @@ import frc.robot.Constants.VisionConstants;
 public class Limelight {
     private String name;
     private NetworkTable tableLime;
+    private double visionLatency= 0;
 
     public Limelight(String name){
         this.name = name; 
@@ -48,26 +49,16 @@ public class Limelight {
     }
 
     public Pose2d getBotPose(){
-        if(hasTargets()){
-            try{
-                double[] poseEntry = tableLime.getEntry("botpose").getDoubleArray(new double[6]);
-                Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-                return pose;
-            }
-            catch(Exception e){
-                System.out.println("=========Error Adding New Bot Pose========");
-                throw new NullPointerException();
-            }
-        }
+        double[] poseEntry = tableLime.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+        Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
+        visionLatency = poseEntry[5];
+        return pose;
 
-        else{
-            throw new NullPointerException();
-        }
     }
 
+
     public double getLatency(){
-        double latency = tableLime.getEntry("tl").getDouble(0) + tableLime.getEntry("cl").getDouble(0);
-        return latency;
+        return visionLatency *.001;
     }
 
     public double getTargets(){

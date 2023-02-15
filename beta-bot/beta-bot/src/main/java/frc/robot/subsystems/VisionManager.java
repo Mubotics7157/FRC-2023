@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
@@ -57,8 +58,11 @@ public class VisionManager extends SubsystemBase{
         }
     }
 
-    public Pose2d getFieldRelativePose(){
-        return targetLL.getBotPose();
+
+    public void addFieldRelativePose(){
+        if(targetLL.hasTargets()) //TODO: add a check to make sure we are in tags mode
+            Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
+        
     }
 
     public Rotation2d getOffset(){
@@ -83,20 +87,21 @@ public class VisionManager extends SubsystemBase{
     public void periodic() {
         logData();
         coneOffset = getConeOffset();
+        addFieldRelativePose();
     }
 
     public void logData(){
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake offset", coneOffset);
         SmartDashboard.putNumber("distance to target", getDistanceToTarget());
+        SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
+        SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
+        SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         try{
         SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
         SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
         SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
 
-        SmartDashboard.putNumber("Vision Pose X", getFieldRelativePose().getX());
-        SmartDashboard.putNumber("Vision Pose Y", getFieldRelativePose().getY());
-        SmartDashboard.putNumber("Vision Pose R", getFieldRelativePose().getRotation().getDegrees());
         SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
         }
         catch(Exception e ){

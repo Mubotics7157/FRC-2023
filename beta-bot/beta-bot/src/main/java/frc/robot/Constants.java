@@ -166,7 +166,7 @@ public final class Constants {
       public static final int CONE_PIPELINE_INDEX = 0;
 
       public static final String INTAKE_LL_NAME = "limelight-intake";
-      public static final String TARGET_LL_NAME = "limelight-polecam";
+      public static final String TARGET_LL_NAME = "limelight";//"limelight-polecam";
 
       public static final int FILTER_SAMPLE_WINDOW = 20;
 
