@@ -8,7 +8,6 @@ import frc.robot.Constants.VisionConstants;
 
 public class Limelight {
     private String name;
-
     private NetworkTable tableLime;
 
     public Limelight(String name){
@@ -67,7 +66,7 @@ public class Limelight {
     }
 
     public double getLatency(){
-        double latency = tableLime.getEntry("tl").getDouble(0);
+        double latency = tableLime.getEntry("tl").getDouble(0) + tableLime.getEntry("cl").getDouble(0);
         return latency;
     }
 

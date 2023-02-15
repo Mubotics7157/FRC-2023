@@ -176,6 +176,8 @@ public final class Constants {
 
       public static final Pose2d RED_NODE_POSITION = new Pose2d(new Translation2d(16.16,4.97),Rotation2d.fromDegrees(0));
       public static final Pose2d BLUE_NODE_POSITION = new Pose2d(new Translation2d(Units.inchesToMeters(54.25)-Units.inchesToMeters(39.75),4.97),Rotation2d.fromDegrees(0));
+
+      public static final double CAM_DIST_TO_INTAKE = 0;
  
     }
 

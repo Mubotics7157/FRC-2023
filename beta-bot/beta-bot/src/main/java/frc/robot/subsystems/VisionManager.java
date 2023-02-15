@@ -5,6 +5,8 @@ import java.util.TreeMap;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -64,9 +66,8 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Rotation2d getAdjustedOffset(){
-        double roundedOffset = Math.round(coneOffset);
 
-        return Rotation2d.fromDegrees(offsetMap.get(roundedOffset));
+        return Rotation2d.fromDegrees(targetLL.getTargetYaw().getDegrees());
     }
 
     public double getTargetLatency(){
@@ -88,6 +89,19 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake offset", coneOffset);
         SmartDashboard.putNumber("distance to target", getDistanceToTarget());
+        try{
+        SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
+        SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
+        SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
+
+        SmartDashboard.putNumber("Vision Pose X", getFieldRelativePose().getX());
+        SmartDashboard.putNumber("Vision Pose Y", getFieldRelativePose().getY());
+        SmartDashboard.putNumber("Vision Pose R", getFieldRelativePose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
+        }
+        catch(Exception e ){
+
+        }
         //SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
     }
 
@@ -164,5 +178,16 @@ public class VisionManager extends SubsystemBase{
         }
  
     }
+
+    public Pose2d getIntakeConePose(){
+        try{
+            return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
+        }
+        catch(Exception e ){
+            System.out.print("==========COULD NOT GRAB CONE POSE=======");
+            return Tracker.getInstance().getPose();
+        }
+    }
+
 
 }   
