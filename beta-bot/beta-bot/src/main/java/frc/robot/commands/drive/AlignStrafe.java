@@ -33,13 +33,14 @@ import frc.robot.subsystems.VisionManager;
 public class AlignStrafe extends CommandBase{
     private Drive drive;
     private Tracker tracker;
-
+    private Command run;
 
 
     public AlignStrafe(Drive dInstance,Tracker tracker){
         drive = dInstance;
         this.tracker = tracker;
         addRequirements(drive);
+        
         addRequirements(tracker);
         //tracker.regeneratePath();
         //addCommands(tracker.getCommand());
@@ -48,8 +49,15 @@ public class AlignStrafe extends CommandBase{
     @Override
     public void initialize() {
         tracker.regeneratePath();
-        tracker.getCommand().schedule();
+        run = tracker.getCommand();
+        run.schedule();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        run.cancel();
+    }
+    
 
 
 

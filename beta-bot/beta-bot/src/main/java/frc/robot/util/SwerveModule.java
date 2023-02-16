@@ -47,6 +47,7 @@ public class SwerveModule {
         driveMotor.enableVoltageCompensation(true);
         driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
         driveMotor.setSensorPhase(false);
+        driveMotor.config_kP(0, SwerveModuleConstants.driveKP);
         
         turnMotor.setSelectedSensorPosition(0);
         turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);

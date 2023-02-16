@@ -29,6 +29,7 @@ public final class Constants {
     public static final double driveKS = 0.71003;
     public static final double driveKV = 2.2783;
     public static final double driveKA = 0.25953;
+    public static final double driveKP = 0.003;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
     public static final double TURNING_KP = .2;
@@ -253,16 +254,16 @@ public final class Constants {
   public static final class FieldConstants{
 
       public static final class RedConstants{
-        public static final Pose2d NODE_CONE_RED_1 = new Pose2d(14.75, 4.95, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_RED_2 = new Pose2d(14.75, 3.85, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_RED_3 = new Pose2d(14.75, 3.30, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_RED_4 = new Pose2d(14.75, 2.18, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_RED_5 = new Pose2d(14.75, 1.61, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_RED_6 = new Pose2d(14.75, 0.45, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_1 = new Pose2d(14.25, 4.95, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_2 = new Pose2d(14.25, 3.85, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_3 = new Pose2d(14.25, 3.30, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_4 = new Pose2d(14.25, 2.18, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_5 = new Pose2d(14.25, 1.61, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_RED_6 = new Pose2d(14.25, 0.45, Rotation2d.fromDegrees(0));
 
-        public static final Pose2d NODE_CUBE_RED_1 = new Pose2d(14.75, 4.42, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CUBE_RED_2 = new Pose2d(14.75, 2.74, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CUBE_RED_3 = new Pose2d(14.75, 1, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_RED_1 = new Pose2d(14.25, 4.42, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_RED_2 = new Pose2d(14.25, 2.74, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_RED_3 = new Pose2d(14.25, 1, Rotation2d.fromDegrees(0));
       }
     //according to Pathplanner
       

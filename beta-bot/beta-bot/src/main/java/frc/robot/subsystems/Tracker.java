@@ -70,16 +70,17 @@ public class Tracker extends SubsystemBase{
 
         SmartDashboard.putData("Field", m_field);
 
-        SmartDashboard.putNumber("x deviation", 0.02);
-        SmartDashboard.putNumber("y deviation", 0.02);
-        SmartDashboard.putNumber("r deviation", 0.02);
+        SmartDashboard.putNumber("xy val", 2.5);
+       
+        SmartDashboard.putNumber("r val", 2.5);
+        
     SmartDashboard.putNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX());
     SmartDashboard.putNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY());
     }
 
     public void regeneratePath(){
         traj = PathPlanner.generatePath(
-            new com.pathplanner.lib.PathConstraints(.5,.5),
+            new com.pathplanner.lib.PathConstraints(2, 2),
             new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
             new PathPoint(FieldConstants.RedConstants.NODE_CONE_RED_2.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
         );
@@ -91,9 +92,9 @@ public class Tracker extends SubsystemBase{
             getTraj(), 
             this::getPose, // Pose supplier
             DriveConstants.DRIVE_KINEMATICS,
-            new PIDController(1.25, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(1.25, 0, 0), // Y controller (usually the same values as X controller)
-            new PIDController(2.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(SmartDashboard.getNumber("xy val", 2.5), 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(SmartDashboard.getNumber("xy val", 2.5), 0, 0), // Y controller (usually the same values as X controller)
+            new PIDController(SmartDashboard.getNumber("r val", 2.5), 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             Drive.getInstance()::setModuleStates, // Module states consumer
             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             Drive.getInstance()
