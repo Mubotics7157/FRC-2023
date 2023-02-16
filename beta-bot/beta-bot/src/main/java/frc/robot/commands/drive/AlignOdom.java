@@ -75,7 +75,7 @@ public class AlignOdom extends CommandBase{
         rotController.setTolerance(Units.degreesToRadians(3));
 
         // strController.enableContinuousInput(-Math.PI, Math.PI);
-        // strController.setTolerance(Units.degreesToRadians(3));
+         strController.setTolerance(.1);
 
     }
 
