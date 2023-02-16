@@ -113,6 +113,7 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
         SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
         SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
+        //SmartDashboard.putNumber("Interpolated Node Pose", getNodeY());
         try{
         SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
         SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
@@ -219,13 +220,14 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Pose2d getIntakeConePose(){
-        try{
-            return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
-        }
-        catch(Exception e ){
-            System.out.print("==========COULD NOT GRAB CONE POSE=======");
-            return Tracker.getInstance().getPose();
-        }
+        // try{
+            // return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
+        // }
+        // catch(Exception e ){
+            // System.out.print("==========COULD NOT GRAB CONE POSE=======");
+            // return Tracker.getInstance().getPose();
+        // }
+        return Tracker.getInstance().getPose();
     }
 
 

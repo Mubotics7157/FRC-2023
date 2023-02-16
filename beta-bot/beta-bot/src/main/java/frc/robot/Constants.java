@@ -45,7 +45,7 @@ public final class Constants {
 }
 
   public static class DriveConstants{
-    public static final int MAX_TANGENTIAL_VELOCITY = 4; 
+    public static final double MAX_TANGENTIAL_VELOCITY = 3.5; 
     public static final double MAX_TELE_TANGENTIAL_VELOCITY = 3.5; 
     public static final double MAX_TELE_ANGULAR_VELOCITY = 2 * Math.PI; 
     public static final double WHEELBASE_WIDTH = .6604;

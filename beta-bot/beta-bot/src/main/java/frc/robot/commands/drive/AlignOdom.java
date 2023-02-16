@@ -13,6 +13,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
@@ -69,7 +71,7 @@ public class AlignOdom extends CommandBase{
     public void initialize() {
         atGoal= false;
         rotController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2*Math.PI , 2*Math.PI));
-        strController = new ProfiledPIDController(.3, 0, 0, new TrapezoidProfile.Constraints(2,2));
+        strController = new ProfiledPIDController(1.25, 0, 0, new TrapezoidProfile.Constraints(2,2));
 
         rotController.enableContinuousInput(-Math.PI, Math.PI);
         rotController.setTolerance(Units.degreesToRadians(3));
@@ -89,9 +91,8 @@ public class AlignOdom extends CommandBase{
         Rotation2d onTarget = Rotation2d.fromDegrees(180);
         double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
 
-        if(vision.foundNode()){
 
-        double strError = new Pose2d().minus(VisionManager.getInstance().getIntakeConePose()).getY();
+        double strError = FieldConstants.RedConstants.NODE_CONE_RED_2.getY()-VisionManager.getInstance().getIntakeConePose().getY();
 
         if(Math.abs(error)>Units.degreesToRadians(3))
             deltaSpeed = rotController.calculate(error);
@@ -103,14 +104,13 @@ public class AlignOdom extends CommandBase{
         if(Math.abs(strError) > 0.1)
             strSpeed = -strController.calculate(strError);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
         
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("strafe speed", strSpeed);
         SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
-        SmartDashboard.putNumber("strafe error", Units.degreesToRadians(strError));
+        SmartDashboard.putNumber("strafe error", strError);
         SmartDashboard.putBoolean("On target", rotController.atGoal());
-    }
     }
 
     /* 

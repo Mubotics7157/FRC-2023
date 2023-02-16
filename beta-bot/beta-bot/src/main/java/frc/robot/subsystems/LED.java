@@ -30,7 +30,7 @@ public class LED extends CommandBase{
         candle.configFactoryDefault();
         config.stripType = LEDStripType.RGB;
 
-        config.brightnessScalar = 0.5;
+        config.brightnessScalar = .5;
         candle.setLEDs(255, 255, 255);
         candle.clearAnimation(0);
         rainbowAnim = new RainbowAnimation(1, 0.85, 300);
@@ -115,7 +115,7 @@ public class LED extends CommandBase{
         offAnim();
         config.brightnessScalar = 1;
         candle.configAllSettings(config);
-        candle.setLEDs(255, 25, 0);
+        candle.setLEDs(245, 86, 30);
     }
 
     public void setOff(){

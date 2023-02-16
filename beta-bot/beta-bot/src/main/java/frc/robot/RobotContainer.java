@@ -76,12 +76,15 @@ public class RobotContainer {
     //m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
     //cube testing shot
 
-    m_driverController.povDown().whileTrue(new AlignStrafe(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive, tracker, poleCam) );
+    m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
     m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
     m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
+
+    m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
+    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
