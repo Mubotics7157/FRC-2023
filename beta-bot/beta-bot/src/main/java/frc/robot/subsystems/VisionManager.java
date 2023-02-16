@@ -65,6 +65,14 @@ public class VisionManager extends SubsystemBase{
         
     }
 
+    public Pose2d getBotPose(){
+        if(targetLL.hasTargets()) //TODO: add a check to make sure we are in tags mode
+            return targetLL.getBotPose();
+        else
+            return null;
+        
+    }
+
     public Rotation2d getOffset(){
         return Rotation2d.fromDegrees(coneOffset);
     }

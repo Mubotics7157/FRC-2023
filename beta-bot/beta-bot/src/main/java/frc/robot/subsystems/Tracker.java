@@ -50,9 +50,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void addVisionMeasurement(Pose2d visionPose,double latency){
-        //System.out.println(Timer.getFPGATimestamp()-timestamp);
-        //System.out.println(visionPose.getX() + " " + visionPose.getY());
-        //if(getPose().minus(visionPose).getX()<1 && getPose().minus(visionPose).getY()<1)
+        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))>1)
             estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
     }
 
@@ -114,5 +112,11 @@ public class Tracker extends SubsystemBase{
             // return VisionConstants.BLUE_NODE_POSITION.minus(getOdometry()).getX();
         // else
             return VisionConstants.RED_NODE_POSITION.minus(getOdometry()).getX();
+    }
+
+    public void resetViaVision(){
+        Pose2d visionPose = VisionManager.getInstance().getBotPose();
+        if(visionPose!=null)
+            estimator.resetPosition(visionPose.getRotation(),Drive.getInstance().getModulePositions(),visionPose);
     }
 }
