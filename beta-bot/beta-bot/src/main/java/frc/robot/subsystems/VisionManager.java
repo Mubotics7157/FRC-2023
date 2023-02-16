@@ -8,10 +8,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants.FieldConstants.BlueConstants;
+import frc.robot.Constants.FieldConstants.RedConstants;
 import frc.robot.util.Limelight;
 
 public class VisionManager extends SubsystemBase{
@@ -23,6 +27,10 @@ public class VisionManager extends SubsystemBase{
     private MedianFilter coneFilter;
     private double coneOffset;
     private TreeMap<Double,Double> offsetMap = new TreeMap<>();
+
+    //private TreeMap<Double, Double> CubeNodeMap = new TreeMap<>();
+    private TreeMap<Double, Double> ConeNodeMap = new TreeMap<>();
+
     private double lastKnownDistance = 0;
 
     public enum VisionState{
@@ -173,6 +181,20 @@ public class VisionManager extends SubsystemBase{
         offsetMap.put(15.0,3.98);
         offsetMap.put(16.0,3.98);
         offsetMap.put(17.0,3.98);
+        
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_1.getY(), BlueConstants.NODE_CONE_BLUE_1.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_2.getY(), BlueConstants.NODE_CONE_BLUE_2.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_3.getY(), BlueConstants.NODE_CONE_BLUE_3.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_4.getY(), BlueConstants.NODE_CONE_BLUE_4.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_5.getY(), BlueConstants.NODE_CONE_BLUE_5.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_6.getY(), BlueConstants.NODE_CONE_BLUE_6.getY());
+
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_1.getY(), RedConstants.NODE_CONE_RED_1.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_2.getY(), RedConstants.NODE_CONE_RED_2.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_3.getY(), RedConstants.NODE_CONE_RED_3.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
     }
 
     public double getDistanceToTarget(){
@@ -190,6 +212,10 @@ public class VisionManager extends SubsystemBase{
             return lastKnownDistance;
         }
  
+    }
+
+    public double getNodeY(){
+            return ConeNodeMap.get(Tracker.getInstance().getPose().getY());
     }
 
     public Pose2d getIntakeConePose(){
