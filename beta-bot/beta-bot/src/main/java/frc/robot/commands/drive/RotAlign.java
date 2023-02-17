@@ -78,7 +78,7 @@ public class RotAlign extends CommandBase{
                 atGoal = true;
             }
 
-            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+            driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, deltaSpeed*DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getPose().getRotation()));
 
             SmartDashboard.putNumber("controller output", deltaSpeed);
             SmartDashboard.putNumber("error", Units.radiansToDegrees(error));
