@@ -83,8 +83,8 @@ public class Tracker extends SubsystemBase{
         return traj;
     }
 
-    private void editNodePose(){
-        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()),SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY())), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
+    public void editNodePose(double nodeY){
+        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()), nodeY), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
         m_field.getObject("pose").setPose(node);
     }
 
@@ -94,16 +94,17 @@ public class Tracker extends SubsystemBase{
     }
 
     public void addVisionMeasurement(Pose2d visionPose,double latency){
-        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))<1)
+        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY() - getPose().getY()))<1)
             estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
     }
 
     @Override
     public void periodic() {
-        editNodePose();
+        //editNodePose(SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY()));
         updatePose();
         m_field.setRobotPose(estimator.getEstimatedPosition());
 
+        SmartDashboard.putNumber("what node", node.getY());
         SmartDashboard.putNumber("estim x", getPose().getX());
         SmartDashboard.putNumber("estim y", getPose().getY());
         SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());

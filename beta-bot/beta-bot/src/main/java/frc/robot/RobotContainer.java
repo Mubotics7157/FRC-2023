@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.FieldConstants.RedConstants;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.Outtake;
 import frc.robot.commands.ScoreConeHigh;
@@ -8,6 +9,7 @@ import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.Stow;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.drive.AlignStrafe;
+import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Elevator;
@@ -29,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -36,6 +39,9 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandJoystick m_operatorController =
+      new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+
   private final Drive drive = Drive.getInstance();
   private final Elevator elevator = Elevator.getInstance();
   private final Wrist wrist = Wrist.getInstance();
@@ -95,6 +101,14 @@ public class RobotContainer {
     //m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));
     //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
+    
+    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
+    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
+    m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
+    m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
+    m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
+
   }
 
   public Command getAutonomousCommand() {
