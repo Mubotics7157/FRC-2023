@@ -29,7 +29,7 @@ public class AutoRoutine {
 
     public Command buildAuto(){
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-          tracker::getOdometry, 
+          tracker::getPose, 
           tracker::setOdometry, 
           DriveConstants.DRIVE_KINEMATICS, 
           AutoConstants.X_Y_CONTROLLER,

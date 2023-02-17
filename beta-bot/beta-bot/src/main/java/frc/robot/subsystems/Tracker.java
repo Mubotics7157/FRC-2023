@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
@@ -48,12 +44,29 @@ public class Tracker extends SubsystemBase{
 
     public Tracker(){
         resetViaVision();
+        initTunableFields();
+    }
 
-        SmartDashboard.putData("Field", m_field);
-        SmartDashboard.putNumber("xy val", 2.5);
-        SmartDashboard.putNumber("r val", 2.5);
-        SmartDashboard.putNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX());
-        SmartDashboard.putNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY());
+
+    @Override
+    public void periodic() {
+        editNodePose();
+        updatePose();
+        m_field.setRobotPose(estimator.getEstimatedPosition());
+
+        SmartDashboard.putNumber("estim x", getPose().getX());
+        SmartDashboard.putNumber("estim y", getPose().getY());
+        SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
+    }
+
+    private void updatePose(){
+        
+        estimator.updateWithTime(Timer.getFPGATimestamp(),Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
+    }
+
+    public void addVisionMeasurement(Pose2d visionPose,double latency){
+        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))<1)
+            estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
     }
 
     public void regeneratePath(){
@@ -62,6 +75,23 @@ public class Tracker extends SubsystemBase{
             new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
             new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
         );
+    }
+
+    private void editNodePose(){
+        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()),SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY())), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
+        m_field.getObject("pose").setPose(node);
+    }
+
+    public void setPose(Pose2d pose){
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
+    }
+
+    public void setOdometry(Pose2d pose){
+        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
+    }
+
+    public Pose2d getPose(){
+        return estimator.getEstimatedPosition();
     }
 
     public Command getPathFollowingCommand(){
@@ -83,55 +113,22 @@ public class Tracker extends SubsystemBase{
         return traj;
     }
 
-    private void editNodePose(){
-        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()),SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY())), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
-        m_field.getObject("pose").setPose(node);
-    }
-
-    private void updatePose(){
-        
-        estimator.updateWithTime(Timer.getFPGATimestamp(),Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
-    }
-
-    public void addVisionMeasurement(Pose2d visionPose,double latency){
-        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))<1)
-            estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
-    }
-
-    @Override
-    public void periodic() {
-        editNodePose();
-        updatePose();
-        m_field.setRobotPose(estimator.getEstimatedPosition());
-
-        SmartDashboard.putNumber("estim x", getPose().getX());
-        SmartDashboard.putNumber("estim y", getPose().getY());
-        SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
-    }
-
-    public void setOdometry(Pose2d pose){
-        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
-    }
-
-    public Pose2d getOdometry(){
-        return estimator.getEstimatedPosition();
+    public void resetViaVision(){
+        Pose2d visionPose = VisionManager.getInstance().getBotPose();
+        if(visionPose!=null)
+            estimator.resetPosition(Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions(),visionPose);
     }
 
     public void resetHeading(){
         estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(estimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(0)));
     }
 
-    public Pose2d getPose(){
-        return estimator.getEstimatedPosition();
-    }
+    private void initTunableFields(){
+        SmartDashboard.putData("Field", m_field);
+        SmartDashboard.putNumber("xy val", 2.5);
+        SmartDashboard.putNumber("r val", 2.5);
+        SmartDashboard.putNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX());
+        SmartDashboard.putNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY());
 
-    public void setPose(Pose2d pose){
-        estimator.resetPosition(Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), pose);
-    }
-
-    public void resetViaVision(){
-        Pose2d visionPose = VisionManager.getInstance().getBotPose();
-        if(visionPose!=null)
-            estimator.resetPosition(Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions(),visionPose);
     }
 }

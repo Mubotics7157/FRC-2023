@@ -89,7 +89,7 @@ public class AlignOdom extends CommandBase{
         double omega = modifyInputs(rot.getAsDouble(), true);
         
         Rotation2d onTarget = Rotation2d.fromDegrees(180);
-        double error = onTarget.rotateBy(tracker.getOdometry().getRotation()).getRadians();
+        double error = onTarget.rotateBy(tracker.getPose().getRotation()).getRadians();
 
 
         double strError = FieldConstants.RedConstants.NODE_CONE_RED_2.getY()-VisionManager.getInstance().getIntakeConePose().getY();
@@ -104,7 +104,7 @@ public class AlignOdom extends CommandBase{
         if(Math.abs(strError) > 0.1)
             strSpeed = -strController.calculate(strError);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getOdometry().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, strSpeed*DriveConstants.MAX_TANGENTIAL_VELOCITY, deltaSpeed * DriveConstants.MAX_TELE_ANGULAR_VELOCITY, Tracker.getInstance().getPose().getRotation()));
         
         SmartDashboard.putNumber("controller output", deltaSpeed);
         SmartDashboard.putNumber("strafe speed", strSpeed);

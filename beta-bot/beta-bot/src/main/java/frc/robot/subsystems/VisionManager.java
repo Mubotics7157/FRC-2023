@@ -68,11 +68,9 @@ public class VisionManager extends SubsystemBase{
         }
     }
 
-
     public void addFieldRelativePose(){
         if(targetLL.hasTargets() && useVision) //TODO: add a check to make sure we are in tags mode
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-        
     }
 
     public void useVision(){
