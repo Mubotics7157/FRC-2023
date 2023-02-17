@@ -115,7 +115,7 @@ public class LED extends CommandBase{
         offAnim();
         config.brightnessScalar = 1;
         candle.configAllSettings(config);
-        candle.setLEDs(245, 86, 30);
+        candle.setLEDs(255, 25, 0);
     }
 
     public void setOff(){

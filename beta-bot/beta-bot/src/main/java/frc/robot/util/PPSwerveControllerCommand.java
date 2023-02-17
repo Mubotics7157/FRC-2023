@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +23,7 @@ import java.util.function.Supplier;
 /** Custom PathPlanner version of SwerveControllerCommand */
 public class PPSwerveControllerCommand extends CommandBase {
   private final Timer timer = new Timer();
-  private final Supplier<PathPlannerTrajectory> trajectory;
+  private final PathPlannerTrajectory trajectory;
   private final Supplier<Pose2d> poseSupplier;
   private final SwerveDriveKinematics kinematics;
   private final PPHolonomicDriveController controller;
@@ -60,7 +61,7 @@ public class PPSwerveControllerCommand extends CommandBase {
    * @param requirements The subsystems to require.
    */
   public PPSwerveControllerCommand(
-      Supplier<PathPlannerTrajectory> trajectory,
+      PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       PIDController xController,
       PIDController yController,
@@ -79,7 +80,13 @@ public class PPSwerveControllerCommand extends CommandBase {
 
     addRequirements(requirements);
 
-    
+    if (useAllianceColor && trajectory.fromGUI && trajectory.getInitialPose().getX() > 8.27) {
+      DriverStation.reportWarning(
+          "You have constructed a path following command that will automatically transform path states depending"
+              + " on the alliance color, however, it appears this path was created on the red side of the field"
+              + " instead of the blue side. This is likely an error.",
+          false);
+    }
   }
 
   /**
@@ -100,7 +107,7 @@ public class PPSwerveControllerCommand extends CommandBase {
    * @param requirements The subsystems to require.
    */
   public PPSwerveControllerCommand(
-      Supplier<PathPlannerTrajectory> trajectory,
+      PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       PIDController xController,
       PIDController yController,
@@ -140,7 +147,7 @@ public class PPSwerveControllerCommand extends CommandBase {
    * @param requirements The subsystems to require.
    */
   public PPSwerveControllerCommand(
-      Supplier<PathPlannerTrajectory> trajectorySupplier,
+      PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       SwerveDriveKinematics kinematics,
       PIDController xController,
@@ -149,7 +156,7 @@ public class PPSwerveControllerCommand extends CommandBase {
       Consumer<SwerveModuleState[]> outputModuleStates,
       boolean useAllianceColor,
       Subsystem... requirements) {
-    this.trajectory = trajectorySupplier;
+    this.trajectory = trajectory;
     this.poseSupplier = poseSupplier;
     this.kinematics = kinematics;
     this.controller = new PPHolonomicDriveController(xController, yController, rotationController);
@@ -159,6 +166,14 @@ public class PPSwerveControllerCommand extends CommandBase {
     this.useAllianceColor = useAllianceColor;
 
     addRequirements(requirements);
+
+    if (useAllianceColor && trajectory.fromGUI && trajectory.getInitialPose().getX() > 8.27) {
+      DriverStation.reportWarning(
+          "You have constructed a path following command that will automatically transform path states depending"
+              + " on the alliance color, however, it appears this path was created on the red side of the field"
+              + " instead of the blue side. This is likely an error.",
+          false);
+    }
   }
 
   /**
@@ -180,7 +195,7 @@ public class PPSwerveControllerCommand extends CommandBase {
    * @param requirements The subsystems to require.
    */
   public PPSwerveControllerCommand(
-      Supplier<PathPlannerTrajectory> trajectory,
+      PathPlannerTrajectory trajectory,
       Supplier<Pose2d> poseSupplier,
       SwerveDriveKinematics kinematics,
       PIDController xController,
@@ -202,20 +217,19 @@ public class PPSwerveControllerCommand extends CommandBase {
 
   @Override
   public void initialize() {
-
-    transformedTrajectory = trajectory.get();
-    
-    if (useAllianceColor) {
-   
-      
-           
+    if (useAllianceColor && trajectory.fromGUI) {
+      transformedTrajectory =
+          PathPlannerTrajectory.transformTrajectoryForAlliance(
+              trajectory, DriverStation.getAlliance());
     } else {
-   
+      transformedTrajectory = trajectory;
     }
 
     if (logActiveTrajectory != null) {
       logActiveTrajectory.accept(transformedTrajectory);
     }
+
+    controller.setTolerance(new Pose2d(new Translation2d(Units.inchesToMeters(1),Units.inchesToMeters(1)),Rotation2d.fromDegrees(.5)));
 
     timer.reset();
     timer.start();
@@ -278,7 +292,7 @@ public class PPSwerveControllerCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds());
+    return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds()) && controller.atReference();
   }
 
   private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {

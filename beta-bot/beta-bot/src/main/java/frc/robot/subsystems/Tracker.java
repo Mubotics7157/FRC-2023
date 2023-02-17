@@ -6,7 +6,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
@@ -33,6 +32,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.drive.PathConstraints;
+import frc.robot.util.PPSwerveControllerCommand;
 
 public class Tracker extends SubsystemBase{
 
@@ -45,9 +45,9 @@ public class Tracker extends SubsystemBase{
         .01
     ),
     new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-        .2,
-        .2,
-        .2
+        1,
+        1,
+        1
     ));
 
     private SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
@@ -68,6 +68,8 @@ public class Tracker extends SubsystemBase{
 
     public Tracker(){
 
+        resetViaVision();
+
         SmartDashboard.putData("Field", m_field);
 
         SmartDashboard.putNumber("xy val", 2.5);
@@ -82,7 +84,7 @@ public class Tracker extends SubsystemBase{
         traj = PathPlanner.generatePath(
             new com.pathplanner.lib.PathConstraints(2, 2),
             new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
-            new PathPoint(FieldConstants.RedConstants.NODE_CONE_RED_2.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
+            new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
         );
     }
 
@@ -106,7 +108,7 @@ public class Tracker extends SubsystemBase{
     }
 
     private void editNodePose(){
-        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()),SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY())), Rotation2d.fromDegrees(0));
+        node = new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX()),SmartDashboard.getNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY())), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
     }
 
     
@@ -185,6 +187,6 @@ public class Tracker extends SubsystemBase{
     public void resetViaVision(){
         Pose2d visionPose = VisionManager.getInstance().getBotPose();
         if(visionPose!=null)
-            estimator.resetPosition(visionPose.getRotation(),Drive.getInstance().getModulePositions(),visionPose);
+            estimator.resetPosition(Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions(),visionPose);
     }
 }

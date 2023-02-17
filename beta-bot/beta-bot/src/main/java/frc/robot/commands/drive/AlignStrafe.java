@@ -55,7 +55,7 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        run.cancel();
+        run.end(true);
     }
     
 

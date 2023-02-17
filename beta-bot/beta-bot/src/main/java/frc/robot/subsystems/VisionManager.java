@@ -27,9 +27,11 @@ public class VisionManager extends SubsystemBase{
     private MedianFilter coneFilter;
     private double coneOffset;
     private TreeMap<Double,Double> offsetMap = new TreeMap<>();
+    private boolean useVision = true;
 
     //private TreeMap<Double, Double> CubeNodeMap = new TreeMap<>();
     private TreeMap<Double, Double> ConeNodeMap = new TreeMap<>();
+    
 
     private double lastKnownDistance = 0;
 
@@ -68,9 +70,17 @@ public class VisionManager extends SubsystemBase{
 
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets()) //TODO: add a check to make sure we are in tags mode
+        if(targetLL.hasTargets() && useVision) //TODO: add a check to make sure we are in tags mode
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
         
+    }
+
+    public void useVision(){
+        useVision = true;
+    }
+
+    public void noUseVision(){
+        useVision = false;
     }
 
     public Pose2d getBotPose(){

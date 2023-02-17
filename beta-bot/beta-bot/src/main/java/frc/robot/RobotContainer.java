@@ -83,7 +83,9 @@ public class RobotContainer {
 
     m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
 
-    m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
+    //m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
+    m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
+    m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
     m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
