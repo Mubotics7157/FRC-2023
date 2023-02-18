@@ -16,7 +16,6 @@ public class SuperStructure extends SubsystemBase {
     private LED led = LED.getInstance();
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
-    private SetpointState setpointState = SetpointState.OFF;
 
     public enum SuperStructureState{
         CONE_HIGH,
@@ -29,12 +28,6 @@ public class SuperStructure extends SubsystemBase {
         OPEN_DOOR,
         STOWED,
         ZERO
-    }
-
-    public enum SetpointState{
-        AT_GOAL,
-        MOVING,
-        OFF
     }
 
     @Override

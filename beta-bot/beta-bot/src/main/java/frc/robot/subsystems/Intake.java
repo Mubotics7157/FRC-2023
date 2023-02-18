@@ -1,19 +1,13 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -132,9 +126,8 @@ public class Intake extends SubsystemBase {
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                //setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
+                setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(-3000);
-                setSpeed(distanceMap.get(VisionManager.getInstance().getDistanceToTarget()));
                 break;
             case IDLE:
                 setMotors(IntakeConstants.IDLE_SPEED);

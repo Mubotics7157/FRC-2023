@@ -5,17 +5,10 @@ import java.util.TreeMap;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.FieldConstants.BlueConstants;
-import frc.robot.Constants.FieldConstants.RedConstants;
 import frc.robot.util.Limelight;
 
 public class VisionManager extends SubsystemBase{
@@ -67,7 +60,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1) 
+        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
         lastTimeStamp = targetLL.getBootTimeStamp();
     }
@@ -117,11 +110,9 @@ public class VisionManager extends SubsystemBase{
     public void logData(){
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake offset", coneOffset);
-        SmartDashboard.putNumber("distance to target", getDistanceToTarget());
         SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
         SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
         SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
-        //SmartDashboard.putNumber("Interpolated Node Pose", getNodeY());
         try{
         SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
         SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
@@ -132,7 +123,6 @@ public class VisionManager extends SubsystemBase{
         catch(Exception e ){
 
         }
-        //SmartDashboard.putNumber("Experimental Cone Offset", getAdjustedOffset().getDegrees());
     }
 
     public void setTargetLLState(VisionState state){
@@ -167,23 +157,6 @@ public class VisionManager extends SubsystemBase{
         //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
         //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
         //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
-    }
-
-    public double getDistanceToTarget(){
-        try{
-            double targetPitch = targetLL.getTargetPitch().getRadians();
-            double distance = (VisionConstants.TARGET_HEIGHT_METERS - VisionConstants.CAM_HEIGHT_METERS) / Math.tan(VisionConstants.CAM_MOUNTING_PITCH_RADIANS + targetPitch);
-                if(distance<5){
-                    lastKnownDistance = distance;
-                    return distance;
-                }
-                else 
-                    return lastKnownDistance;
-        }
-        catch(Exception e){
-            return lastKnownDistance;
-        }
- 
     }
 
     public double getNodeY(){
