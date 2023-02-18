@@ -26,13 +26,11 @@ public class VisionManager extends SubsystemBase{
     
     private MedianFilter coneFilter;
     private double coneOffset;
-    private TreeMap<Double,Double> offsetMap = new TreeMap<>();
     private boolean useVision = true;
+    private double lastTimeStamp = 0;
 
-    //private TreeMap<Double, Double> CubeNodeMap = new TreeMap<>();
     private TreeMap<Double, Double> ConeNodeMap = new TreeMap<>();
     
-
     private double lastKnownDistance = 0;
 
     public enum VisionState{
@@ -69,8 +67,9 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets() && useVision) //TODO: add a check to make sure we are in tags mode
+        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1) 
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
+        lastTimeStamp = targetLL.getBootTimeStamp();
     }
 
     public void useVision(){
@@ -82,7 +81,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Pose2d getBotPose(){
-        if(targetLL.hasTargets()) //TODO: add a check to make sure we are in tags mode
+        if(targetLL.hasTargets() && targetLL.getPipelineIndex()==VisionConstants.TAG_PIPELINE_INDEX) 
             return targetLL.getBotPose();
         else
             return null;
@@ -112,6 +111,7 @@ public class VisionManager extends SubsystemBase{
         logData();
         coneOffset = getConeOffset();
         addFieldRelativePose();
+        SmartDashboard.putNumber("Publish Timestamp", targetLL.getJsonDump().targetingResults.timestamp_LIMELIGHT_publish);
     }
 
     public void logData(){
@@ -154,43 +154,6 @@ public class VisionManager extends SubsystemBase{
     }
 
     private void initAlignmentMap(){
-        offsetMap.put(0.0, -5.2);
-        offsetMap.put(-1.0, -5.2);
-        offsetMap.put(-2.0, -5.2);
-        offsetMap.put(-3.0, -5.2);
-        offsetMap.put(-4.0, -5.2);
-        offsetMap.put(-5.0, -5.2);
-        offsetMap.put(-6.0, -5.2);
-        offsetMap.put(-7.0, -5.2);
-        offsetMap.put(-8.0, -5.2);
-        offsetMap.put(-9.0, -5.2);
-        offsetMap.put(-10.0, -5.2);
-        offsetMap.put(-11.0, -5.2);
-        offsetMap.put(-12.0, -5.2);
-        offsetMap.put(-13.0, -5.2);
-        offsetMap.put(-14.0, -5.2);
-        offsetMap.put(-15.0, -5.2);
-        offsetMap.put(-16.0, -5.2);
-        offsetMap.put(-17.0, -5.2);
-
-        offsetMap.put(1.0, 3.98);
-        offsetMap.put(2.0, 3.98);
-        offsetMap.put(3.0, 3.98);
-        offsetMap.put(4.0, 3.98);
-        offsetMap.put(5.0, 3.98);
-        offsetMap.put(6.0, 3.98);
-        offsetMap.put(7.0, 3.98);
-        offsetMap.put(8.0, 3.98);
-        offsetMap.put(9.0, 3.98);
-        offsetMap.put(10.0,3.98);
-        offsetMap.put(11.0,3.98);
-        offsetMap.put(12.0,3.98);
-        offsetMap.put(13.0,3.98);
-        offsetMap.put(14.0,3.98);
-        offsetMap.put(15.0,3.98);
-        offsetMap.put(16.0,3.98);
-        offsetMap.put(17.0,3.98);
-        
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_1.getY(), BlueConstants.NODE_CONE_BLUE_1.getY());
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_2.getY(), BlueConstants.NODE_CONE_BLUE_2.getY());
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_3.getY(), BlueConstants.NODE_CONE_BLUE_3.getY());

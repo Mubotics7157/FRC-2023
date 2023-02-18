@@ -70,6 +70,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void regeneratePath(){
+        //man i love polar bears
         traj = PathPlanner.generatePath(
             new com.pathplanner.lib.PathConstraints(2, 2),
             new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading

@@ -1,5 +1,6 @@
 package frc.robot;
 
+
 import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -15,7 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
-public final class Constants {
+public final class AltConstants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
@@ -69,12 +70,6 @@ public final class Constants {
     public static final double FRONT_RIGHT_ENCODER_OFFSET =  127.0007175492034;//-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
     public static final double FRONT_LEFT_ENCODER_OFFSET = -49.65367268041238;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
     public static final double REAR_LEFT_ENCODER_OFFSET = -154.42226306232428;//-107;
-/* 
-    public static final double REAR_LEFT_ENCODER_OFFSET = 9.7503662109375;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = 124.07684326171876; //-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = -47.72186279296875;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -154.852294921875;//-107;
-*/
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
@@ -258,7 +253,6 @@ public final class Constants {
         public static final Pose2d NODE_CUBE_RED_2 = new Pose2d(14.25, 2.74, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CUBE_RED_3 = new Pose2d(14.25, 1, Rotation2d.fromDegrees(0));
       }
-    //according to Pathplanner
       
       public static final class BlueConstants{
         public static final Pose2d NODE_CONE_BLUE_1 = new Pose2d(1.75, 4.95, Rotation2d.fromDegrees(0));
@@ -273,7 +267,5 @@ public final class Constants {
         public static final Pose2d NODE_CUBE_BLUE_3 = new Pose2d(1.75, 1, Rotation2d.fromDegrees(0));
       }
 
-      
-    
   }
 }

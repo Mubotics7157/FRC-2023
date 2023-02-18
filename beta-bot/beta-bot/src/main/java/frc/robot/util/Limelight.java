@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.LimelightHelpers.LimelightResults;
 
 public class Limelight {
     private String name;
@@ -56,13 +58,20 @@ public class Limelight {
 
     }
 
-
     public double getLatency(){
         return visionLatency *.001;
     }
 
     public double getTargets(){
         return tableLime.getEntry("tv").getDouble(0);
+    }
+
+    public LimelightResults getJsonDump(){
+        return LimelightHelpers.getLatestResults(name);
+    }
+
+    public double getBootTimeStamp(){
+        return getJsonDump().targetingResults.timestamp_LIMELIGHT_publish;
     }
 
     public double getPipelineIndex(){

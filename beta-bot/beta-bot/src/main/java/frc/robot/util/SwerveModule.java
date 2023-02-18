@@ -13,24 +13,17 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
-    WPI_TalonFX turnMotor;
-    WPI_TalonFX driveMotor;
-    WPI_CANCoder absEncoder;
+   private WPI_TalonFX turnMotor;
+   private WPI_TalonFX driveMotor;
+   private WPI_CANCoder absEncoder;
 
-
-
-
-       public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
-
+    public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
         driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
         turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
@@ -72,12 +65,10 @@ public class SwerveModule {
     }
 
     public void setState(SwerveModuleState state){
-        //SwerveModuleState optimizedState = SwerveModuleState.optimize(state, getAbsHeading());
         SwerveModuleState optimizedState = CTREUtils.optimize(state, getHeading());
-        SmartDashboard.putNumber("swerve wanted angle", optimizedState.angle.getDegrees());
 
-            setVelocity(optimizedState.speedMetersPerSecond,.2); // should be arbitrary dt in auto
-            setTurnRad(optimizedState.angle);
+        setVelocity(optimizedState.speedMetersPerSecond,.2); 
+        setTurnRad(optimizedState.angle);
     }
 
     private void setVelocity(double driveSetpoint, double dt){
@@ -92,18 +83,7 @@ public class SwerveModule {
 
 
     private void setTurnRad(Rotation2d turnSetpointRad){
-        // double output = turnPID.calculate(getAbsHeading().getRadians(), turnSetpointRad.getRadians());
-// 
-        // turnMotor.set(ControlMode.PercentOutput,output);
-        SmartDashboard.putNumber("wanted steps", turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
-
         turnMotor.set(ControlMode.Position, turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
-        
-    }
-
-    private void setTurnDeg(Rotation2d turnSetpoint){
-        turnMotor.set(ControlMode.Position,CommonConversions.degreeToSteps(turnSetpoint.getDegrees(), SwerveModuleConstants.TURN_GEAR_RATIO));
-
     }
 
     public SwerveModuleState getState(){
@@ -127,9 +107,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getRelativeHeading(){
-       // return getAbsHeading();
         return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
-        //new Rotation2d(CommonConversions.stepsToRadians(turnMotor.getSelectedSensorPosition(),21.43));
     }
 
     public void flip(double angle){
