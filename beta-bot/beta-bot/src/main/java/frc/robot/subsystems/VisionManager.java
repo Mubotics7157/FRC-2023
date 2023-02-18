@@ -16,14 +16,11 @@ public class VisionManager extends SubsystemBase{
     private static VisionManager instance = new VisionManager();
     private Limelight targetLL;
     private Limelight intakeLL;
-    
     private MedianFilter coneFilter;
     private double coneOffset;
     private boolean useVision = true;
     private double lastTimeStamp = 0;
-
     private TreeMap<Double, Double> ConeNodeMap = new TreeMap<>();
-    
     private double lastKnownDistance = 0;
 
     public enum VisionState{
@@ -46,6 +43,13 @@ public class VisionManager extends SubsystemBase{
         return instance;
     }
 
+    @Override
+    public void periodic() {
+        logData();
+        coneOffset = getConeOffset();
+        addFieldRelativePose();
+    }
+
     public Rotation2d getNodeAngle(){
         return targetLL.getTargetYaw();
     }
@@ -57,20 +61,6 @@ public class VisionManager extends SubsystemBase{
         catch(NullPointerException e){
             return 0;
         }
-    }
-
-    public void addFieldRelativePose(){
-        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-            Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-        lastTimeStamp = targetLL.getBootTimeStamp();
-    }
-
-    public void useVision(){
-        useVision = true;
-    }
-
-    public void noUseVision(){
-        useVision = false;
     }
 
     public Pose2d getBotPose(){
@@ -94,17 +84,68 @@ public class VisionManager extends SubsystemBase{
         return targetLL.getLatency();
     }
 
-    public boolean foundNode(){
-        return targetLL.hasTargets();
+    public double getNodeY(){
+            return ConeNodeMap.get(Tracker.getInstance().getPose().getY());
+    }
+
+    public Pose2d getIntakeConePose(){
+        // try{
+            // return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
+        // }
+        // catch(Exception e ){
+            // System.out.print("==========COULD NOT GRAB CONE POSE=======");
+            // return Tracker.getInstance().getPose();
+        // }
+        return Tracker.getInstance().getPose();
+    }
+
+    public void addFieldRelativePose(){
+        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+            Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
+        lastTimeStamp = targetLL.getBootTimeStamp();
+    }
+
+    public void useVision(){
+        useVision = true;
+    }
+
+    public void noUseVision(){
+        useVision = false;
     }
 
 
-    @Override
-    public void periodic() {
-        logData();
-        coneOffset = getConeOffset();
-        addFieldRelativePose();
-        SmartDashboard.putNumber("Publish Timestamp", targetLL.getJsonDump().targetingResults.timestamp_LIMELIGHT_publish);
+    public void togglePipeline(){
+        targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.TAPE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.TAPE_PIPELINE_INDEX);
+    }
+
+    public void setTargetLLState(VisionState state){
+        switch(state){
+            case TAG:
+                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
+                break;
+            case TAPE:
+                targetLL.setPipelineIndex(VisionConstants.TAPE_PIPELINE_INDEX);
+                break;
+            default:
+                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
+                break;
+        }
+    }
+
+    private void initAlignmentMap(){
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_1.getY(), BlueConstants.NODE_CONE_BLUE_1.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_2.getY(), BlueConstants.NODE_CONE_BLUE_2.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_3.getY(), BlueConstants.NODE_CONE_BLUE_3.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_4.getY(), BlueConstants.NODE_CONE_BLUE_4.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_5.getY(), BlueConstants.NODE_CONE_BLUE_5.getY());
+        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_6.getY(), BlueConstants.NODE_CONE_BLUE_6.getY());
+
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_1.getY(), RedConstants.NODE_CONE_RED_1.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_2.getY(), RedConstants.NODE_CONE_RED_2.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_3.getY(), RedConstants.NODE_CONE_RED_3.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
+        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
     }
 
     public void logData(){
@@ -124,55 +165,5 @@ public class VisionManager extends SubsystemBase{
 
         }
     }
-
-    public void setTargetLLState(VisionState state){
-        switch(state){
-            case TAG:
-                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
-                break;
-            case TAPE:
-                targetLL.setPipelineIndex(VisionConstants.TAPE_PIPELINE_INDEX);
-                break;
-            default:
-                targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
-                break;
-        }
-    }
-
-    public void togglePipeline(){
-        targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.TAPE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.TAPE_PIPELINE_INDEX);
-    }
-
-    private void initAlignmentMap(){
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_1.getY(), BlueConstants.NODE_CONE_BLUE_1.getY());
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_2.getY(), BlueConstants.NODE_CONE_BLUE_2.getY());
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_3.getY(), BlueConstants.NODE_CONE_BLUE_3.getY());
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_4.getY(), BlueConstants.NODE_CONE_BLUE_4.getY());
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_5.getY(), BlueConstants.NODE_CONE_BLUE_5.getY());
-        ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_6.getY(), BlueConstants.NODE_CONE_BLUE_6.getY());
-
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_1.getY(), RedConstants.NODE_CONE_RED_1.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_2.getY(), RedConstants.NODE_CONE_RED_2.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_3.getY(), RedConstants.NODE_CONE_RED_3.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
-    }
-
-    public double getNodeY(){
-            return ConeNodeMap.get(Tracker.getInstance().getPose().getY());
-    }
-
-    public Pose2d getIntakeConePose(){
-        // try{
-            // return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
-        // }
-        // catch(Exception e ){
-            // System.out.print("==========COULD NOT GRAB CONE POSE=======");
-            // return Tracker.getInstance().getPose();
-        // }
-        return Tracker.getInstance().getPose();
-    }
-
 
 }   
