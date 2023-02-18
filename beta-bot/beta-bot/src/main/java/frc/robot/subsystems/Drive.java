@@ -5,9 +5,12 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
@@ -25,6 +28,8 @@ public class Drive extends SubsystemBase {
     private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
+    private double lastTimeStamp = Timer.getFPGATimestamp();
+    private Translation2d lastReqVel = new Translation2d();
 
     public Drive(){
         rotController.setTolerance(5);
@@ -124,6 +129,41 @@ public class Drive extends SubsystemBase {
 
     public ProfiledPIDController getRotationController(){
         return rotController;
+    }
+
+    public ChassisSpeeds limitTangentialAcceleration(ChassisSpeeds currVelocity){
+        double dt = Timer.getFPGATimestamp() - lastTimeStamp;
+
+        double maxDV =  DriveConstants.MAX_DRIVE_TANGENTIAL_ACCEL * dt;
+
+        Translation2d currVel = new Translation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond);
+
+        Translation2d dV =  currVel.minus(lastReqVel) ;
+
+        if(dV.getNorm() > maxDV){
+            Translation2d velLimit = lastReqVel.plus(new Translation2d(maxDV,maxDV));
+            currVelocity.vxMetersPerSecond = velLimit.getX();
+            currVelocity.vyMetersPerSecond = velLimit.getY();
+            SmartDashboard.putString("Limited?", "yes");
+        }
+        else
+            SmartDashboard.putString("Limited?", "no");
+
+
+        SmartDashboard.putNumber("Current DV", dV.getNorm());
+        SmartDashboard.putNumber("maxDV", maxDV);
+        SmartDashboard.putNumber("Max X Vel", currVelocity.vxMetersPerSecond);
+        SmartDashboard.putNumber("Max Y Vel", currVelocity.vyMetersPerSecond);
+        SmartDashboard.putNumber("Last X Vel", lastReqVel.getX());
+        SmartDashboard.putNumber("Last Y Vel", lastReqVel.getY());
+        SmartDashboard.putNumber("DT", dt);
+        SmartDashboard.putNumber("Current Accel", (currVel.minus(lastReqVel).getX())/dt);
+        
+        lastReqVel = currVel;
+        lastTimeStamp = Timer.getFPGATimestamp();
+
+        return currVelocity;
+
     }
 
 }

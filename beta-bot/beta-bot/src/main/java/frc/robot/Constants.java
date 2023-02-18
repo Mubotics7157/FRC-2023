@@ -90,7 +90,10 @@ public final class Constants {
 
     public static final double AUTO_CONTROLLER_kP = 2;
 
-    public static final SwerveModuleState[] LOCKED_SwerveModule_STATES = {new SwerveModuleState(0, Rotation2d.fromDegrees(45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
+    public static final SwerveModuleState[] LOCKED_MODULE_STATES = {new SwerveModuleState(0, Rotation2d.fromDegrees(45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
+
+    public static final double MAX_DRIVE_TANGENTIAL_ACCEL = .5; // in units of m/s/s
+
 
   }
 
