@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,13 +40,13 @@ public class Wrist extends SubsystemBase {
   
         holdAtWantedState = false;
 
-        magSensor = new DigitalInput(1);
+        magSensor = new DigitalInput(WristConstants.DEVICE_ID_MAG_SENSOR);
 
         configWristDefault();
 
         wristState = WristState.STOW;
         
-        SmartDashboard.putNumber("Wrist setpoint", -117);
+        //SmartDashboard.putNumber("Wrist setpoint", -117);
         SmartDashboard.putNumber("mid score", -135);
        
     }
@@ -126,9 +127,12 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.configFactoryDefault();
 
+
+        wristMotor.setInverted(true);
         wristMotor.setNeutralMode(NeutralMode.Brake);
         wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
+        wristMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 1));
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 60000;
@@ -153,6 +157,8 @@ public class Wrist extends SubsystemBase {
 
     private void logData(){
         SmartDashboard.putString("Wrist State", wristState.toString());
+        SmartDashboard.putBoolean("Mag Sensor", magSensor.get());
+        SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
     }
 
 }

@@ -39,16 +39,14 @@ public class RobotContainer {
 
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  private final CommandJoystick m_operatorController =
-      new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+  // private final CommandJoystick m_operatorController =
+      // new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   private final Drive drive = Drive.getInstance();
-  private final Elevator elevator = Elevator.getInstance();
-  private final Wrist wrist = Wrist.getInstance();
   private final Intake intake = Intake.getInstance();
-  private final Tracker tracker = Tracker.getInstance();
-  private final VisionManager poleCam = VisionManager.getInstance();
-  private final LED led = LED.getInstance();
+  //private final Tracker tracker = Tracker.getInstance();
+  //private final VisionManager poleCam = VisionManager.getInstance();
+  //private final LED led = LED.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
 
   public RobotContainer() {
@@ -60,8 +58,8 @@ public class RobotContainer {
   private void configureBindings() {
 
     //ground intake tipped CONES
-    m_driverController.leftTrigger().whileTrue(new frc.robot.commands.Intake(superStructure, true));
-    m_driverController.leftTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new frc.robot.commands.Intake(superStructure, true),new Outtake(IntakeState.INTAKE)));
+    m_driverController.leftTrigger().onFalse(new Stow(superStructure));
     //high score CONES
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -70,7 +68,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
-    //m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
+    m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
 
 
     //poop
@@ -82,17 +80,17 @@ public class RobotContainer {
     //m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
     //cube testing shot
 
-    m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
+   // m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
-    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
-    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
+    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
+    //m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
-    m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
+    //m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
 
     //m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
-    m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
-    m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
-    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
+    //m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
+    //m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
+    //m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
@@ -102,26 +100,26 @@ public class RobotContainer {
     //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
     
-    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
-    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
-    m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
-    m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
-    m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
-    m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
+    // m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
+    // m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
+    // m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
+    // m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
+    // m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
   }
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new Outtake(IntakeState.OUTTAKE)));
-    eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
-    eventMap.put("stow", new Stow(superStructure));
+    //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new Outtake(IntakeState.OUTTAKE)));
+    //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
+    //eventMap.put("stow", new Stow(superStructure));
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
     HashMap<String, Command> climbMap = new HashMap<>();
-    climbMap.put("cook",new OpenDoor(superStructure, 0.5));
-    climbMap.put("uncook", new Stow(superStructure));
+    //climbMap.put("cook",new OpenDoor(superStructure, 0.5));
+    //climbMap.put("uncook", new Stow(superStructure));
 
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));

@@ -173,6 +173,8 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
+        elevatorMotor.setInverted(true);
+        elevatorSlave.setInverted(true);
 
         elevatorMotor.setControlFramePeriodMs(50);
         elevatorMotor.setIdleMode(IdleMode.kBrake);

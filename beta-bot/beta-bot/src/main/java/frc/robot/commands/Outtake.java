@@ -14,8 +14,8 @@ public class Outtake extends CommandBase {
 
     @Override
     public void execute() {
-        //Intake.getInstance().setIntakeState(state);
-        Intake.getInstance().setIntakeState(IntakeState.OUTTAKE);
+        Intake.getInstance().setIntakeState(state);
+        //Intake.getInstance().setIntakeState(IntakeState.OUTTAKE);
     }
 
     @Override

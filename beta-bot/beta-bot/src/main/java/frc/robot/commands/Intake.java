@@ -21,10 +21,7 @@ public class Intake extends CommandBase {
             superStructure.setState(SuperStructureState.FALLEN_CONE);
         else
             superStructure.setState(SuperStructureState.CUBE_INTAKE);
+
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        superStructure.setState(SuperStructureState.STOWED);
-    }
 }

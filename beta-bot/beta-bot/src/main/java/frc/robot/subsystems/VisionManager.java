@@ -100,9 +100,9 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets() && useVision && (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+        if(targetLL.hasTargets() && useVision )//&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-        lastTimeStamp = targetLL.getBootTimeStamp();
+        //lastTimeStamp = targetLL.getBootTimeStamp();
     }
 
     public void useVision(){

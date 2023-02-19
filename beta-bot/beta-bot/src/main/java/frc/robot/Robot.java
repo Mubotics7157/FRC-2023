@@ -5,10 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.LED;
 
 /**
@@ -23,6 +26,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_PCM , IntakeConstants.PNEUMATICS_MODULE_TYPE);
+  //DigitalInput test1 = new DigitalInput(0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,6 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putNumber("fallen cone wrist setpoint", 0);
   }
 
   /**
@@ -44,6 +49,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    Drive.getInstance().logData();
+    //SmartDashboard.putBoolean("test 1", test1.get());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -91,7 +98,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //compressor.enableDigital();
+    compressor.enableDigital();
   }
 
   @Override

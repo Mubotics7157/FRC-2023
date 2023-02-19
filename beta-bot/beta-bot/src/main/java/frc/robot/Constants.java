@@ -65,10 +65,10 @@ public final class Constants {
     public static final int FRONT_LEFT_ENCODER_PORT = 6;
     public static final int REAR_LEFT_ENCODER_PORT = 3;
 
-    public static final double REAR_RIGHT_ENCODER_OFFSET = 10.107010016401127;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET =  127.0007175492034;//-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -49.65367268041238;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_LEFT_ENCODER_OFFSET = -154.42226306232428;//-107;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = -22.93;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = 27.15;//-61.60;//.219;//176.1328125;//-110.830078125 ;// -111.263671875;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = 27.49;//8.1 0169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    public static final double REAR_LEFT_ENCODER_OFFSET = 14.06;
 /* 
     public static final double REAR_LEFT_ENCODER_OFFSET = 9.7503662109375;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
     public static final double FRONT_LEFT_ENCODER_OFFSET = 124.07684326171876; //-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
@@ -94,6 +94,8 @@ public final class Constants {
 
     public static final double MAX_DRIVE_TANGENTIAL_ACCEL = .5; // in units of m/s/s
 
+    public static final String CANIVORE_NAME = "swerve";
+
 
   }
 
@@ -114,7 +116,7 @@ public final class Constants {
 
       public static final double ELEVATOR_ZERO_HEIGHT = 0;
 
-      public static int DEVICE_ID_ELEVATOR_SWITCH = 0;
+      public static int DEVICE_ID_ELEVATOR_SWITCH = 3;
       //TODO: find out what id to use
 
     }
@@ -133,7 +135,7 @@ public final class Constants {
 
       public static final int ABS_ENCODER_PORT = 0;
 
-      public static final int DEVICE_ID_MAG_SENSOR = 1;
+      public static final int DEVICE_ID_MAG_SENSOR = 0;
       //TODO: find out what the id is
 
 
@@ -149,6 +151,8 @@ public final class Constants {
 
 
       public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
+
+      public static final boolean MAG_DETECTED = false;
     }
 
     public static class VisionConstants{
@@ -185,7 +189,9 @@ public final class Constants {
       public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
-      public static final int DEVICE_ID_PCM = 28;
+      public static final boolean INVERT_MASTER = false;
+
+      public static final int DEVICE_ID_PCM = 40;
 
       public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
@@ -228,14 +234,14 @@ public final class Constants {
   }
 
   public static final class SuperStructureConstants{
-    public static final double ELEVATOR_CONE_HIGH = -26;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-107);
+    public static final double ELEVATOR_CONE_HIGH = -20;
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-93);
 
     public static final double ELEVATOR_CONE_MID = -15;
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);//-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);

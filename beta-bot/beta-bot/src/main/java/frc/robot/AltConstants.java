@@ -204,6 +204,9 @@ public final class AltConstants {
       public static final double BOT_ROLLER_KF = .000332;
       public static final double BOT_ROLLER_KP = .00007;
 
+      public static final boolean INTAKE_MASTER = true;
+
+
     }
 
     public static final class LidarConstants {
@@ -227,7 +230,7 @@ public final class AltConstants {
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);//-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-123);
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);

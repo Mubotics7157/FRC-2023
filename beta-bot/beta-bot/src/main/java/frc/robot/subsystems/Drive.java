@@ -25,7 +25,7 @@ public class Drive extends SubsystemBase {
     private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
     private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
     private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
-    private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON);
+    private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON,DriveConstants.CANIVORE_NAME);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
     private double lastTimeStamp = Timer.getFPGATimestamp();
@@ -52,16 +52,20 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
 // 
-        // SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
-// 
-        // SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
-        // SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
-        // SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
 // 
         // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
 // 
 // 
         // SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
+    }
+    
+    public void logData(){
+        SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
+// 
+         SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
+         SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
+         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
+
     }
 
     public void setModuleStates(SwerveModuleState[] states){

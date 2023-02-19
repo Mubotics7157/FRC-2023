@@ -65,7 +65,7 @@ public class Intake extends SubsystemBase {
         //intakeMaster.setSmartCurrentLimit(20);
         //intakeSlave.setSmartCurrentLimit(20);
 
-        intakeMaster.setInverted(true);
+        intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
         intakeSlave.setInverted(!intakeMaster.getInverted());
         intakeSlave.follow(intakeMaster);
         intakeMaster.setIdleMode(IdleMode.kBrake);
