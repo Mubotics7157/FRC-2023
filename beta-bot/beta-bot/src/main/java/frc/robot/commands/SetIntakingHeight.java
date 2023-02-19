@@ -4,11 +4,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
-public class Intake extends CommandBase {
+public class SetIntakingHeight extends CommandBase {
     private SuperStructure superStructure;
     private boolean intakeCone;
 
-    public Intake(SuperStructure instance,boolean intakeCone){
+    public SetIntakingHeight(SuperStructure instance,boolean intakeCone){
         superStructure = instance;
         this.intakeCone = intakeCone;
 

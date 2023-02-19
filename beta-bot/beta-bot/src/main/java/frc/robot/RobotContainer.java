@@ -1,37 +1,24 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.FieldConstants.RedConstants;
-import frc.robot.commands.OpenDoor;
-import frc.robot.commands.Outtake;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
+import frc.robot.commands.SetIntakeState;
+import frc.robot.commands.SetIntakingHeight;
+import frc.robot.commands.ShootCone;
 import frc.robot.commands.Stow;
 import frc.robot.commands.auto.AutoRoutine;
-import frc.robot.commands.drive.AlignStrafe;
-import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.SuperStructure;
-import frc.robot.subsystems.Tracker;
-import frc.robot.subsystems.VisionManager;
-import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Intake.IntakeState;
-
 import java.util.HashMap;
-
 import com.pathplanner.lib.PathConstraints;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -58,27 +45,17 @@ public class RobotContainer {
   private void configureBindings() {
 
     //ground intake tipped CONES
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new frc.robot.commands.Intake(superStructure, true),new Outtake(IntakeState.INTAKE_CONE)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetIntakingHeight(superStructure, true)));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
     //high score CONES
-    m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
     //mid score CONES
-    m_driverController.rightBumper().whileTrue(new ScoreConeMid(superStructure));
+    m_driverController.rightBumper().onTrue(new ScoreConeMid(superStructure));
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.rightTrigger().whileTrue(new Outtake(IntakeState.OUTTAKE));
-    m_driverController.rightTrigger().onFalse(new Outtake(IntakeState.OFF));
-
-
-    //poop
-    //m_driverController.rightTrigger().whileTrue(new RunIntake(intake, IntakeState.OUTTAKE));
-    //eat
-    //m_driverController.a().whileTrue(new RunIntake(intake, IntakeState.INTAKE));
-
-    //m_driverController.x().whileTrue(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-40), wrist, false, false), new SetElevatorHeight(-.25, elevator, false), new RunIntake(intake, IntakeState.INTAKE)));
-    //m_driverController.x().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(.25, elevator, false)));
-    //cube testing shot
+    m_driverController.rightTrigger().whileTrue(new ShootCone());
+    m_driverController.rightTrigger().onFalse(new Stow(superStructure));
 
    // m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));

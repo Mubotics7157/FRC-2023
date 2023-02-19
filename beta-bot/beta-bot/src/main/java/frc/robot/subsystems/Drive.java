@@ -51,20 +51,19 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
-// 
-// 
+ 
+ 
         // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
-// 
-// 
+ 
+ 
         // SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
     }
     
     public void logData(){
         SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
-// 
-         SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
-         SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
-         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
+        SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
+        SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
+        SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
 
     }
 
@@ -73,6 +72,8 @@ public class Drive extends SubsystemBase {
         frontRight.setState(states[1]);
         rearLeft.setState(states[2]);
         rearRight.setState(states[3]);
+
+        //SmartDashboard.putNumber("FL VEL Error", Math.abs(states[0].speedMetersPerSecond-frontLeft.getDriveVelocity()));
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
         //SmartDashboard.putNumber("left front error", flError);

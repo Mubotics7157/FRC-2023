@@ -58,13 +58,6 @@ public class Intake extends SubsystemBase {
         topController.setP(IntakeConstants.TOP_ROLLER_KP);
         topController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
-        //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
-        //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
-
-
-        //intakeMaster.setSmartCurrentLimit(20);
-        //intakeSlave.setSmartCurrentLimit(20);
-
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
         intakeSlave.setInverted(!intakeMaster.getInverted());
         intakeSlave.follow(intakeMaster);

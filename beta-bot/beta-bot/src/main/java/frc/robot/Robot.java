@@ -5,13 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.LED;
 
 /**
@@ -49,7 +47,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Drive.getInstance().logData();
     //SmartDashboard.putBoolean("test 1", test1.get());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
@@ -61,7 +58,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    LED.getInstance().setOrange();
+    //LED.getInstance().setOrange();
   }
 
   @Override

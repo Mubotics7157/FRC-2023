@@ -14,7 +14,8 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
-    private LED led = LED.getInstance();
+    //private LED led = LED.getInstance();
+    private LED led;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
 
@@ -52,7 +53,7 @@ public class SuperStructure extends SubsystemBase {
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
 
-        //intake.setIntakeState(IntakeState.INTAKE_CONE);
+        intake.setIntakeState(IntakeState.INTAKE_CONE);
 
     }
 
@@ -73,7 +74,7 @@ public class SuperStructure extends SubsystemBase {
     public void stowAll(){
         wrist.setWristState(WristState.STOW);
         elevator.setState(ElevatorState.STOW);
-        //intake.setIntakeState(IntakeState.OFF);
+        intake.setIntakeState(IntakeState.OFF);
     }
 
     public void idleIntake(){
@@ -91,6 +92,37 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
         scoringState = state;
 
+        //setLedMode(scoringState);
+
+        switch(scoringState){
+            case CONE_HIGH:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
+                break;
+            case CONE_MID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
+                break;
+            case STOWED:
+                stowAll();
+                break;
+            case CONE_INTAKE:
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
+                break;
+            case CUBE_INTAKE:
+                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            case FALLEN_CONE:
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, Rotation2d.fromDegrees(-93));//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            case OPEN_DOOR:
+                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void setLedMode(SuperStructureState state){
         switch(state){
             case CONE_HIGH:
                 led.setStrobe();
@@ -111,34 +143,5 @@ public class SuperStructure extends SubsystemBase {
                 led.setStrobe();
                 break;
         }
-
-                switch(scoringState){
-            case CONE_HIGH:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
-                break;
-            case CONE_MID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
-                break;
-            case STOWED:
-                stowAll();
-                led.setCurrentIntake();
-                break;
-            case CONE_INTAKE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
-                break;
-            case CUBE_INTAKE:
-                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                break;
-            case FALLEN_CONE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, Rotation2d.fromDegrees(-93));//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                led.setYellowStrobe();
-                break;
-            case OPEN_DOOR:
-                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
-                break;
-            default:
-                break;
-        }
-
     }
 }
