@@ -58,7 +58,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     //ground intake tipped CONES
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new frc.robot.commands.Intake(superStructure, true),new Outtake(IntakeState.INTAKE)));
+    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new frc.robot.commands.Intake(superStructure, true),new Outtake(IntakeState.INTAKE_CONE)));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
     //high score CONES
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
@@ -84,6 +84,9 @@ public class RobotContainer {
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
     //m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
+
+    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
+    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
 
     //m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
 
