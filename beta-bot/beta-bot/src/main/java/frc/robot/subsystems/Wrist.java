@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.AltConstants.IntakeConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.util.CommonConversions;
 
@@ -58,7 +60,7 @@ public class Wrist extends SubsystemBase {
     @Override
     public void periodic() {
         if(holdAtWantedState)
-            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
+            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
 
         logData();
 
@@ -74,7 +76,8 @@ public class Wrist extends SubsystemBase {
                 setState();
                 break;
             case STOW:
-                setState();
+                if(Elevator.getInstance().getElevatorHeight()>-20)
+                    setState();
                 break;
             case ZERO:
                 zeroRoutine();
@@ -106,7 +109,9 @@ public class Wrist extends SubsystemBase {
     }
 
     private void setState(){
-        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
+        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
+        if(magSensor.get()==WristConstants.MAG_DETECTED)
+            wristMotor.setSelectedSensorPosition(0);
     }
 
     public void setGains(){
@@ -115,7 +120,12 @@ public class Wrist extends SubsystemBase {
 
 
     public boolean atSetpoint(){
-        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 96)) - Units.radiansToDegrees(setpoint.getRadians())) < 3;
+        return getError() <3;
+    }
+
+    private double getError(){
+        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), Constants.WristConstants.WRIST_GEARING)) - Units.radiansToDegrees(setpoint.getRadians()));
+
     }
 
     public void zeroOnboardEncoder(){
@@ -152,13 +162,14 @@ public class Wrist extends SubsystemBase {
         wristState = state;
 
         if(state==WristState.STOW)
-            setpoint = Rotation2d.fromDegrees(-7);
+            setpoint = Rotation2d.fromDegrees(0);
     }
 
     private void logData(){
         SmartDashboard.putString("Wrist State", wristState.toString());
         SmartDashboard.putBoolean("Mag Sensor", magSensor.get());
         SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
+        SmartDashboard.putNumber("Wrist Error Deg", getError());
     }
 
 }

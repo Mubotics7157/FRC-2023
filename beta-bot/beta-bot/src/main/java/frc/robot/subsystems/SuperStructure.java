@@ -36,8 +36,6 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
-        //if(scoringState!=SuperStructureState.STOWED && !atSetpoint())
-            //idleIntake();
     }
 
     public static SuperStructure getInstance(){
@@ -72,9 +70,9 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void stowAll(){
-        wrist.setWristState(WristState.STOW);
         elevator.setState(ElevatorState.STOW);
         intake.setIntakeState(IntakeState.OFF);
+        wrist.setWristState(WristState.STOW);
     }
 
     public void idleIntake(){
@@ -111,7 +109,7 @@ public class SuperStructure extends SubsystemBase {
                 intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
             case FALLEN_CONE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, Rotation2d.fromDegrees(-93));//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
             case OPEN_DOOR:
                 goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);

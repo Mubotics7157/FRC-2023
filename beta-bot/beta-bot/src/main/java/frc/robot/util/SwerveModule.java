@@ -46,7 +46,7 @@ public class SwerveModule {
         turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
         turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(true);
-        turnMotor.config_kP(0, .15);
+        turnMotor.config_kP(0, .2);
         turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
 
         absEncoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);

@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final CommandXboxController m_driverController =
+  public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   // private final CommandJoystick m_operatorController =
       // new CommandJoystick(OperatorConstants.kOperatorControllerPort);

@@ -183,7 +183,7 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-1, .35, 0);
+        elevatorController.setOutputRange(-1, .45, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
@@ -204,6 +204,7 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
         SmartDashboard.putNumber("bruddah", elevatorEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator Height", getElevatorHeight());
     }
 
     public void setState(ElevatorState state){

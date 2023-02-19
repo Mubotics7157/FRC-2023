@@ -98,22 +98,22 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CUBE:
                 setMotors(IntakeConstants.CUBE_INTAKE_SPEED);
-                //toggleIntake(false);
+                toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
                 setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
-                //toggleIntake(false);
+                toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(2000);
-                //toggleIntake(true);
+                toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
                 setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
-                //toggleIntake(true);
+                toggleIntake(true);
                 break;
             case INTAKE:
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
