@@ -66,10 +66,10 @@ public final class AltConstants {
     public static final int FRONT_LEFT_ENCODER_PORT = 6;
     public static final int REAR_LEFT_ENCODER_PORT = 3;
 
-    public static final double REAR_RIGHT_ENCODER_OFFSET = 10.107010016401127;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET =  127.0007175492034;//-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -49.65367268041238;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_LEFT_ENCODER_OFFSET = -154.42226306232428;//-107;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = -65.91385016401125;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = 96.94327700328023;//-61.60;//.219;//176.1328125;//-110.830078125 ;// -111.263671875;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = -49.48069206888473;//8.1 0169.277;//-4.74609375;//-6.328125;//6-2.263671875;
+    public static final double REAR_LEFT_ENCODER_OFFSET = -56.334019154170576;
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
