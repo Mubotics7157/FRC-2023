@@ -12,6 +12,7 @@ public class SetIntakeState extends CommandBase {
         this.state = state;
     }
 
+    
     @Override
     public void execute() {
         Intake.getInstance().setIntakeState(state);

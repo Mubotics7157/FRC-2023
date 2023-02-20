@@ -29,6 +29,7 @@ public class SuperStructure extends SubsystemBase {
         FALLEN_CONE,
         OPEN_DOOR,
         STOWED,
+        CUSTOM,
         ZERO
     }
 
@@ -45,6 +46,7 @@ public class SuperStructure extends SubsystemBase {
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
 
+        
     }
 
     public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){
@@ -92,6 +94,7 @@ public class SuperStructure extends SubsystemBase {
 
         //setLedMode(scoringState);
 
+        
         switch(scoringState){
             case CONE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
@@ -113,6 +116,9 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case OPEN_DOOR:
                 goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                break;
+            case CUSTOM:
+                goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
                 break;
             default:
                 break;

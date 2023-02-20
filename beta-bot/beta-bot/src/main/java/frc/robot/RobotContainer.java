@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.SetIntakeState;
@@ -47,9 +48,12 @@ public class RobotContainer {
     //ground intake tipped CONES
     m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetIntakingHeight(superStructure, true)));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
-    //high score CONES
-    m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
+
+    m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    //high score CONES
+    //m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
+    //m_driverController.leftBumper().onFalse(new Stow(superStructure));
     //mid score CONES
     m_driverController.rightBumper().onTrue(new ScoreConeMid(superStructure));
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
@@ -57,12 +61,15 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new Stow(superStructure));
 
+    //m_driverController.x().whileTrue(new SetIntakeState(IntakeState.INTAKE));
+    //m_driverController.x().onFalse(new SetIntakeState(IntakeState.OFF));
+
    // m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
     //m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
-    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
+    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
     m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
 
     //m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.SuperStructureConstants;
 
 
 public class Elevator extends SubsystemBase {
@@ -63,7 +64,8 @@ public class Elevator extends SubsystemBase {
         elevatorSlave.follow(elevatorMotor);
 
 
-        SmartDashboard.putNumber("elevator setpoint", -26);
+        //SmartDashboard.putNumber("elevator setpoint", -26);
+        SmartDashboard.putNumber("custom elevator", -24.5);
         zeroElevator();
 
 
@@ -212,7 +214,7 @@ public class Elevator extends SubsystemBase {
 
         if(state==ElevatorState.STOW){
             configElevatorDownwardConstraints();
-            setpoint = 0;
+            setpoint = SuperStructureConstants.ELEVATOR_STOW;
         }
         else
             configElevatorMotor();

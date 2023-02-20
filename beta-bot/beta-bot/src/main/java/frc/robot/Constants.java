@@ -22,13 +22,13 @@ public final class Constants {
   }
 
   public static final class SwerveModuleConstants{
-    public static final double driveKS = 0.71003;
-    public static final double driveKV = 2.2783;
-    public static final double driveKA = 0.25953;
-    public static final double driveKP = 0.003;
+    public static final double driveKS = 0.12256;
+    public static final double driveKV = 2.3396;
+    public static final double driveKA = 0.19701;
+    public static final double driveKP = 0.0018763;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
-    public static final double TURNING_KP = .2;
+    public static final double TURNING_KP = .3;
 
     public static final double CLOSED_LOOP_RAMP_RATE  = .2;
     public static final double OPEN_LOOP_RAMP_RATE  = .25;
@@ -45,9 +45,9 @@ public final class Constants {
     public static final double MAX_TANGENTIAL_VELOCITY = 3.5; 
     public static final double MAX_TELE_TANGENTIAL_VELOCITY = 3.5; 
     public static final double MAX_TELE_ANGULAR_VELOCITY = 2 * Math.PI; 
-    public static final double WHEELBASE_WIDTH = .6604;
-    public static final double WHEELBASE_LENGTH = .6604;
-    public static final double WHEEL_DIAMETER_METERS = .1016;
+    public static final double WHEELBASE_WIDTH =  Units.inchesToMeters(20.75);
+    public static final double WHEELBASE_LENGTH = Units.inchesToMeters(20.75);
+    public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(4);
 
 
     public static final int REAR_RIGHT_DRIVE_PORT = 10;
@@ -69,6 +69,7 @@ public final class Constants {
     public static final double FRONT_RIGHT_ENCODER_OFFSET = 27.15;//-61.60;//.219;//176.1328125;//-110.830078125 ;// -111.263671875;
     public static final double FRONT_LEFT_ENCODER_OFFSET = 27.49;//8.1 0169.277;//-4.74609375;//-6.328125;//6-2.263671875;
     public static final double REAR_LEFT_ENCODER_OFFSET = 14.06;
+
 /* 
     public static final double REAR_LEFT_ENCODER_OFFSET = 9.7503662109375;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
     public static final double FRONT_LEFT_ENCODER_OFFSET = 124.07684326171876; //-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
@@ -122,7 +123,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 60;
+      public static final double WRIST_GEARING = 75;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -186,8 +187,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 4;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 5;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 4;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -203,15 +204,15 @@ public final class Constants {
       public static final double CUBE_INTAKE_SPEED = .25;
       public static final double CONE_INTAKE_SPEED = .75;
 
-      public static final double CONE_OUTTAKE_SPEED=-0.9;
-      public static final double CUBE_OUTTAKE_SPEED=-0.9;
+      public static final double CONE_OUTTAKE_SPEED=-1;
+      public static final double CUBE_OUTTAKE_SPEED=-1;
       public static final double CUBE_INTAKE_SETPOINT= .25;
       public static final double CONE_INTAKE_SETPOINT= .75;
       public static final double CONE_OUTTAKE_SETPOINT=-30123;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9;
       public static final double IDLE_SETPOINT = 0;
 
-      public static final double IDLE_SPEED = .65;
+      public static final double IDLE_SPEED = .75;
 
       public static final double TOP_ROLLER_KP = 0.00007;
       public static final double TOP_ROLLER_KF = .000186;
@@ -241,16 +242,19 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-145); //-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-117); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
-    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-135);
+    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-117);
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
+
+    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-2);
+    public static final double ELEVATOR_STOW = 0;
   }
 
   public static final class FieldConstants{

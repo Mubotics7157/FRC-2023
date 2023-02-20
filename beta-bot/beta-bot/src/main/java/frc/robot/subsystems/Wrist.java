@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.AltConstants.IntakeConstants;
+import frc.robot.AltConstants.SuperStructureConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.subsystems.SuperStructure.SuperStructureState;
 import frc.robot.util.CommonConversions;
 
 public class Wrist extends SubsystemBase {
@@ -50,7 +52,7 @@ public class Wrist extends SubsystemBase {
         
         //SmartDashboard.putNumber("Wrist setpoint", -117);
         SmartDashboard.putNumber("mid score", -135);
-       
+        SmartDashboard.putNumber("custom wrist", -104);
     }
 
     public static Wrist getInstance(){
@@ -162,7 +164,7 @@ public class Wrist extends SubsystemBase {
         wristState = state;
 
         if(state==WristState.STOW)
-            setpoint = Rotation2d.fromDegrees(0);
+            setpoint = frc.robot.Constants.SuperStructureConstants.WRIST_STOW;
     }
 
     private void logData(){
