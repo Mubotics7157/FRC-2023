@@ -118,18 +118,17 @@ public class Elevator extends SubsystemBase {
     }
 
 
-    public boolean zeroRoutine(){
-        if(!limitSwitch.get()){//assuming !get() means not triggered
-            elevatorMotor.set(0.1);
-            return false;
+    public void zeroRoutine(){
+        if(limitSwitch.get() != ElevatorConstants.MAG_DETECTED){
+            elevatorMotor.set(ElevatorConstants.ZEROING_SPEED);
+            //go down until mag is hit
         }
 
         else{
             elevatorMotor.set(0);
             zeroElevator();
-            return true;
+            setState(ElevatorState.STOW);
         }
-        //this returns if the elevator has been zeroed
     }
 
 

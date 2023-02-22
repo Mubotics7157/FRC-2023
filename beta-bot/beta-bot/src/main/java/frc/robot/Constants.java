@@ -117,7 +117,9 @@ public final class Constants {
 
       public static final double ELEVATOR_ZERO_HEIGHT = 0;
 
-      public static int DEVICE_ID_ELEVATOR_SWITCH = 3;
+      public static final int DEVICE_ID_ELEVATOR_SWITCH = 3;
+
+      public static final boolean MAG_DETECTED = false;
       //TODO: find out what id to use
 
     }
@@ -154,6 +156,8 @@ public final class Constants {
       public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
 
       public static final boolean MAG_DETECTED = false;
+
+      public static final double ZEROING_SPEED = 0.1;
     }
 
     public static class VisionConstants{
@@ -205,14 +209,14 @@ public final class Constants {
       public static final double CONE_INTAKE_SPEED = .75;
 
       public static final double CONE_OUTTAKE_SPEED=-1;
-      public static final double CUBE_OUTTAKE_SPEED=-1;
+      public static final double CUBE_OUTTAKE_SPEED=-.45;
       public static final double CUBE_INTAKE_SETPOINT= .25;
       public static final double CONE_INTAKE_SETPOINT= .75;
       public static final double CONE_OUTTAKE_SETPOINT=-30123;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9;
       public static final double IDLE_SETPOINT = 0;
 
-      public static final double IDLE_SPEED = .75;
+      public static final double IDLE_SPEED = .75/2;
 
       public static final double TOP_ROLLER_KP = 0.00007;
       public static final double TOP_ROLLER_KF = .000186;
@@ -235,8 +239,11 @@ public final class Constants {
   }
 
   public static final class SuperStructureConstants{
-    public static final double ELEVATOR_CONE_HIGH = -25;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-83);
+    public static final double ELEVATOR_CONE_HIGH = -24.5;
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-104);
+
+    public static final double ELEVATOR_CUBE_HIGH = 0;
+    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
 
     public static final double ELEVATOR_CONE_MID = -15;
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
@@ -244,14 +251,11 @@ public final class Constants {
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-117); //-123
 
-    public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -4;
-    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-135);
+    public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
+    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-123);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
-    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-117);
-
-    public static final double ELEVATOR_CUBE_HIGH = 0;
-    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
+    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);
 
     public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-2);
     public static final double ELEVATOR_STOW = 0;

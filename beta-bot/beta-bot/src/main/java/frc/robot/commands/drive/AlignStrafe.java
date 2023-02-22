@@ -32,6 +32,11 @@ public class AlignStrafe extends CommandBase{
     }
 
     @Override
+    public boolean isFinished() {
+        return (Math.abs(RobotContainer.m_driverController.getLeftY())>.2||Math.abs(RobotContainer.m_driverController.getLeftX())>.2);
+    }
+
+    @Override
     public void end(boolean interrupted) {
         run.end(true);
     }

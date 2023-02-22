@@ -16,8 +16,10 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "score"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -101,13 +103,6 @@
   "maxAcceleration": 2.0,
   "isReversed": null,
   "markers": [
-    {
-      "position": 0.0,
-      "names": [
-        "score",
-        "climb"
-      ]
-    },
     {
       "position": 2.487272727272735,
       "names": [

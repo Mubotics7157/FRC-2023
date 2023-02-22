@@ -47,7 +47,7 @@ public class VisionManager extends SubsystemBase{
     public void periodic() {
         //logData();
         //coneOffset = getConeOffset();
-        //   addFieldRelativePose();
+          addFieldRelativePose();
     }
 
     public Rotation2d getNodeAngle(){
@@ -100,7 +100,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets() && useVision )//&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+        if(targetLL.hasTargets() && useVision) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
             Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
         //lastTimeStamp = targetLL.getBootTimeStamp();
     }

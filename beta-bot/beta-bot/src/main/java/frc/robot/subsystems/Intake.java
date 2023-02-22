@@ -30,8 +30,12 @@ public class Intake extends SubsystemBase {
     private CANSparkMax intakeSlave;
 
     private DoubleSolenoid solenoid; 
+
     private SparkMaxPIDController topController;
+    private SparkMaxPIDController botController;
+
     private RelativeEncoder topEncoder;
+    private RelativeEncoder botEncoder;
     private IntakeState intakeState;
 
     //private Ultrasonic tof;
@@ -66,6 +70,8 @@ public class Intake extends SubsystemBase {
 
         //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
+
+        intakeMaster.setSmartCurrentLimit(100);
 
 
         SmartDashboard.putNumber("Intake speed", 0.5);
@@ -103,7 +109,7 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE:
                 setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
-                toggleIntake(false);
+                //toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
@@ -113,7 +119,7 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CONE:
                 setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
-                toggleIntake(true);
+                //toggleIntake(true);
                 break;
             case INTAKE:
                 setMotors(IntakeConstants.CONE_INTAKE_SPEED);
@@ -130,10 +136,10 @@ public class Intake extends SubsystemBase {
     }
 
     public void setIntakeState(IntakeState state){
-        if(state==IntakeState.IDLE)
-            currentLimit(true);
-        else
+        if(state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE)
             currentLimit(false);
+        else
+            currentLimit(true);
             
         intakeState = state;
     }
@@ -165,22 +171,22 @@ public class Intake extends SubsystemBase {
 
     public boolean isClosed(){
         if(solenoid.get() == Value.kForward){
-            return false;
+            return true;
         }
         else if(solenoid.get() == Value.kReverse){
-            return true;
+            return false;
         }
         else
-            return true;
+            return false;
     }
 
     public void currentLimit(boolean enable){
-        if(enable){
+        if(enable)
             intakeMaster.setSmartCurrentLimit(10, 20);
-        }
-        else{
-            intakeMaster.setSmartCurrentLimit(50);
-        }
+        
+        else
+            intakeMaster.setSmartCurrentLimit(70);
+         
     }
 
     public double getObjDistance(){

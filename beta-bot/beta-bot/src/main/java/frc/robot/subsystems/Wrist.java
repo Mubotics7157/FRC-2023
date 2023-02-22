@@ -79,7 +79,7 @@ public class Wrist extends SubsystemBase {
                 break;
             case STOW:
                 if(Elevator.getInstance().getElevatorHeight()>-20)
-                    setState();
+                setState();
                 break;
             case ZERO:
                 zeroRoutine();
@@ -96,18 +96,16 @@ public class Wrist extends SubsystemBase {
         setpoint = requestedAngle;
     }
 
-    public boolean zeroRoutine(){
-        if(!magSensor.get()){ //assuming !get() means not triggered
-            wristMotor.set(ControlMode.PercentOutput, 0.1);
-            return false;
+    public void zeroRoutine(){
+        if(magSensor.get() != WristConstants.MAG_DETECTED){
+            wristMotor.set(ControlMode.PercentOutput, WristConstants.ZEROING_SPEED);
         }
         
         else{
             wristMotor.set(ControlMode.PercentOutput, 0);
-            zeroOnboardEncoder();
-            return true;
+            zeroOnboardEncoder(); 
+            setWristState(WristState.STOW);
         }
-        //this returns if the wrist has been zeroed
     }
 
     private void setState(){
@@ -148,7 +146,7 @@ public class Wrist extends SubsystemBase {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 60000;
-        config.motionAcceleration = 60000;
+        config.motionAcceleration = 45000;
         wristMotor.configAllSettings(config);
 
         zeroOnboardEncoder();

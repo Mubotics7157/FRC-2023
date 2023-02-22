@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +39,10 @@ public class SuperStructure extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
+
+        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && intake.isClosed())
+            intake.setIntakeState(IntakeState.IDLE);
+
     }
 
     public static SuperStructure getInstance(){
@@ -64,8 +70,8 @@ public class SuperStructure extends SubsystemBase {
 
     }
 
-    public void shoot(boolean cone){
-        if(cone)
+    public void shoot(){
+        if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
         else
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE);
@@ -75,6 +81,15 @@ public class SuperStructure extends SubsystemBase {
         elevator.setState(ElevatorState.STOW);
         intake.setIntakeState(IntakeState.OFF);
         wrist.setWristState(WristState.STOW);
+    }
+
+    public void zeroAll(){
+        //elevator.setState(ElevatorState.ZERO);
+        wrist.setWristState(WristState.ZERO);
+        //intake.setIntakeState(IntakeState.OFF);
+    }
+
+    public void isZeroed(){
     }
 
     public void idleIntake(){
@@ -102,11 +117,14 @@ public class SuperStructure extends SubsystemBase {
             case CONE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
                 break;
+            case CUBE_HIGH:
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
+                break;
             case STOWED:
                 stowAll();
                 break;
             case CONE_INTAKE:
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_UPRIGHT, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
                 break;
             case CUBE_INTAKE:
                 intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
@@ -119,6 +137,9 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUSTOM:
                 goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
+                break;
+            case ZERO:
+                zeroAll();
                 break;
             default:
                 break;
