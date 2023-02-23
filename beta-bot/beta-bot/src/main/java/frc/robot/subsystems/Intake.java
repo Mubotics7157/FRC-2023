@@ -103,40 +103,40 @@ public class Intake extends SubsystemBase {
                 setMotors(0);
                 break;
             case INTAKE_CUBE:
-                setMotors(IntakeConstants.CUBE_INTAKE_SPEED);
+                setSpeed(IntakeConstants.CUBE_INTAKE_SPEED);
                 toggleIntake(false);
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
-                setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
+                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
                 //toggleIntake(false);
                 //value to be detemermined :P
                 break;
             case INTAKE_CONE:
-                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(2000);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
+                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
                 //toggleIntake(true);
                 break;
             case INTAKE:
-                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(-3000);
                 break;
             case IDLE:
-                setMotors(IntakeConstants.IDLE_SPEED);
+                setSpeed(IntakeConstants.IDLE_SPEED);
                 break;
         }
         
     }
 
     public void setIntakeState(IntakeState state){
-        if(state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE)
+        if(state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE)
             currentLimit(false);
         else
             currentLimit(true);

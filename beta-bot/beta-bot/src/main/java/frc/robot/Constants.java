@@ -205,23 +205,23 @@ public final class Constants {
 
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
-      public static final double CUBE_INTAKE_SPEED = .25;
-      public static final double CONE_INTAKE_SPEED = .75;
+      public static final double CUBE_INTAKE_SPEED = .25 * 5700;
+      public static final double CONE_INTAKE_SPEED = .9 * 5700;
 
-      public static final double CONE_OUTTAKE_SPEED=-1;
-      public static final double CUBE_OUTTAKE_SPEED=-.45;
-      public static final double CUBE_INTAKE_SETPOINT= .25;
-      public static final double CONE_INTAKE_SETPOINT= .75;
-      public static final double CONE_OUTTAKE_SETPOINT=-30123;
-      public static final double CUBE_OUTTAKE_SETPOINT=-0.9;
+      public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
+      public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
+      public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
+      public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
+      public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
+      public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
       public static final double IDLE_SETPOINT = 0;
 
-      public static final double IDLE_SPEED = .75/2;
+      public static final double IDLE_SPEED = .75/2 * 5700;
 
-      public static final double TOP_ROLLER_KP = 0.00007;
-      public static final double TOP_ROLLER_KF = .000186;
-      public static final double BOT_ROLLER_KF = .000332;
-      public static final double BOT_ROLLER_KP = .00007;
+      public static final double TOP_ROLLER_KP = .00001;
+      public static final double TOP_ROLLER_KF = .0002;
+      public static final double BOT_ROLLER_KF = .00001;
+      public static final double BOT_ROLLER_KP = .0002;
 
     }
 

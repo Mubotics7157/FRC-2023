@@ -14,7 +14,11 @@ public class Zero extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return false;
+        return  SuperStructure.getInstance().isZeroed();
+    }
+    @Override
+    public void end(boolean interrupted) {
+        SuperStructure.getInstance().setState(SuperStructureState.STOWED);
     }
 
 }

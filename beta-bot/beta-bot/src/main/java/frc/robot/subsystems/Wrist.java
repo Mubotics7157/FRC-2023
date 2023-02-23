@@ -105,7 +105,12 @@ public class Wrist extends SubsystemBase {
             wristMotor.set(ControlMode.PercentOutput, 0);
             zeroOnboardEncoder(); 
             setWristState(WristState.STOW);
+            
         }
+    }
+
+    public boolean isZeroed(){
+        return magSensor.get() == WristConstants.MAG_DETECTED;
     }
 
     private void setState(){

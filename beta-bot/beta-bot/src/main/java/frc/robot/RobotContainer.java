@@ -9,6 +9,7 @@ import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
+import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.DriveTele;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -34,8 +36,8 @@ public class RobotContainer {
 
   public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  // private final CommandJoystick m_operatorController =
-      // new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+ private final CommandJoystick m_operatorController =
+      new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
@@ -65,8 +67,12 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    // m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    // m_driverController.leftBumper().onFalse(new Stow(superStructure));
+
+    m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    //high score CONES
     //high score CONES
     //m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
     //m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -103,7 +109,7 @@ public class RobotContainer {
     //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
     
-    // m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
+     m_operatorController.button(7).onTrue(new Zero());
     // m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
     // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
     // m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));

@@ -89,7 +89,8 @@ public class SuperStructure extends SubsystemBase {
         //intake.setIntakeState(IntakeState.OFF);
     }
 
-    public void isZeroed(){
+    public boolean isZeroed(){
+        return wrist.isZeroed();
     }
 
     public void idleIntake(){
