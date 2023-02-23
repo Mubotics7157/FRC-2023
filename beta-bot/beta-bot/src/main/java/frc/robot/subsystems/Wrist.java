@@ -148,6 +148,8 @@ public class Wrist extends SubsystemBase {
         wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
         wristMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 1));
+        wristMotor.configVoltageCompSaturation(10);
+        wristMotor.enableVoltageCompensation(true);
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 60000;

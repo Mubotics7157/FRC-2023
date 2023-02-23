@@ -31,6 +31,7 @@ public class SuperStructure extends SubsystemBase {
         FALLEN_CONE,
         OPEN_DOOR,
         STOWED,
+        SEAGUL,
         CUSTOM,
         ZERO
     }
@@ -40,7 +41,7 @@ public class SuperStructure extends SubsystemBase {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
-        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && intake.isClosed())
+        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && intake.isClosed() && scoringState!=SuperStructureState.SEAGUL)
             intake.setIntakeState(IntakeState.IDLE);
 
     }
@@ -138,6 +139,10 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUSTOM:
                 goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
+                break;
+            case SEAGUL:
+                //goToPosition(0, Rotation2d.fromDegrees(-20));
+                intakeCone(0, Rotation2d.fromDegrees(-20));
                 break;
             case ZERO:
                 zeroAll();

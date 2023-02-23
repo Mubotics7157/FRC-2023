@@ -56,11 +56,17 @@ public class Intake extends SubsystemBase {
         topController = intakeMaster.getPIDController();
         topEncoder = intakeMaster.getEncoder();
 
+        botController = intakeSlave.getPIDController();
+        botEncoder = intakeSlave.getEncoder();
+
         intakeMaster.restoreFactoryDefaults();
         intakeSlave.restoreFactoryDefaults();
 
         topController.setP(IntakeConstants.TOP_ROLLER_KP);
         topController.setFF(IntakeConstants.TOP_ROLLER_KF);
+
+        botController.setP(IntakeConstants.TOP_ROLLER_KP);
+        botController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
         intakeSlave.setInverted(!intakeMaster.getInverted());
@@ -73,9 +79,13 @@ public class Intake extends SubsystemBase {
 
         intakeMaster.setSmartCurrentLimit(100);
 
+        intakeMaster.enableVoltageCompensation(10);
+        intakeSlave.enableVoltageCompensation(10);
+
 
         SmartDashboard.putNumber("Intake speed", 0.5);
         SmartDashboard.putNumber("Outtake Setpoint", 1000);
+        SmartDashboard.putNumber("L ratio", 1);   
         
     }
 
@@ -108,7 +118,8 @@ public class Intake extends SubsystemBase {
                 //value to be determined :P
                 break;
             case OUTTAKE_CUBE:
-                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
+                //setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_SPEED);
                 //toggleIntake(false);
                 //value to be detemermined :P
                 break;
@@ -118,7 +129,7 @@ public class Intake extends SubsystemBase {
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setSpeed(-4000);
+                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
                 //toggleIntake(true);
                 break;
             case INTAKE:
@@ -182,7 +193,7 @@ public class Intake extends SubsystemBase {
 
     public void currentLimit(boolean enable){
         if(enable)
-            intakeMaster.setSmartCurrentLimit(10, 20);
+            intakeMaster.setSmartCurrentLimit(20, 30);
         
         else
             intakeMaster.setSmartCurrentLimit(70);

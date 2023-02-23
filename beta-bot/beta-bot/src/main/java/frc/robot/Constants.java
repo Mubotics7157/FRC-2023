@@ -206,7 +206,7 @@ public final class Constants {
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
-      public static final double CONE_INTAKE_SPEED = .9 * 5700;
+      public static final double CONE_INTAKE_SPEED = 1 * 5700;
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;

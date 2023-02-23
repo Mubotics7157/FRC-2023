@@ -4,6 +4,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
+import frc.robot.commands.Seagul;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.ShootCone;
@@ -100,6 +101,9 @@ public class RobotContainer {
     //m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
     //m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
     m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
+    m_driverController.button(7).onTrue(new Zero());
+    m_driverController.button(8).whileTrue(new Seagul(superStructure));
+    m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));

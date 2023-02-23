@@ -177,6 +177,9 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setInverted(true);
         elevatorSlave.setInverted(true);
 
+        elevatorMotor.enableVoltageCompensation(10);
+        elevatorSlave.enableVoltageCompensation(10);
+
         elevatorMotor.setControlFramePeriodMs(50);
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
