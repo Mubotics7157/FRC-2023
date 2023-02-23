@@ -111,7 +111,7 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
         scoringState = state;
 
-        switch(scoringState){
+        switch(state){
             case CONE_HIGH:
                 led.setStrobe();
                 break;
