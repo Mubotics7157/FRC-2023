@@ -118,7 +118,7 @@ public class Intake extends SubsystemBase {
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
+                setSpeed(-4000);
                 //toggleIntake(true);
                 break;
             case INTAKE:
