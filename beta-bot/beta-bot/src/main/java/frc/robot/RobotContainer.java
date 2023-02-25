@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreConeHigh;
@@ -45,7 +46,7 @@ public class RobotContainer {
   private final Intake intake = Intake.getInstance();
   private final Tracker tracker = Tracker.getInstance();
   //private final VisionManager poleCam = VisionManager.getInstance();
-  //private final LED led = LED.getInstance();
+  //private final LED led = LED.getInstance()
   private final SuperStructure superStructure = SuperStructure.getInstance();
 
   public RobotContainer() {
@@ -63,7 +64,7 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
     m_driverController.b().onFalse(new Stow(superStructure));
 
-    m_driverController.y().whileTrue(new ShootCube());
+    m_driverController.y().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_HIGH));
     m_driverController.y().onFalse(new Stow(superStructure));
 
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
@@ -103,7 +104,7 @@ public class RobotContainer {
     //m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
     //m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
     //m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
-    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
+    m_driverController.x().onTrue(new ConeSniper(superStructure));
     m_driverController.button(7).onTrue(new Zero());
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
@@ -116,18 +117,26 @@ public class RobotContainer {
     //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
     
-     m_operatorController.button(7).onTrue(new Zero());
+    // m_operatorController.button(7).onTrue(new Zero());
     // m_operatorControllaer.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
     // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
     // m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
     // m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
     // m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
+    m_operatorController.button(7).whileTrue(new CustomSetpoints(superStructure)); //bottom left
+    m_operatorController.button(7).onFalse(new Stow(superStructure)); 
+
   }
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
+    eventMap.put("intake",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
+    eventMap.put("stow",new Stow(superStructure));
+    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    eventMap.put("uncook", new Stow(superStructure));
+    //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
     //eventMap.put("stow", new Stow(superStructure));
@@ -143,6 +152,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-    return new AutoRoutine("Climb jawn", new PathConstraints(2, 2), climbMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    //return new AutoRoutine("Climb jawn", new PathConstraints(2, 2), climbMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }

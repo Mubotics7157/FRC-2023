@@ -168,8 +168,13 @@ public class Wrist extends SubsystemBase {
     public void setWristState(WristState state){
         wristState = state;
 
-        if(state==WristState.STOW)
-            setpoint = frc.robot.Constants.SuperStructureConstants.WRIST_STOW;
+        if(state==WristState.STOW){
+            if(Intake.getInstance().isClosed())
+                setpoint = frc.robot.Constants.SuperStructureConstants.WRIST_STOW;
+            else
+                setpoint = Rotation2d.fromDegrees(-15);
+
+        }
     }
 
     private void logData(){

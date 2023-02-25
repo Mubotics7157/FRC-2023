@@ -191,8 +191,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 5;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 4;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -244,15 +244,20 @@ public final class Constants {
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
+    public static final double INTAKE_CUBE_HIGH = -2200;
 
-    public static final double ELEVATOR_CONE_MID = -17;
-    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-114);
+    public static final double ELEVATOR_CUBE_MID = 0;
+    public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
+    public static final double INTAKE_CUBE_MID = -1200;
+
+    public static final double ELEVATOR_CONE_MID = -19;
+    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-124); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
-    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-123);
+    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-124);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
     public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);

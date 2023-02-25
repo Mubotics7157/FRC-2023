@@ -21,6 +21,9 @@ public class Drive extends SubsystemBase {
     
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+    private double tanDeadband = 0.1;
+    private double angDeadband = 0.15;
+
     private static Drive instance = new Drive();
     private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
     private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
@@ -102,18 +105,24 @@ public class Drive extends SubsystemBase {
     }
     
     public void changeMax(){
+        tanDeadband = 0.1;
+        angDeadband = 0.15;
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
 
     public void changeSlow(){
-        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
-        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
+        tanDeadband = 0.20;
+        angDeadband = 0.25;
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 3;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 3;
     }
 
     public void changeVerySlow(){
-        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 4;
-        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4;
+        tanDeadband = 0.20;
+        angDeadband = 0.25;
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 5;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 5;
     }
 
     public double getTan(){
@@ -122,6 +131,14 @@ public class Drive extends SubsystemBase {
 
     public double getAng(){
         return driveAngle;
+    }
+
+    public double getTanDeadband(){
+        return tanDeadband;
+    }
+
+    public double getAngDeadband(){
+        return angDeadband;
     }
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());

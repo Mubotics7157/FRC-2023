@@ -47,7 +47,7 @@ public class VisionManager extends SubsystemBase{
     public void periodic() {
         //logData();
         //coneOffset = getConeOffset();
-          addFieldRelativePose();
+          //addFieldRelativePose();
     }
 
     public Rotation2d getNodeAngle(){
@@ -59,6 +59,8 @@ public class VisionManager extends SubsystemBase{
             return coneFilter.calculate(intakeLL.getTargetYaw().getDegrees());
         }
         catch(NullPointerException e){
+
+            
             return 0;
         }
     }
