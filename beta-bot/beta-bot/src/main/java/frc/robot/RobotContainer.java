@@ -57,8 +57,7 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    //ground intake tipped CONES
-    m_driverController.leftTrigger().whileTrue(new ParallelCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
+    m_driverController.leftTrigger().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
 
     m_driverController.b().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
@@ -70,27 +69,15 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
-     m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
-    //  m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
-    //  m_driverController.leftBumper().onFalse(new Stow(superStructure));
-    // m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
-    // m_driverController.leftBumper().onFalse(new Stow(superStructure));
-    //high score CONES
-    //high score CONES
-    //m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
-    //m_driverController.leftBumper().onFalse(new Stow(superStructure));
-    //mid score CONES
     m_driverController.rightBumper().onTrue(new ScoreConeMid(superStructure));
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new Stow(superStructure));
-
-    //m_driverController.x().whileTrue(new SetIntakeState(IntakeState.INTAKE));
-    //m_driverController.x().onFalse(new SetIntakeState(IntakeState.OFF));
-
+    
     m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
@@ -109,14 +96,6 @@ public class RobotContainer {
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
-    //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
-    //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
-    //intake CUBES (slower intake speed)
-    
-    //m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));
-    //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
-    //ground intake upright CONES
-    
     // m_operatorController.button(7).onTrue(new Zero());
     // m_operatorControllaer.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
     // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
@@ -124,7 +103,7 @@ public class RobotContainer {
     // m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
     // m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
-    m_operatorController.button(7).whileTrue(new CustomSetpoints(superStructure)); //bottom left
+    m_operatorController.button(7).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
     m_operatorController.button(7).onFalse(new Stow(superStructure)); 
 
   }

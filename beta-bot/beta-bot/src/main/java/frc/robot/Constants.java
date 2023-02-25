@@ -200,9 +200,6 @@ public final class Constants {
 
       public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
-      public static final int ULTRASONIC_PING_PORT = 0;
-      public static final int ULTRASONIC_RESPONSE_PORT = 1;
-
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
@@ -210,10 +207,13 @@ public final class Constants {
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
+      public static final double CUBE_OUTTAKE_HIGH = -2200;
+      public static final double CUBE_OUTTAKE_MID = -1200;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
+      public static final double CONE_SNIPER_SPEED = -4000;
       public static final double IDLE_SETPOINT = 0;
 
       public static final double IDLE_SPEED = .75/2 * 5700;
@@ -244,11 +244,9 @@ public final class Constants {
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
-    public static final double INTAKE_CUBE_HIGH = -2200;
 
     public static final double ELEVATOR_CUBE_MID = 0;
     public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
-    public static final double INTAKE_CUBE_MID = -1200;
 
     public static final double ELEVATOR_CONE_MID = -19;
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);

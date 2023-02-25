@@ -86,11 +86,7 @@ public class Intake extends SubsystemBase {
         intakeMaster.enableVoltageCompensation(10);
         intakeSlave.enableVoltageCompensation(10);
 
-
-        SmartDashboard.putNumber("Custom Intake", 1000);
-        SmartDashboard.putNumber("Outtake Setpoint", 1000);
-      
-        
+        SmartDashboard.putNumber("custom intake", 1000);  
     }
 
     public static Intake getInstance(){
@@ -119,16 +115,13 @@ public class Intake extends SubsystemBase {
             case INTAKE_CUBE:
                 setSpeed(IntakeConstants.CUBE_INTAKE_SPEED);
                 toggleIntake(false);
-                //value to be determined :P
                 break;
             case OUTTAKE_CUBE_MID:
-                //setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
-                setSpeed(SuperStructureConstants.INTAKE_CUBE_MID);
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_MID);
                 //toggleIntake(false);
-                //value to be detemermined :P
                 break;
             case OUTTAKE_CUBE_HIGH:
-                setSpeed(SuperStructureConstants.INTAKE_CUBE_HIGH);
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
                 break;
             case INTAKE_CONE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
@@ -150,10 +143,10 @@ public class Intake extends SubsystemBase {
                 setSpeed(IntakeConstants.IDLE_SPEED);
                 break;
             case CONE_SNIPER:
-                setSpeed(-4000);
+                setSpeed(IntakeConstants.CONE_SNIPER_SPEED);
                 break;
             case CUSTOM:
-                setSpeed(SmartDashboard.getNumber("Custom Intake", 1000));
+                setSpeed(SmartDashboard.getNumber("custom intake", 1000));
                 break;
         }
         

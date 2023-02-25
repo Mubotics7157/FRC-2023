@@ -9,10 +9,12 @@ import frc.robot.subsystems.SuperStructure.SuperStructureState;
 public class CustomSetpoints extends CommandBase{
 
     private SuperStructure superStructure;
+    private boolean isIntaking;
 
-    public CustomSetpoints(SuperStructure instance){
+    public CustomSetpoints(SuperStructure instance, boolean isIntaking){
 
         superStructure = instance;
+        this.isIntaking = isIntaking;
 
         addRequirements(superStructure);
     }
@@ -20,7 +22,9 @@ public class CustomSetpoints extends CommandBase{
     @Override
     public void initialize() {
         superStructure.setState(SuperStructureState.CUSTOM);
-
+        
+        if(isIntaking)
+            Intake.getInstance().setIntakeState(IntakeState.INTAKE_CONE);
     }
 
     @Override

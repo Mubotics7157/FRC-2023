@@ -53,8 +53,6 @@ public class SuperStructure extends SubsystemBase {
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
-
-        
     }
 
     public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){
@@ -62,26 +60,28 @@ public class SuperStructure extends SubsystemBase {
         wrist.setSetpoint(wristSetpoint);
 
         intake.setIntakeState(IntakeState.INTAKE_CONE);
-
     }
 
     public void intakeCube(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
         intake.setIntakeState(IntakeState.INTAKE_CUBE);
-
     }
 
     public void shoot(){
         if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
+
         else if(scoringState == SuperStructureState.CUBE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
+
         else if(scoringState == SuperStructureState.CUBE_HIGH)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH);
+
         else if(scoringState == SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.CONE_SNIPER);
-        else
+
+        else 
             intake.setIntakeState(IntakeState.CUSTOM);
     }
 
