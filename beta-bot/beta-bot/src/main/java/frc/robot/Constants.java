@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 75;
+      public static final double WRIST_GEARING = 108;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -234,13 +234,13 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(5, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -24.5;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-109);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
@@ -249,7 +249,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-114);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-117); //-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-124); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-123);
@@ -257,7 +257,7 @@ public final class Constants {
     public static final double ELEVATOR_INTAKE_CUBE = 0;
     public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);
 
-    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-2);
+    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-7);
     public static final double ELEVATOR_STOW = 0;
   }
 

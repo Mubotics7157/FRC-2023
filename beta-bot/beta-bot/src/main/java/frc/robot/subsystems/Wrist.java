@@ -78,7 +78,7 @@ public class Wrist extends SubsystemBase {
                 setState();
                 break;
             case STOW:
-                if(Elevator.getInstance().getElevatorHeight()>-20)
+                if(Elevator.getInstance().getElevatorHeight()>-22.5)
                 setState();
                 break;
             case ZERO:
@@ -153,7 +153,7 @@ public class Wrist extends SubsystemBase {
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 60000;
-        config.motionAcceleration = 45000;
+        config.motionAcceleration = 50000;
         wristMotor.configAllSettings(config);
 
         zeroOnboardEncoder();

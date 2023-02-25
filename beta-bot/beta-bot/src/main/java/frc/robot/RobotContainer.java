@@ -2,6 +2,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CustomSetpoints;
+import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.Seagul;
@@ -68,11 +69,13 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    // m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
-    // m_driverController.leftBumper().onFalse(new Stow(superStructure));
+     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+     m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
-    m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    //  m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
+    //  m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    // m_driverController.leftBumper().whileTrue(new CustomSetpoints(superStructure));
+    // m_driverController.leftBumper().onFalse(new Stow(superStructure));
     //high score CONES
     //high score CONES
     //m_driverController.leftBumper().onTrue(new ScoreConeHigh(superStructure));
@@ -114,7 +117,7 @@ public class RobotContainer {
     //ground intake upright CONES
     
      m_operatorController.button(7).onTrue(new Zero());
-    // m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    // m_operatorControllaer.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
     // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
     // m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
     // m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
@@ -124,7 +127,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.2), new Stow(superStructure),new WaitCommand(10000)));
+    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
     //eventMap.put("stow", new Stow(superStructure));
@@ -132,13 +135,14 @@ public class RobotContainer {
     //ooga-wooga
 
     HashMap<String, Command> climbMap = new HashMap<>();
-    //climbMap.put("cook",new OpenDoor(superStructure, 0.5));
-    //climbMap.put("uncook", new Stow(superStructure));
+    climbMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
+    climbMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    climbMap.put("uncook", new Stow(superStructure));
 
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-    return new AutoRoutine("Climb jawn", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    return new AutoRoutine("Climb jawn", new PathConstraints(2, 2), climbMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }
