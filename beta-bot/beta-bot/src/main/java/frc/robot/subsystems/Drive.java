@@ -189,4 +189,11 @@ public class Drive extends SubsystemBase {
 
     }
 
+    private void lockModules(){
+        frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    }
+
 }
