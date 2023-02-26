@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 75;
+      public static final double WRIST_GEARING = 108;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -191,17 +191,14 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 5;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 4;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
       public static final boolean INVERT_MASTER = false;
 
       public static final int DEVICE_ID_PCM = 40;
 
       public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-
-      public static final int ULTRASONIC_PING_PORT = 0;
-      public static final int ULTRASONIC_RESPONSE_PORT = 1;
 
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
@@ -210,10 +207,13 @@ public final class Constants {
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
+      public static final double CUBE_OUTTAKE_HIGH = -2000;
+      public static final double CUBE_OUTTAKE_MID = -1600;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
+      public static final double CONE_SNIPER_SPEED = -4000;
       public static final double IDLE_SETPOINT = 0;
 
       public static final double IDLE_SPEED = .75/2 * 5700;
@@ -234,31 +234,37 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(5, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -24.5;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-109);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
-    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
+    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-45);
 
-    public static final double ELEVATOR_CONE_MID = -17;
-    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-114);
+    public static final double ELEVATOR_CUBE_MID = 0;
+    public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
+
+    public static final double ELEVATOR_CONE_MID = -19;
+    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-117); //-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-125); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
-    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-123);
+    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-124);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
     public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);
 
-    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-2);
+    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-7);
     public static final double ELEVATOR_STOW = 0;
+
+    public static final double ELEVATOR_INTAKE_SEAGUL = 0;
+    public static final Rotation2d WRIST_INTAKE_SEAGUL = Rotation2d.fromDegrees(-35);
   }
 
   public static final class FieldConstants{

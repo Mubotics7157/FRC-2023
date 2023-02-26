@@ -174,8 +174,8 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
-        elevatorMotor.setInverted(true);
-        elevatorSlave.setInverted(true);
+        elevatorMotor.setInverted(false);
+        elevatorSlave.setInverted(false);
 
         elevatorMotor.enableVoltageCompensation(10);
         elevatorSlave.enableVoltageCompensation(10);
@@ -192,8 +192,8 @@ public class Elevator extends SubsystemBase {
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
 
-        elevatorController.setSmartMotionMaxVelocity(9500, 0);
-        elevatorController.setSmartMotionMaxAccel(10000, 0);
+        elevatorController.setSmartMotionMaxVelocity(10500, 0);
+        elevatorController.setSmartMotionMaxAccel(11000, 0);
 
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);

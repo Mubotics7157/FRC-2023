@@ -12,18 +12,22 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.SuperStructureConstants;
 
 public class Intake extends SubsystemBase {
 
     public enum IntakeState{
         OFF,
         INTAKE_CUBE,
-        OUTTAKE_CUBE,
+        OUTTAKE_CUBE_MID,
+        OUTTAKE_CUBE_HIGH,
         INTAKE_CONE,
         OUTTAKE_CONE,
         INTAKE,
         OUTTAKE,
-        IDLE
+        IDLE,
+        CONE_SNIPER,
+        CUSTOM
     }
 
     private CANSparkMax intakeMaster; 
@@ -82,11 +86,7 @@ public class Intake extends SubsystemBase {
         intakeMaster.enableVoltageCompensation(10);
         intakeSlave.enableVoltageCompensation(10);
 
-
-        SmartDashboard.putNumber("Intake speed", 0.5);
-        SmartDashboard.putNumber("Outtake Setpoint", 1000);
-        SmartDashboard.putNumber("L ratio", 1);   
-        
+        SmartDashboard.putNumber("custom intake", -1000);  
     }
 
     public static Intake getInstance(){
@@ -115,13 +115,13 @@ public class Intake extends SubsystemBase {
             case INTAKE_CUBE:
                 setSpeed(IntakeConstants.CUBE_INTAKE_SPEED);
                 toggleIntake(false);
-                //value to be determined :P
                 break;
-            case OUTTAKE_CUBE:
-                //setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
-                setSpeed(IntakeConstants.CUBE_OUTTAKE_SPEED);
+            case OUTTAKE_CUBE_MID:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_MID);
                 //toggleIntake(false);
-                //value to be detemermined :P
+                break;
+            case OUTTAKE_CUBE_HIGH:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
                 break;
             case INTAKE_CONE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
@@ -129,7 +129,7 @@ public class Intake extends SubsystemBase {
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setSpeed(SmartDashboard.getNumber("Outtake Setpoint", 1000));
+                setSpeed(-3000);
                 //toggleIntake(true);
                 break;
             case INTAKE:
@@ -142,12 +142,19 @@ public class Intake extends SubsystemBase {
             case IDLE:
                 setSpeed(IntakeConstants.IDLE_SPEED);
                 break;
+            case CONE_SNIPER:
+                setSpeed(IntakeConstants.CONE_SNIPER_SPEED);
+                break;
+            case CUSTOM:
+                setSpeed(SmartDashboard.getNumber("custom intake", -1000));
+                break;
         }
         
     }
 
+
     public void setIntakeState(IntakeState state){
-        if(state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE)
+        if(state != IntakeState.IDLE)//state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID || state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
             currentLimit(false);
         else
             currentLimit(true);

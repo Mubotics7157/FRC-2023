@@ -14,17 +14,21 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
+import frc.robot.AltConstants;
 import frc.robot.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
     
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+    private double tanDeadband = 0.1;
+    private double angDeadband = 0.15;
+
     private static Drive instance = new Drive();
-    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
-    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
-    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
-    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,AltConstants.DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
     private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON,DriveConstants.CANIVORE_NAME);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
@@ -74,6 +78,7 @@ public class Drive extends SubsystemBase {
         rearRight.setState(states[3]);
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
+        SmartDashboard.putNumber("FL VEL", states[0].speedMetersPerSecond);
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
         //SmartDashboard.putNumber("left front error", flError);
@@ -101,18 +106,24 @@ public class Drive extends SubsystemBase {
     }
     
     public void changeMax(){
+        tanDeadband = 0.1;
+        angDeadband = 0.15;
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
 
     public void changeSlow(){
-        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 2;
-        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2;
+        tanDeadband = 0.20;
+        angDeadband = 0.25;
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 3;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 3;
     }
 
     public void changeVerySlow(){
-        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 4;
-        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4;
+        tanDeadband = 0.20;
+        angDeadband = 0.25;
+        driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY / 5;
+        driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 5;
     }
 
     public double getTan(){
@@ -121,6 +132,14 @@ public class Drive extends SubsystemBase {
 
     public double getAng(){
         return driveAngle;
+    }
+
+    public double getTanDeadband(){
+        return tanDeadband;
+    }
+
+    public double getAngDeadband(){
+        return angDeadband;
     }
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
@@ -169,6 +188,13 @@ public class Drive extends SubsystemBase {
 
         return currVelocity;
 
+    }
+
+    public void lockModules(){
+        frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
     }
 
 }

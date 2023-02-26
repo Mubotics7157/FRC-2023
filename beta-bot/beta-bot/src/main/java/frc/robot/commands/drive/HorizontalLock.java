@@ -9,7 +9,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 
-public class DriveTele extends CommandBase {
+public class HorizontalLock extends CommandBase {
 
     private double modifyInputs(double val, boolean isRot){
         if(isRot){
@@ -36,7 +36,7 @@ public class DriveTele extends CommandBase {
     private DoubleSupplier fwd,str,rot;
     private Drive drive;
 
-    public DriveTele(DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot,Drive instance){
+    public HorizontalLock(DoubleSupplier str, DoubleSupplier rot,Drive instance){
         this.fwd = fwd;
         this.str = str;
         this.rot = rot;
@@ -57,7 +57,8 @@ public class DriveTele extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
+        //drive.lockModules();
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
     }
 
     @Override
