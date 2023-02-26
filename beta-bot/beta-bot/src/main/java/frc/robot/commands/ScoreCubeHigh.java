@@ -17,7 +17,7 @@ public class ScoreCubeHigh extends CommandBase{
     @Override
     public void initialize() {
         //superStructure.setState(SuperStructureState.CUBE_HIGH);
-        superStructure.setState(SuperStructureState.CUSTOM);
+        superStructure.setState(SuperStructureState.CUBE_HIGH);
 
     }
 

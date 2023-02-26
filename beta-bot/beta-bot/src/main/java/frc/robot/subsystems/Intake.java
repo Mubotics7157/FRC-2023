@@ -86,7 +86,7 @@ public class Intake extends SubsystemBase {
         intakeMaster.enableVoltageCompensation(10);
         intakeSlave.enableVoltageCompensation(10);
 
-        SmartDashboard.putNumber("custom intake", 1000);  
+        SmartDashboard.putNumber("custom intake", -1000);  
     }
 
     public static Intake getInstance(){
@@ -146,7 +146,7 @@ public class Intake extends SubsystemBase {
                 setSpeed(IntakeConstants.CONE_SNIPER_SPEED);
                 break;
             case CUSTOM:
-                setSpeed(SmartDashboard.getNumber("custom intake", 1000));
+                setSpeed(SmartDashboard.getNumber("custom intake", -1000));
                 break;
         }
         
@@ -154,7 +154,7 @@ public class Intake extends SubsystemBase {
 
 
     public void setIntakeState(IntakeState state){
-        if(state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID || state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
+        if(state != IntakeState.IDLE)//state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID || state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
             currentLimit(false);
         else
             currentLimit(true);

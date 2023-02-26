@@ -42,7 +42,7 @@ public class SuperStructure extends SubsystemBase {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
-        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && intake.isClosed() && scoringState!=SuperStructureState.SEAGUL)
+        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && scoringState!=SuperStructureState.SEAGUL)
             intake.setIntakeState(IntakeState.IDLE);
 
     }
@@ -132,6 +132,10 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
                 Drive.getInstance().changeSlow();
                 break;
+            case CUBE_MID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID, SuperStructureConstants.WRIST_CUBE_MID);
+                Drive.getInstance().changeSlow();
+                break;
             case STOWED:
                 Drive.getInstance().changeMax();
                 stowAll();
@@ -154,7 +158,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
-                intakeCone(0, Rotation2d.fromDegrees(-20));
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
             case ZERO:

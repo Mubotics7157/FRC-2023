@@ -78,6 +78,7 @@ public class Drive extends SubsystemBase {
         rearRight.setState(states[3]);
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
+        SmartDashboard.putNumber("FL VEL", states[0].speedMetersPerSecond);
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
         //SmartDashboard.putNumber("left front error", flError);
@@ -189,7 +190,7 @@ public class Drive extends SubsystemBase {
 
     }
 
-    private void lockModules(){
+    public void lockModules(){
         frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));

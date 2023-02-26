@@ -207,8 +207,8 @@ public final class Constants {
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
-      public static final double CUBE_OUTTAKE_HIGH = -2200;
-      public static final double CUBE_OUTTAKE_MID = -1200;
+      public static final double CUBE_OUTTAKE_HIGH = -2000;
+      public static final double CUBE_OUTTAKE_MID = -1600;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
@@ -243,7 +243,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
-    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-40);
+    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-45);
 
     public static final double ELEVATOR_CUBE_MID = 0;
     public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
@@ -252,7 +252,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-135);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-124); //-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-125); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-124);
@@ -262,6 +262,9 @@ public final class Constants {
 
     public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-7);
     public static final double ELEVATOR_STOW = 0;
+
+    public static final double ELEVATOR_INTAKE_SEAGUL = 0;
+    public static final Rotation2d WRIST_INTAKE_SEAGUL = Rotation2d.fromDegrees(-35);
   }
 
   public static final class FieldConstants{

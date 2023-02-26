@@ -36,7 +36,7 @@ public class AutoRoutine {
           AutoConstants.ROT_CONTROLLER,
           drive::setModuleStates,
           events,
-          false,
+          true,
           drive
           ); 
 
