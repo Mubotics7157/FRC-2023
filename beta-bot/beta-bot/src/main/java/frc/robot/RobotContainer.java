@@ -25,6 +25,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Tracker;
+import frc.robot.subsystems.VisionManager;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
@@ -73,8 +74,9 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    m_driverController.x().whileTrue(new ConeSniper(superStructure));
-    m_driverController.x().onFalse(new Stow(superStructure));
+    //m_driverController.x().whileTrue(new ConeSniper(superStructure));
+    //m_driverController.x().onFalse(new Stow(superStructure));
+    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -85,9 +87,9 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new Stow(superStructure));
     
-    //m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
-    m_driverController.povDown().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_MID));
-    m_driverController.povDown().onFalse(new Stow(superStructure));
+    m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
+    //m_driverController.povDown().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_MID));
+    //m_driverController.povDown().onFalse(new Stow(superStructure));
 
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));

@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.RobotContainer;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -292,7 +294,7 @@ public class PPSwerveControllerCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds()) && controller.atReference();
+    return (this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds()) && controller.atReference()) || (Math.abs(RobotContainer.m_driverController.getLeftX())>.2);
   }
 
   private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {

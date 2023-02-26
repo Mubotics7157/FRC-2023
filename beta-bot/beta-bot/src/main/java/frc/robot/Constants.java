@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 108;
+      public static final double WRIST_GEARING = 75;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -191,8 +191,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 4;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -200,10 +200,20 @@ public final class Constants {
 
       public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
+      public static final int ULTRASONIC_PING_PORT = 0;
+      public static final int ULTRASONIC_RESPONSE_PORT = 1;
+
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
       public static final double CONE_INTAKE_SPEED = 1 * 5700;
+
+      public static final double IDLE_SPEED = .75/2 * 5700;
+
+      public static final double TOP_ROLLER_KP = .00001;
+      public static final double TOP_ROLLER_KF = .0002;
+      public static final double BOT_ROLLER_KF = .00001;
+      public static final double BOT_ROLLER_KP = .0002;
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
@@ -216,13 +226,6 @@ public final class Constants {
       public static final double CONE_SNIPER_SPEED = -4000;
       public static final double IDLE_SETPOINT = 0;
 
-      public static final double IDLE_SPEED = .75/2 * 5700;
-
-      public static final double TOP_ROLLER_KP = .00001;
-      public static final double TOP_ROLLER_KF = .0002;
-      public static final double BOT_ROLLER_KF = .00001;
-      public static final double BOT_ROLLER_KP = .0002;
-
     }
 
     public static final class LidarConstants {
@@ -234,7 +237,7 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(5, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
 
