@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.FieldConstants.RedConstants;
 import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
@@ -13,6 +14,7 @@ import frc.robot.commands.Stow;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.drive.AlignStrafe;
+import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -113,12 +115,12 @@ public class RobotContainer {
     //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
     //ground intake upright CONES
     
-     m_operatorController.button(7).onTrue(new Zero());
-    // m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
-    // m_operatorController.button(3).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
-    // m_operatorController.button(2).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
-    // m_operatorController.button(4).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
-    // m_operatorController.button(1).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
+    //m_operatorController.button(7).onTrue(new Zero());
+    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
+    m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
+    m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
+    m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
   }
 
