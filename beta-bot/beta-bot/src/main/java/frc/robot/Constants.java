@@ -223,7 +223,7 @@ public final class Constants {
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
-      public static final double CONE_SNIPER_SPEED = -4000;
+      public static final double CONE_SNIPER_SPEED = -5700;
       public static final double IDLE_SETPOINT = 0;
 
     }
@@ -237,13 +237,15 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(1.25, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(5, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.5, 0, 0);
   }
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -24.5;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-105);
+
+
 
     public static final double ELEVATOR_CUBE_HIGH = 0;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-45);
@@ -279,7 +281,7 @@ public final class Constants {
         public static final Pose2d NODE_CONE_RED_4 = new Pose2d(14.25+.5, 2.18, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CONE_RED_5 = new Pose2d(14.25+.5, 1.61, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CONE_RED_6 = new Pose2d(14.25+.5, 0.45, Rotation2d.fromDegrees(0));
-
+ 
         public static final Pose2d NODE_CUBE_RED_1 = new Pose2d(14.25+.5, 4.42, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CUBE_RED_2 = new Pose2d(14.25+.5, 2.74, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CUBE_RED_3 = new Pose2d(14.25+.5, 1, Rotation2d.fromDegrees(0));

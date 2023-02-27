@@ -13,6 +13,7 @@ import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
+import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
@@ -131,12 +132,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.25), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("intake",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
+    eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
+    eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
     eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
+    eventMap.put("go-to-shoot", new ShootPosition());
+    eventMap.put("shoot", new ShootCone());
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
@@ -154,7 +158,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-    return new AutoRoutine("left climb jawn", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine("Climb jawn Copy", new PathConstraints(3.2, 3.2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }

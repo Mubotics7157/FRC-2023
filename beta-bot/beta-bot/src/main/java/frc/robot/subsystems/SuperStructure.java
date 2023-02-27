@@ -42,7 +42,7 @@ public class SuperStructure extends SubsystemBase {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
-        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && scoringState!=SuperStructureState.SEAGUL)
+        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && scoringState!=SuperStructureState.SEAGUL && scoringState!=SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.IDLE);
 
     }
@@ -84,6 +84,7 @@ public class SuperStructure extends SubsystemBase {
         else 
             intake.setIntakeState(IntakeState.CUSTOM);
     }
+
 
     public void stowAll(){
         elevator.setState(ElevatorState.STOW);

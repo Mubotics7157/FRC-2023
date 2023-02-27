@@ -47,7 +47,7 @@ public class VisionManager extends SubsystemBase{
     public void periodic() {
         //logData();
         //coneOffset = getConeOffset();
-          addFieldRelativePose();
+        //addFieldRelativePose();
     }
 
     public Rotation2d getNodeAngle(){

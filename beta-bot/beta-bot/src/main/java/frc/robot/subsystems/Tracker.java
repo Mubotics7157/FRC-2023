@@ -27,14 +27,14 @@ public class Tracker extends SubsystemBase{
     private static Tracker instance = new Tracker();
     private SwerveDrivePoseEstimator estimator = new SwerveDrivePoseEstimator(DriveConstants.DRIVE_KINEMATICS, Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions(), new Pose2d(),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill(
-            .02,
-            .02,
-            .01
+            .1,
+            .1,
+            .1
         ),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
-            1,
-            1,
-            1
+            15,
+            15,
+            15
         )
     );
 
