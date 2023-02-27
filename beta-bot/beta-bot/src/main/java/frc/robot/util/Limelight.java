@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.LimelightHelpers.LimelightResults;
@@ -51,7 +53,11 @@ public class Limelight {
     }
 
     public Pose2d getBotPose(){
-        double[] poseEntry = tableLime.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+        double[] poseEntry;
+        if(DriverStation.getAlliance()==Alliance.Red)
+            poseEntry = tableLime.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+        else
+            poseEntry = tableLime.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
         Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
         visionLatency = poseEntry[6];
         return pose;
