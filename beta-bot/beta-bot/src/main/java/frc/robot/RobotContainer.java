@@ -131,7 +131,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.25), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
@@ -149,7 +149,7 @@ public class RobotContainer {
     //ooga-wooga
 
     HashMap<String, Command> climbMap = new HashMap<>();
-    climbMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
+    climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.25),new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
     climbMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
     climbMap.put("uncook", new Stow(superStructure));
     climbMap.put("lock", new InstantCommand(drive::lockModules));
@@ -158,7 +158,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine("Climb jawn Copy", new PathConstraints(3.2, 3.2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 }

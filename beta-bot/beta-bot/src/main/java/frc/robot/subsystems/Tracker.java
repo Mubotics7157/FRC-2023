@@ -56,7 +56,7 @@ public class Tracker extends SubsystemBase{
 
         //SmartDashboard.putNumber("estim x", getPose().getX());
         //SmartDashboard.putNumber("estim y", getPose().getY());
-        //SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
     }
 
     private void updatePose(){
