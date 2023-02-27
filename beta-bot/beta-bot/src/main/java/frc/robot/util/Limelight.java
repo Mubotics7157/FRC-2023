@@ -53,7 +53,7 @@ public class Limelight {
     public Pose2d getBotPose(){
         double[] poseEntry = tableLime.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
         Pose2d pose = new Pose2d(poseEntry[0], poseEntry[1], Rotation2d.fromDegrees(poseEntry[5]));
-        visionLatency = poseEntry[5];
+        visionLatency = poseEntry[6];
         return pose;
 
     }

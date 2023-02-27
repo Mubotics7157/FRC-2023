@@ -207,7 +207,7 @@ public class Elevator extends SubsystemBase {
     private void logData(){
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
-        SmartDashboard.putNumber("bruddah", elevatorEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator Position", elevatorEncoder.getPosition());
         SmartDashboard.putNumber("Elevator Height", getElevatorHeight());
     }
 
