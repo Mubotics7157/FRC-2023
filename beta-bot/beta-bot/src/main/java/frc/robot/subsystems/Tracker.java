@@ -74,7 +74,7 @@ public class Tracker extends SubsystemBase{
         traj = PathPlanner.generatePath(
             new com.pathplanner.lib.PathConstraints(2, 2),
             new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
-            new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
+            new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(-180)) // position, heading
         );
     }
 
