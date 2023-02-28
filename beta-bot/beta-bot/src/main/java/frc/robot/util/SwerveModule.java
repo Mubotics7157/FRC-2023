@@ -119,4 +119,8 @@ public class SwerveModule {
         turnMotor.set(ControlMode.PercentOutput,0);
     }
 
+    public double getCurrentDraw(){
+        return driveMotor.getSupplyCurrent();
+    }
+
 }

@@ -174,8 +174,8 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
-        elevatorMotor.setInverted(true);
-        elevatorSlave.setInverted(true);
+        elevatorMotor.setInverted(false);
+        elevatorSlave.setInverted(false);
 
         elevatorMotor.enableVoltageCompensation(10);
         elevatorSlave.enableVoltageCompensation(10);
@@ -187,7 +187,7 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-1, .75, 0);
+        elevatorController.setOutputRange(-1, 1, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
@@ -200,8 +200,8 @@ public class Elevator extends SubsystemBase {
     }
 
     private void configElevatorDownwardConstraints(){
-        elevatorController.setSmartMotionMaxVelocity(3500, 0);
-        elevatorController.setSmartMotionMaxAccel(2000, 0);
+        elevatorController.setSmartMotionMaxVelocity(8000, 0);
+        elevatorController.setSmartMotionMaxAccel(8000, 0);
     }
 
     private void logData(){

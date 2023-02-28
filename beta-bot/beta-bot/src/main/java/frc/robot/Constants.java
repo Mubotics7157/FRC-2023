@@ -42,8 +42,8 @@ public final class Constants {
 }
 
   public static class DriveConstants{
-    public static final double MAX_TANGENTIAL_VELOCITY = 3.5; 
-    public static final double MAX_TELE_TANGENTIAL_VELOCITY = 3.5; 
+    public static final double MAX_TANGENTIAL_VELOCITY = 4.3; 
+    public static final double MAX_TELE_TANGENTIAL_VELOCITY = 4.5; 
     public static final double MAX_TELE_ANGULAR_VELOCITY = 2 * Math.PI; 
     public static final double WHEELBASE_WIDTH =  Units.inchesToMeters(20.75);
     public static final double WHEELBASE_LENGTH = Units.inchesToMeters(20.75);
@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 75;
+      public static final double WRIST_GEARING = 108;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
