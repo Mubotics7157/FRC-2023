@@ -154,6 +154,10 @@ public class Drive extends SubsystemBase {
         return rotController;
     }
 
+    public double getVelocity(){
+        return frontLeft.getDriveVelocity();
+    }
+
     public ChassisSpeeds limitTangentialAcceleration(ChassisSpeeds currVelocity){
         double dt = Timer.getFPGATimestamp() - lastTimeStamp;
 

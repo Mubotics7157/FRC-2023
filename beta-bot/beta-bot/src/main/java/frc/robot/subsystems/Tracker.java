@@ -73,8 +73,9 @@ public class Tracker extends SubsystemBase{
         //man i love polar bears
         traj = PathPlanner.generatePath(
             new com.pathplanner.lib.PathConstraints(2, 2),
-            new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+            new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(), Rotation2d.fromDegrees(0), Drive.getInstance().getVelocity()), // position, heading
             new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(-180)) // position, heading
+            //positon, heading , holonomic rotation, velocity override
         );
     }
 
