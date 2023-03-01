@@ -10,7 +10,9 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +23,7 @@ import frc.robot.util.PPSwerveControllerCommand;
 
 public class Tracker extends SubsystemBase{
 
-    private Pose2d node = FieldConstants.RedConstants.NODE_CONE_RED_2;
+    private Pose2d node = FieldConstants.RedConstants.NODE_CONE_RED_1;
     private PathPlannerTrajectory traj;
     private final Field2d m_field = new Field2d();
     private static Tracker instance = new Tracker();
@@ -32,9 +34,9 @@ public class Tracker extends SubsystemBase{
             .1
         ),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
-            1,
-            1,
-            1
+            15,
+            15,
+            15
         )
     );
 
@@ -53,9 +55,11 @@ public class Tracker extends SubsystemBase{
         //editNodePose();
         updatePose();
         m_field.setRobotPose(estimator.getEstimatedPosition());
+        node = new Pose2d(new Translation2d(FieldConstants.BlueConstants.NODE_CONE_BLUE_1.getX(), getPose().getY()), Rotation2d.fromDegrees(0));
 
         //SmartDashboard.putNumber("estim x", getPose().getX());
-        //SmartDashboard.putNumber("estim y", getPose().getY());
+        //SmartDas1hboard.putNumber("estim y", getPose().getY());
+        m_field.getObject("gyro").setPose(new Pose2d(getPose().getTranslation(),Drive.getInstance().getDriveHeading()));
         SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
     }
 
@@ -71,11 +75,18 @@ public class Tracker extends SubsystemBase{
 
     public void regeneratePath(){
         //man i love polar bears
-        traj = PathPlanner.generatePath(
-            new com.pathplanner.lib.PathConstraints(2, 2),
-            new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
-            new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0)) // position, heading
-        );
+        if(DriverStation.getAlliance() == Alliance.Red)
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(node.getTranslation(),Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
+            );
+        else
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(180)) // position, heading
+            );
     }
 
     public void editNodePose(double nodeY){
@@ -101,8 +112,8 @@ public class Tracker extends SubsystemBase{
            getTraj(), 
            this::getPose, 
            DriveConstants.DRIVE_KINEMATICS,
-           new PIDController(SmartDashboard.getNumber("xy val", 2.5), 0, 0), 
-           new PIDController(SmartDashboard.getNumber("xy val", 2.5), 0, 0),
+           new PIDController(5, 0, 0), 
+           new PIDController(5, 0, 0),
            new PIDController(SmartDashboard.getNumber("r val", 2.5), 0, 0), 
            Drive.getInstance()::setModuleStates,
            false, 
@@ -130,6 +141,7 @@ public class Tracker extends SubsystemBase{
         SmartDashboard.putNumber("r val", 2.5);
         SmartDashboard.putNumber("Node X", FieldConstants.RedConstants.NODE_CONE_RED_2.getX());
         SmartDashboard.putNumber("Node Y", FieldConstants.RedConstants.NODE_CONE_RED_2.getY());
+        m_field.getObject("pose").setPose(node);
 
     }
 

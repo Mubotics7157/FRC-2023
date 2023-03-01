@@ -163,4 +163,8 @@ public class RobotContainer {
   return new AutoRoutine("Climb jawn Copy", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
+
+  public static boolean gotDriverInput(){
+    return Math.abs(Math.max(m_driverController.getLeftX(), m_driverController.getLeftY())) > .2;
+  }
 }

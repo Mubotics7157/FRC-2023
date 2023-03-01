@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 108;
+      public static final double WRIST_GEARING = 75;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -285,20 +285,22 @@ public final class Constants {
         public static final Pose2d NODE_CUBE_RED_1 = new Pose2d(14.25+.5, 4.42, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CUBE_RED_2 = new Pose2d(14.25+.5, 2.74, Rotation2d.fromDegrees(0));
         public static final Pose2d NODE_CUBE_RED_3 = new Pose2d(14.25+.5, 1, Rotation2d.fromDegrees(0));
+
+        public static final Pose2d NODE_CONE_RED= new Pose2d(14.25+.5, 3.85, Rotation2d.fromDegrees(0));
       }
     //according to Pathplanner
       
       public static final class BlueConstants{
-        public static final Pose2d NODE_CONE_BLUE_1 = new Pose2d(1.75, 4.95, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_BLUE_2 = new Pose2d(1.75, 3.85, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_BLUE_3 = new Pose2d(1.75, 3.30, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_BLUE_4 = new Pose2d(1.75, 2.18, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_BLUE_5 = new Pose2d(1.75, 1.61, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CONE_BLUE_6 = new Pose2d(1.75, 0.45, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_1 = new Pose2d(1.75 +.15, 4.95, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_2 = new Pose2d(1.75 +.15, 3.85, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_3 = new Pose2d(1.75 +.15, 3.30, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_4 = new Pose2d(1.75 +.15, 2.18, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_5 = new Pose2d(1.75 +.15, 1.61, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CONE_BLUE_6 = new Pose2d(1.75 +.15, 0.45, Rotation2d.fromDegrees(0));
 
-        public static final Pose2d NODE_CUBE_BLUE_1 = new Pose2d(1.75, 4.42, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CUBE_BLUE_2 = new Pose2d(1.75, 2.74, Rotation2d.fromDegrees(0));
-        public static final Pose2d NODE_CUBE_BLUE_3 = new Pose2d(1.75, 1, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_BLUE_1 = new Pose2d(1.75 +.15, 4.42, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_BLUE_2 = new Pose2d(1.75 +.15, 2.74, Rotation2d.fromDegrees(0));
+        public static final Pose2d NODE_CUBE_BLUE_3 = new Pose2d(1.75 +.15, 1, Rotation2d.fromDegrees(0));
       }
 
       

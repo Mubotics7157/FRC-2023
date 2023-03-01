@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.filter.MedianFilter;
@@ -167,7 +168,8 @@ public class Intake extends SubsystemBase {
     }
 
     private void setSpeed(double speedRPM){
-        topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        // topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        topController.setReference(0, ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){

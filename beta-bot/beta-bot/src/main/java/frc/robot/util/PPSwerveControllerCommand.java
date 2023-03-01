@@ -231,7 +231,7 @@ public class PPSwerveControllerCommand extends CommandBase {
       logActiveTrajectory.accept(transformedTrajectory);
     }
 
-    controller.setTolerance(new Pose2d(new Translation2d(Units.inchesToMeters(1),Units.inchesToMeters(1)),Rotation2d.fromDegrees(.5)));
+    controller.setTolerance(new Pose2d(new Translation2d(Units.inchesToMeters(1),Units.inchesToMeters(2.5)),Rotation2d.fromDegrees(.5)));
 
     timer.reset();
     timer.start();
@@ -294,7 +294,7 @@ public class PPSwerveControllerCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds()) && controller.atReference()) || (Math.abs(RobotContainer.m_driverController.getLeftX())>.2);
+    return (this.timer.hasElapsed(transformedTrajectory.getTotalTimeSeconds()) && controller.atReference()) || RobotContainer.gotDriverInput();
   }
 
   private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
