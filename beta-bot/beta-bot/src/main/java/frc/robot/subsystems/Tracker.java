@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.time.OffsetDateTime;
 
+import javax.sound.midi.Track;
+
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
@@ -79,18 +81,18 @@ public class Tracker extends SubsystemBase{
 
     public void regeneratePath(){
         //man i love polar bears
-        Translation2d offsetPose = new Translation2d(Tracker.getInstance().getPose().getX(), Tracker.getInstance().getPose().getY() + coneOffset);
+        Translation2d offsetPose = new Translation2d(node.getX(), node.getY() + coneOffset);
         if(DriverStation.getAlliance() == Alliance.Red)
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
-                new PathPoint(node.getTranslation(),Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(offsetPose,Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
             );
         else
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation()), // position, heading
-                new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(180)) // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(offsetPose,Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(180)) // position, heading
             );
     }
 

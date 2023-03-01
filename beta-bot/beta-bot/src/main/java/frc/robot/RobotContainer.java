@@ -123,8 +123,10 @@ public class RobotContainer {
     m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
     m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
-    m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
-    m_operatorController.button(3).onFalse(new Stow(superStructure)); 
+    m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
+
+    //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
+    //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
 
     //m_operatorController.button(1).whileTrue(new HorizontalLock(m_driverController::getLeftX, m_driverController::getRightY, drive));
   }
