@@ -18,6 +18,7 @@ public class SuperStructure extends SubsystemBase {
     private Wrist wrist = Wrist.getInstance();
     //private LED led = LED.getInstance();
     private LED led;
+    private boolean scoreHigh;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
 
@@ -194,5 +195,13 @@ public class SuperStructure extends SubsystemBase {
                 led.setStrobe();
                 break;
         }
+    }
+
+    public void setScorePosition(boolean high){
+        scoreHigh = high;
+    }
+
+    public boolean wantScoreHigh(){
+        return scoreHigh;
     }
 }

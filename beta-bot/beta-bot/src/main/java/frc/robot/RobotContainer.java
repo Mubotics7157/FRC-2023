@@ -11,6 +11,7 @@ import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.Seagul;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
+import frc.robot.commands.SetScoreHigh;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.ShootPosition;
@@ -124,6 +125,9 @@ public class RobotContainer {
     m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
     m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
+
+    m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
+    m_operatorController.povDown().onFalse(new SetScoreHigh(false));
 
     //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
     //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
