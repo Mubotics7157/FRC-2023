@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.time.OffsetDateTime;
-
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
@@ -26,7 +24,6 @@ import frc.robot.util.PPSwerveControllerCommand;
 public class Tracker extends SubsystemBase{
 
     private Pose2d node = FieldConstants.RedConstants.NODE_CONE_RED_1;
-    private double coneOffset = 0;
     private PathPlannerTrajectory traj;
     private final Field2d m_field = new Field2d();
     private static Tracker instance = new Tracker();
@@ -50,7 +47,6 @@ public class Tracker extends SubsystemBase{
     public Tracker(){
         resetViaVision();
         initTunableFields();
-        SmartDashboard.putNumber("custom offset", 0);
     }
 
 
@@ -79,23 +75,18 @@ public class Tracker extends SubsystemBase{
 
     public void regeneratePath(){
         //man i love polar bears
-        Translation2d offsetPose = new Translation2d(Tracker.getInstance().getPose().getX(), Tracker.getInstance().getPose().getY() + coneOffset);
         if(DriverStation.getAlliance() == Alliance.Red)
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
                 new PathPoint(node.getTranslation(),Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
             );
         else
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
                 new PathPoint(node.getTranslation(),Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(180)) // position, heading
             );
-    }
-
-    public void setOffset(){
-        coneOffset = SmartDashboard.getNumber("custom offset", 0);
     }
 
     public void editNodePose(double nodeY){
