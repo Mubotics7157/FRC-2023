@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Tracker;
 
-public class ChangeNode extends InstantCommand{
+public class ChangeNode extends CommandBase{
     double nodeY;
 
     public ChangeNode(double nodeY){
@@ -14,7 +14,7 @@ public class ChangeNode extends InstantCommand{
 
     @Override
     public void initialize() {
-        Tracker.getInstance().editNodePose(SmartDashboard.getNumber("Node Y", nodeY));
+        Tracker.getInstance().editNodePose(nodeY);
     }
 
 

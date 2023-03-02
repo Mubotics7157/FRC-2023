@@ -130,14 +130,14 @@ public class Intake extends SubsystemBase {
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setSpeed(-3000);
+                setSpeed(.35*-3000);
                 //toggleIntake(true);
                 break;
             case INTAKE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(.35*-IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(-3000);
                 break;
             case IDLE:
@@ -168,8 +168,8 @@ public class Intake extends SubsystemBase {
     }
 
     private void setSpeed(double speedRPM){
-        // topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
-        topController.setReference(0, ControlType.kVelocity);
+        topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        //topController.setReference(0, ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){

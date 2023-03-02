@@ -78,7 +78,7 @@ public class Wrist extends SubsystemBase {
                 setState();
                 break;
             case STOW:
-                if(Elevator.getInstance().getElevatorHeight()>-22.5)
+                if(Elevator.getInstance().getElevatorHeight()>-24)
                 setState();
                 break;
             case ZERO:
@@ -182,6 +182,7 @@ public class Wrist extends SubsystemBase {
         SmartDashboard.putBoolean("Mag Sensor", magSensor.get());
         SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
         SmartDashboard.putNumber("Wrist Error Deg", getError());
+        SmartDashboard.putNumber("Wrist Velocity", wristMotor.getSelectedSensorVelocity());
     }
 
 }

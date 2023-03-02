@@ -119,6 +119,7 @@ public class RobotContainer {
     
     //m_operatorController.button(7).onTrue(new Zero());
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
     m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
     m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));

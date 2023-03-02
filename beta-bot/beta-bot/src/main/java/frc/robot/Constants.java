@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 75;
+      public static final double WRIST_GEARING = 108;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -191,8 +191,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 4;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -243,7 +243,7 @@ public final class Constants {
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -24.5;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-109);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
 
 
 
