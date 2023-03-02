@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_PCM , IntakeConstants.PNEUMATICS_MODULE_TYPE);
   //DigitalInput test1 = new DigitalInput(0);
@@ -36,6 +38,12 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("fallen cone wrist setpoint", 0);
+
+    autoChooser.setDefaultOption("preload + climb","left climb jawn");
+    autoChooser.addOption("yeet auto","Climb jawn copy");
+    autoChooser.addOption("preload + 1", "PL + 1");
+    autoChooser.addOption("preload + 2","PL + 2");
+    SmartDashboard.putData(autoChooser);
   }
 
   /**
@@ -67,7 +75,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
