@@ -118,14 +118,14 @@ public class RobotContainer {
     //ground intake upright CONES
     
     //m_operatorController.button(7).onTrue(new Zero());
-    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
-    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
-    m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
-    m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
+    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
+    m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
+    m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
+    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
     m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
     m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
 
-    m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
+    //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
     m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
     m_operatorController.povDown().onFalse(new SetScoreHigh(false));
@@ -136,10 +136,11 @@ public class RobotContainer {
     //m_operatorController.button(1).whileTrue(new HorizontalLock(m_driverController::getLeftX, m_driverController::getRightY, drive));
   }
 
-  public Command getAutonomousCommand() {
+  public Command getAutonomousCommand(String autoToUse) {
     HashMap<String, Command> eventMap = new HashMap<>();
     //eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
@@ -167,7 +168,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine("Climb jawn Copy", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine(autoToUse, new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
