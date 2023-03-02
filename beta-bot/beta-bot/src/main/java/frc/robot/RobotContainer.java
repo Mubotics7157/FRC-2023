@@ -127,8 +127,6 @@ public class RobotContainer {
 
     m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
-    m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
-    m_operatorController.povDown().onFalse(new SetScoreHigh(false));
 
     //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
     //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
@@ -167,7 +165,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine("Climb jawn Copy", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine("Climb jawn Copy", new PathConstraints(4, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 

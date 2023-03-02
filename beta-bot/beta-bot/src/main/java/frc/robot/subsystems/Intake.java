@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -130,14 +131,21 @@ public class Intake extends SubsystemBase {
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setSpeed(.35*-3000);
+                if(DriverStation.isTeleop())
+                    setSpeed(.35*-3000);
+                else
+                    setSpeed(-3000);
                 //toggleIntake(true);
                 break;
             case INTAKE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                setSpeed(.35*-IntakeConstants.CONE_INTAKE_SPEED);
+                if(DriverStation.isTeleop())
+                    setSpeed(.35*-IntakeConstants.CONE_INTAKE_SPEED);
+                else
+                setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
+
                 //setSpeed(-3000);
                 break;
             case IDLE:
