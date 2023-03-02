@@ -147,6 +147,7 @@ public class RobotContainer {
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
+    eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(), new WaitCommand(.25),new ShootCone(),new WaitCommand(.25)));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
@@ -165,7 +166,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine("Climb jawn Copy", new PathConstraints(4, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine("yeet weak", new PathConstraints(4, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
