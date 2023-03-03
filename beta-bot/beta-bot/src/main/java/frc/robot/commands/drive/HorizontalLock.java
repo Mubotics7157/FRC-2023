@@ -33,11 +33,10 @@ public class HorizontalLock extends CommandBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(states, DriveConstants.MAX_TANGENTIAL_VELOCITY);
         drive.setModuleStates(states);
     }
-    private DoubleSupplier fwd,str,rot;
+    private DoubleSupplier str,rot;
     private Drive drive;
 
-    public HorizontalLock(DoubleSupplier str, DoubleSupplier rot,Drive instance){
-        this.fwd = fwd;
+    public HorizontalLock(DoubleSupplier str, DoubleSupplier rot, Drive instance){
         this.str = str;
         this.rot = rot;
 
@@ -48,12 +47,11 @@ public class HorizontalLock extends CommandBase {
 
     @Override
     public void initialize() {
-        //drive.changeMax();
+        drive.changeMax();
     }
 
     @Override
     public void execute() {
-        double vx =  modifyInputs(fwd.getAsDouble(),false);
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
