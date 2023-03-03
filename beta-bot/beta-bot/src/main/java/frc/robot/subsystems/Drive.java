@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.AltConstants;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
@@ -34,8 +33,7 @@ public class Drive extends SubsystemBase {
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
     private double lastTimeStamp = Timer.getFPGATimestamp();
-    private double lastReqVel = 0;
-
+    private Translation2d lastReqVel = new Translation2d();
 
     public Drive(){
         rotController.setTolerance(5);
@@ -74,19 +72,12 @@ public class Drive extends SubsystemBase {
     }
 
     public void setModuleStates(SwerveModuleState[] states){
-        double currentTime = Timer.getFPGATimestamp();
-        double currVel = frontLeft.getDriveVelocity();
         frontLeft.setState(states[0]);
         frontRight.setState(states[1]);
         rearLeft.setState(states[2]);
         rearRight.setState(states[3]);
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
-        SmartDashboard.putNumber("FL VEL", frontLeft.getDriveVelocity());
-        SmartDashboard.putNumber("FL Accel", (frontLeft.getDriveVelocity()-lastReqVel)/(currentTime-lastTimeStamp));
-        SmartDashboard.putNumber("Motor current draw", frontLeft.getCurrentDraw());
-        lastTimeStamp = currentTime;
-        lastReqVel = currVel;
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
         //SmartDashboard.putNumber("left front error", flError);
@@ -163,9 +154,46 @@ public class Drive extends SubsystemBase {
         return rotController;
     }
 
- 
+    public double getVelocity(){
+        return frontLeft.getDriveVelocity();
+    }
 
-    public void lockModules(){
+    public ChassisSpeeds limitTangentialAcceleration(ChassisSpeeds currVelocity){
+        double dt = Timer.getFPGATimestamp() - lastTimeStamp;
+
+        double maxDV =  DriveConstants.MAX_DRIVE_TANGENTIAL_ACCEL * dt;
+
+        Translation2d currVel = new Translation2d(currVelocity.vxMetersPerSecond, currVelocity.vyMetersPerSecond);
+
+        Translation2d dV =  currVel.minus(lastReqVel) ;
+
+        if(dV.getNorm() > maxDV){
+            Translation2d velLimit = lastReqVel.plus(new Translation2d(maxDV,maxDV));
+            currVelocity.vxMetersPerSecond = velLimit.getX();
+            currVelocity.vyMetersPerSecond = velLimit.getY();
+            SmartDashboard.putString("Limited?", "yes");
+        }
+        else
+            SmartDashboard.putString("Limited?", "no");
+
+
+        SmartDashboard.putNumber("Current DV", dV.getNorm());
+        SmartDashboard.putNumber("maxDV", maxDV);
+        SmartDashboard.putNumber("Max X Vel", currVelocity.vxMetersPerSecond);
+        SmartDashboard.putNumber("Max Y Vel", currVelocity.vyMetersPerSecond);
+        SmartDashboard.putNumber("Last X Vel", lastReqVel.getX());
+        SmartDashboard.putNumber("Last Y Vel", lastReqVel.getY());
+        SmartDashboard.putNumber("DT", dt);
+        SmartDashboard.putNumber("Current Accel", (currVel.minus(lastReqVel).getX())/dt);
+        
+        lastReqVel = currVel;
+        lastTimeStamp = Timer.getFPGATimestamp();
+
+        return currVelocity;
+
+    }
+
+    private void lockModules(){
         frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
         rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
