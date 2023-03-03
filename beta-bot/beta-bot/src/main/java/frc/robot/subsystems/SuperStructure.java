@@ -18,7 +18,7 @@ public class SuperStructure extends SubsystemBase {
     private Wrist wrist = Wrist.getInstance();
     //private LED led = LED.getInstance();
     private LED led;
-    private boolean isMid = false;
+    private boolean scoreHigh;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
 
@@ -43,7 +43,7 @@ public class SuperStructure extends SubsystemBase {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
-        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && intake.isClosed() && scoringState!=SuperStructureState.SEAGUL)
+        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && scoringState!=SuperStructureState.SEAGUL && scoringState!=SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.IDLE);
 
     }
@@ -54,8 +54,6 @@ public class SuperStructure extends SubsystemBase {
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
-
-        
     }
 
     public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){
@@ -63,28 +61,31 @@ public class SuperStructure extends SubsystemBase {
         wrist.setSetpoint(wristSetpoint);
 
         intake.setIntakeState(IntakeState.INTAKE_CONE);
-
     }
 
     public void intakeCube(double elevatorSetpoint, Rotation2d wristSetpoint){
         elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
         intake.setIntakeState(IntakeState.INTAKE_CUBE);
-
     }
 
     public void shoot(){
         if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
+
         else if(scoringState == SuperStructureState.CUBE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
+
         else if(scoringState == SuperStructureState.CUBE_HIGH)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH);
+
         else if(scoringState == SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.CONE_SNIPER);
-        else
+
+        else 
             intake.setIntakeState(IntakeState.CUSTOM);
     }
+
 
     public void stowAll(){
         elevator.setState(ElevatorState.STOW);
@@ -114,18 +115,6 @@ public class SuperStructure extends SubsystemBase {
         return scoringState;
     }
 
-    public boolean getScoringHeight(){
-        return isMid;
-    }
-
-    public void setScoreMid(){
-        isMid = true;
-    }
-
-    public void setScoreHigh(){
-        isMid = false;
-    }
-
     public void setState(SuperStructureState state){
         scoringState = state;
 
@@ -143,6 +132,10 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUBE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
+                Drive.getInstance().changeSlow();
+                break;
+            case CUBE_MID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID, SuperStructureConstants.WRIST_CUBE_MID);
                 Drive.getInstance().changeSlow();
                 break;
             case STOWED:
@@ -167,7 +160,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
-                intakeCone(0, Rotation2d.fromDegrees(-20));
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
             case ZERO:
@@ -202,5 +195,13 @@ public class SuperStructure extends SubsystemBase {
                 led.setStrobe();
                 break;
         }
+    }
+
+    public void setScorePosition(boolean high){
+        scoreHigh = high;
+    }
+
+    public boolean wantScoreHigh(){
+        return scoreHigh;
     }
 }
