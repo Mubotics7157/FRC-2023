@@ -237,8 +237,8 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(10, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(15, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(12, 0, 0);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(15, 0, 2);
   }
 
   public static final class SuperStructureConstants{
@@ -254,7 +254,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
 
     public static final double ELEVATOR_CONE_MID = -19;
-    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-130);
+    public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-133);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-130); //-123
