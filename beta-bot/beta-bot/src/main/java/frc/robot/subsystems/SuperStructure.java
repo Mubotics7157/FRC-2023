@@ -52,8 +52,8 @@ public class SuperStructure extends SubsystemBase {
         return instance;
     }
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
-        elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
+        elevator.setElevatorHeight(elevatorSetpoint);
     }
 
     public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){

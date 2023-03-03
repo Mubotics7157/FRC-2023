@@ -208,7 +208,7 @@ public final class Constants {
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
       public static final double CONE_INTAKE_SPEED = 1 * 5700;
 
-      public static final double IDLE_SPEED = .75/2 * 5700;
+      public static final double IDLE_SPEED = .8/2 * 5700;
 
       public static final double TOP_ROLLER_KP = .00001;
       public static final double TOP_ROLLER_KF = .0002;
@@ -265,7 +265,7 @@ public final class Constants {
     public static final double ELEVATOR_INTAKE_CUBE = 0;
     public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);
 
-    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-7);
+    public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-15);
     public static final double ELEVATOR_STOW = 0;
 
     public static final double ELEVATOR_INTAKE_SEAGUL = 0;
