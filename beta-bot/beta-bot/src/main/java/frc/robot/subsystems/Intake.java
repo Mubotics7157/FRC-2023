@@ -190,11 +190,11 @@ public class Intake extends SubsystemBase {
     }
 
     public void closeJaws(){
-        solenoid.set(Value.kForward);
+        solenoid.set(Value.kReverse);
     }
 
     public void openJaws(){
-        solenoid.set(Value.kReverse);
+        solenoid.set(Value.kForward);
     }
 
     public boolean isClosed(){
