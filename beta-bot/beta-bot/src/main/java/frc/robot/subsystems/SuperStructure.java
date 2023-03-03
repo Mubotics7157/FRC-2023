@@ -16,8 +16,8 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
-    //private LED led = LED.getInstance();
-    private LED led;
+    private LED led = LED.getInstance();
+    //private LED led;
     private boolean scoreHigh;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
@@ -118,7 +118,7 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
         scoringState = state;
 
-        //setLedMode(scoringState);
+        setLedMode(scoringState);
         
         
         switch(scoringState){
