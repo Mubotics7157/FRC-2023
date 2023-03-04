@@ -64,6 +64,18 @@ public class Limelight {
 
     }
 
+    public double getDistanceToTag(){
+        if(hasTargets()){
+            if(LimelightHelpers.getFiducialID(name) == 7 || LimelightHelpers.getFiducialID(name) == 2){
+                return LimelightHelpers.getCameraPose3d_TargetSpace(VisionConstants.TARGET_LL_NAME).getX();
+            }
+            else
+                throw new NullPointerException();
+        }
+        else
+            throw new NullPointerException();
+    }
+
     public double getLatency(){
         return visionLatency *.001;
     }

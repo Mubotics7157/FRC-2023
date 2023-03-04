@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants.DriveConstants;
@@ -15,36 +16,37 @@ import frc.robot.subsystems.VisionManager;
 
 public class AutoBalance extends CommandBase{
     Drive drive; 
-    VisionManager vision;
-    ProfiledPIDController controller = new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0.5, 0.5));
+    ProfiledPIDController controller = new ProfiledPIDController(0.5, 0, 0, new TrapezoidProfile.Constraints(0.5, 0.5));
     double lastKnownDistance;
     DoubleSupplier str, rot;
 
-    public AutoBalance(DoubleSupplier str, DoubleSupplier rot, Drive drive, VisionManager vision){
+    public AutoBalance(Drive drive){
         this.drive = drive; 
-        this.vision = vision;
 
-        this.rot = rot;
-        this.str = str;
+        //this.rot = rot;
+        //this.str = str;
         lastKnownDistance = 0;
         addRequirements(drive);
 
         controller.setGoal(2.85);
         controller.setTolerance(.1);
+
+        SmartDashboard.putNumber("custom balance P", 0.5);
     }
 
     @Override
     public void initialize() {
-        drive.changeSlow();
+        //drive.changeSlow();
+        controller.setP(SmartDashboard.getNumber("custom balance P", 0.5));
     }
 
     @Override
     public void execute() {
-        double vy = modifyInputs(str.getAsDouble(), false);
-        double omega = modifyInputs(rot.getAsDouble(), true);
+        //double vy = modifyInputs(str.getAsDouble(), false);
+        //double omega = modifyInputs(rot.getAsDouble(), true);
 
         try{
-            lastKnownDistance = vision.getDistanceToTag();
+            lastKnownDistance = VisionManager.getInstance().getDistanceToTag();
         }
         catch(Exception e){
             
@@ -52,8 +54,19 @@ public class AutoBalance extends CommandBase{
 
         double fwdSpeed = controller.calculate(lastKnownDistance);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(fwdSpeed, -vy, omega, Tracker.getInstance().getPose().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-fwdSpeed*0.5, 0,0, drive.getDriveHeading()));
 
+    }
+
+    @Override
+    public boolean isFinished() {
+        return controller.atGoal();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drive.lockModules();
+        //driveFromChassis(new ChassisSpeeds());
     }
 
     private double modifyInputs(double val, boolean isRot){

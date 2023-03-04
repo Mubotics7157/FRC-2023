@@ -116,15 +116,12 @@ public class Wrist extends SubsystemBase {
     private void setState(){
         
         if(SuperStructure.getInstance().getState() == SuperStructureState.CONE_HIGH || SuperStructure.getInstance().getState() == SuperStructureState.CUBE_HIGH){
-            //if(Elevator.getInstance().getElevatorHeight() < -2)
-            wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD / 2);
-            wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE / 2);
-
+            if(Elevator.getInstance().getElevatorHeight() > -2)
+                wristMotor.set(0);
+            else
                 wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
         }
         else{
-            wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
-            wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
 
             wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
         }

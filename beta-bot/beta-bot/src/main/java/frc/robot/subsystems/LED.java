@@ -6,6 +6,7 @@ import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.LarsonAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
+import com.ctre.phoenix.led.SingleFadeAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
@@ -25,6 +26,7 @@ public class LED {
     LarsonAnimation larsonAnim;
     FireAnimation FIREEE;
     ColorFlowAnimation colorFLow;
+    SingleFadeAnimation orangeFade;
 
 
     public LED(){
@@ -109,6 +111,11 @@ public class LED {
         //candle.animate(larsonAnim);
     }
 
+    public void setOrangeFade(){
+        
+        candle.animate(orangeFade);
+    }
+
     public void setOff(){
         offAnim();
         candle.setLEDs(0, 0, 0);
@@ -137,7 +144,7 @@ public class LED {
         FIREEE = new FireAnimation(1, 1, 300, 0.5, 0.5);
         colorFLow = new ColorFlowAnimation(255, 25, 0, 0, 0.5, 250, Direction.Forward, 0);
         larsonAnim = new LarsonAnimation(255, 25, 0, 0, 0.5, 300, BounceMode.Back, 25);
-
+        orangeFade = new SingleFadeAnimation(255, 25, 0, 0, 0.5, 300);
         config.statusLedOffWhenActive = true;
         config.disableWhenLOS = false;
         config.vBatOutputMode = VBatOutputMode.Modulated;

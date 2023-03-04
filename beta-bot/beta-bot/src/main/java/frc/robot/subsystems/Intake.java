@@ -134,7 +134,7 @@ public class Intake extends SubsystemBase {
                 if(DriverStation.isTeleop())
                     setSpeed(.35*-3000);
                 else
-                    setSpeed(-3000);
+                    setSpeed(.5*-3000);
                 //toggleIntake(true);
                 break;
             case INTAKE:

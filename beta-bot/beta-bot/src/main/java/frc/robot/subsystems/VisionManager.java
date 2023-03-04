@@ -46,7 +46,7 @@ public class VisionManager extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //logData();
+        logData();
         //coneOffset = getConeOffset();
         //addFieldRelativePose();
     }
@@ -76,11 +76,13 @@ public class VisionManager extends SubsystemBase{
     
     public double getDistanceToTag(){
         if(targetLL.hasTargets()){
-            if(LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 7 || LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 2){
-                return LimelightHelpers.getCameraPose3d_TargetSpace(VisionConstants.TARGET_LL_NAME).getX();
+            //
+            if(LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 7 || LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 3){
+                return LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.TARGET_LL_NAME).getTranslation().getNorm();
             }
             else
                 throw new NullPointerException();
+       
         }
         else
             throw new NullPointerException();
@@ -116,11 +118,14 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void addFieldRelativePose(){
-        if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-            Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-        if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-            Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
+        if(Math.abs(Drive.getInstance().getDrivePitch()) < 1){
+
+            if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+                Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
+            if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+                Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
         //lastTimeStamp = targetLL.getBootTimeStamp();
+        }
     }
 
     public void useVision(){
@@ -173,11 +178,11 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
         SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         try{
-        SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
-        SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
-        SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
+        //SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
+        //SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
+        //SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
 
-        SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
+        //SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
 
         SmartDashboard.putNumber("Distance to Tag", getDistanceToTag());
         }

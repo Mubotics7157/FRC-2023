@@ -16,8 +16,8 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
-    private LED led = LED.getInstance();
-    //private LED led;
+    //private LED led = LED.getInstance();
+    private LED led;
     private boolean scoreHigh;
     private boolean idleIntake = true;
     
@@ -126,7 +126,7 @@ public class SuperStructure extends SubsystemBase {
     
         scoringState = state;
 
-        setLedMode(scoringState);
+        //setLedMode(scoringState);
 
         switch(scoringState){
             case CONE_HIGH:
@@ -198,6 +198,8 @@ public class SuperStructure extends SubsystemBase {
             case STOWED:
                 led.setCurrentIntake();
                 break;
+            case SEAGUL:
+                led.setYellowStrobe();
             default:
                 led.setStrobe();
                 break;
