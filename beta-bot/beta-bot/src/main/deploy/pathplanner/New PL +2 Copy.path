@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.808088631422937,
-        "y": 5.048684863806281
+        "x": 1.8257029429980156,
+        "y": 5.042067300592563
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6585464674453947,
-        "y": 4.955484330438231
+        "x": 2.6803878437810544,
+        "y": 4.818357829917807
       },
       "holonomicAngle": 179.97841696001902,
       "isReversal": false,
@@ -105,18 +105,43 @@
     },
     {
       "anchorPoint": {
-        "x": 5.550789153325466,
-        "y": 4.511973544422355
+        "x": 5.854966877478551,
+        "y": 4.322439447571156
       },
       "prevControl": {
-        "x": 4.691226568489182,
-        "y": 4.695807332300074
+        "x": 4.9954042926422675,
+        "y": 4.506273235448875
       },
       "nextControl": {
-        "x": 5.905306220059534,
-        "y": 4.436153334940536
+        "x": 6.209483944212619,
+        "y": 4.246619238089337
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -22.19401179694533,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.098761195108181,
+        "y": 3.374372450217102
+      },
+      "prevControl": {
+        "x": 6.684565087924063,
+        "y": 3.745261876445371
+      },
+      "nextControl": {
+        "x": 7.512957302292299,
+        "y": 3.003483023988833
+      },
+      "holonomicAngle": -37.25997215580119,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -180,21 +205,5 @@
       }
     }
   ],
-  "maxVelocity": 3.0,
-  "maxAcceleration": 3.0,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.5454545454545454,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 2.072727272727273,
-      "names": [
-        "stow"
-      ]
-    }
-  ]
+  "markers": []
 }
