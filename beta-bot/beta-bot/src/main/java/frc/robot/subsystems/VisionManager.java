@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.FieldConstants.BlueConstants;
 import frc.robot.util.Limelight;
@@ -72,6 +73,19 @@ public class VisionManager extends SubsystemBase{
             return null;
         
     }
+    
+    public double getDistanceToTag(){
+        if(targetLL.hasTargets()){
+            if(LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 7 || LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 2){
+                return LimelightHelpers.getCameraPose3d_TargetSpace(VisionConstants.TARGET_LL_NAME).getX();
+            }
+            else
+                throw new NullPointerException();
+        }
+        else
+            throw new NullPointerException();
+    }
+    
 
     public Rotation2d getOffset(){
         return Rotation2d.fromDegrees(coneOffset);
@@ -164,6 +178,8 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
 
         SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
+
+        SmartDashboard.putNumber("Distance to Tag", getDistanceToTag());
         }
         catch(Exception e ){
 

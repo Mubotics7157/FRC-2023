@@ -217,7 +217,7 @@ public final class Constants {
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
-      public static final double CUBE_OUTTAKE_HIGH = -2000;
+      public static final double CUBE_OUTTAKE_HIGH = -750;
       public static final double CUBE_OUTTAKE_MID = -1600;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
@@ -243,12 +243,12 @@ public final class Constants {
 
   public static final class SuperStructureConstants{
     public static final double ELEVATOR_CONE_HIGH = -24.5;
-    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-115);
+    public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-119);
 
 
 
-    public static final double ELEVATOR_CUBE_HIGH = 0;
-    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-45);
+    public static final double ELEVATOR_CUBE_HIGH = -21.5;
+    public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-127);
 
     public static final double ELEVATOR_CUBE_MID = 0;
     public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
@@ -257,13 +257,13 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_MID = Rotation2d.fromDegrees(-133);
 
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-130); //-123
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-127); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
-    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-124);
+    public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-127);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
-    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-115);
+    public static final Rotation2d WRIST_INTAKE_CUBE = Rotation2d.fromDegrees(-123);
 
     public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-15);
     public static final double ELEVATOR_STOW = 0;

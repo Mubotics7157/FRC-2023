@@ -97,6 +97,23 @@ public class Tracker extends SubsystemBase{
             );
     }
 
+    public void regenDistancePath(){
+
+        if(DriverStation.getAlliance() == Alliance.Red)
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(new Translation2d(node.getX(), Tracker.getInstance().getPose().getY()), Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
+            );
+        else
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(new Translation2d(node.getX(), Tracker.getInstance().getPose().getY()), Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(0)) // position, heading
+            );
+
+    }
+    
     public void setOffset(){
         coneOffset = SmartDashboard.getNumber("custom offset", 0);
     }

@@ -19,6 +19,7 @@ public class SuperStructure extends SubsystemBase {
     private LED led = LED.getInstance();
     //private LED led;
     private boolean scoreHigh;
+    private boolean idleIntake = true;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
 
@@ -43,7 +44,7 @@ public class SuperStructure extends SubsystemBase {
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
-        if(scoringState!=SuperStructureState.FALLEN_CONE && scoringState!=SuperStructureState.CONE_INTAKE && scoringState!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && scoringState!=SuperStructureState.SEAGUL && scoringState!=SuperStructureState.CONE_SNIPER)
+        if(idleIntake)
             intake.setIntakeState(IntakeState.IDLE);
 
     }
@@ -116,11 +117,17 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void setState(SuperStructureState state){
+    if(scoringState==SuperStructureState.CUBE_INTAKE)
+        idleIntake = false;
+    else if(state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH)
+        idleIntake = true;
+    else
+        idleIntake = false;
+    
         scoringState = state;
 
         setLedMode(scoringState);
-        
-        
+
         switch(scoringState){
             case CONE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
@@ -146,7 +153,7 @@ public class SuperStructure extends SubsystemBase {
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_UPRIGHT, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
                 break;
             case CUBE_INTAKE:
-                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CUBE, SuperStructureConstants.WRIST_INTAKE_CUBE);
                 break;
             case FALLEN_CONE:
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
