@@ -128,6 +128,8 @@ public class RobotContainer {
 
     //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
+    m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
+    m_operatorController.povDown().onFalse(new SetScoreHigh(false));
 
     //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
     //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
@@ -135,12 +137,11 @@ public class RobotContainer {
     //m_operatorController.button(1).whileTrue(new HorizontalLock(m_driverController::getLeftX, m_driverController::getRightY, drive));
   }
 
-  public Command getAutonomousCommand(String autoToUse) {
+  public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
     //eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("score-cone-high", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
@@ -150,22 +151,19 @@ public class RobotContainer {
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
-    eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(), new WaitCommand(.25),new ShootCone(),new WaitCommand(.25)));
+    eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCube(), new WaitCommand(.4), new Stow(superStructure)));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
     //eventMap.put("stow", new Stow(superStructure));
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-
-
     HashMap<String, Command> climbMap = new HashMap<>();
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.25),new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.25),new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
     climbMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
     climbMap.put("uncook", new Stow(superStructure));
     climbMap.put("lock", new InstantCommand(drive::lockModules));
-    HashMap<String, Command> testMap = new HashMap<>();
 
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
