@@ -72,6 +72,7 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void shoot(){
+        idleIntake = false;
         if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
 
@@ -120,7 +121,7 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
     if(scoringState==SuperStructureState.CUBE_INTAKE)
         idleIntake = false;
-    else if(state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH)
+    else if(state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH )
         idleIntake = true;
     else
         idleIntake = false;
@@ -213,5 +214,14 @@ public class SuperStructure extends SubsystemBase {
 
     public boolean wantScoreHigh(){
         return scoreHigh;
+    }
+
+    public void setIdleIntake(boolean idle){
+        idleIntake = idle;
+
+    }
+
+    public void enableIdling(){
+        idleIntake = true;
     }
 }

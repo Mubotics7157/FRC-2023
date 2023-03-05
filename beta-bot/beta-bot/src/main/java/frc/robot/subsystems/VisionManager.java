@@ -178,6 +178,9 @@ public class VisionManager extends SubsystemBase{
         SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
         SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         try{
+            SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
+            SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
+            SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         //SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
         //SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
         //SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
