@@ -41,6 +41,7 @@ public class SuperStructure extends SubsystemBase {
 
     @Override
     public void periodic() {
+        led = LED.getInstance();
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
@@ -126,7 +127,7 @@ public class SuperStructure extends SubsystemBase {
     
         scoringState = state;
 
-        //setLedMode(scoringState);
+        setLedMode(scoringState);
 
         switch(scoringState){
             case CONE_HIGH:
