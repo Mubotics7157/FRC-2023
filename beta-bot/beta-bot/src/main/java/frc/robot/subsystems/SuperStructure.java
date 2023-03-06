@@ -42,6 +42,7 @@ public class SuperStructure extends SubsystemBase {
 
     @Override
     public void periodic() {
+        led = LED.getInstance();
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
 
@@ -225,5 +226,14 @@ public class SuperStructure extends SubsystemBase {
 
     public boolean wantScoreHigh(){
         return scoreHigh;
+    }
+
+    public void setIdleIntake(boolean idle){
+        idleIntake = idle;
+
+    }
+
+    public void enableIdling(){
+        idleIntake = true;
     }
 }

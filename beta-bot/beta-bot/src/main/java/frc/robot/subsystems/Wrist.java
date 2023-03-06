@@ -183,7 +183,7 @@ public class Wrist extends SubsystemBase {
             if(Intake.getInstance().isClosed())
                 setpoint = frc.robot.Constants.SuperStructureConstants.WRIST_STOW;
             else
-                setpoint = Rotation2d.fromDegrees(-15);
+                setpoint = Rotation2d.fromDegrees(-25);
 
         }
     }

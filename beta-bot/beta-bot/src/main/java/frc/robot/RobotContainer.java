@@ -4,6 +4,7 @@ import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
+import frc.robot.commands.JogForks;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
@@ -26,6 +27,7 @@ import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.drive.HorizontalLock;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Forks;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Tracker;
@@ -48,12 +50,13 @@ public class RobotContainer {
 
   public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
- private final CommandJoystick m_operatorController =
+ public static final CommandJoystick m_operatorController =
       new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Tracker tracker = Tracker.getInstance();
+  private final Forks forks = new Forks();
   //private final VisionManager poleCam = VisionManager.getInstance();
   //private final LED led = LED.getInstance()
   private final SuperStructure superStructure = SuperStructure.getInstance();
@@ -89,7 +92,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new ShootCone());
-    m_driverController.rightTrigger().onFalse(new Stow(superStructure));
+    m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
     
     //m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
     m_driverController.povDown().whileTrue(new AutoBalance(drive));
@@ -133,6 +136,8 @@ public class RobotContainer {
 
     m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
     m_operatorController.povDown().onFalse(new SetScoreHigh(false));
+
+    m_operatorController.button(2).whileTrue(new JogForks(forks));
 
     //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
     //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
