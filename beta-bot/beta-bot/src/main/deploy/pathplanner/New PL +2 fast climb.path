@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.8257029429980156,
-        "y": 5.042067300592563
+        "x": 1.808088631422937,
+        "y": 5.0373
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6803878437810544,
-        "y": 4.818357829917807
+        "x": 2.6675801185766344,
+        "y": 4.987690375272599
       },
       "holonomicAngle": 179.97841696001902,
       "isReversal": false,
@@ -17,6 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "stow",
           "score"
         ],
         "executionBehavior": "sequential",
@@ -39,7 +40,7 @@
       },
       "holonomicAngle": 0.8839909731806372,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -53,20 +54,20 @@
     },
     {
       "anchorPoint": {
-        "x": 7.095718886753308,
-        "y": 4.603868296948204
+        "x": 7.040944809421717,
+        "y": 4.860069634547257
       },
       "prevControl": {
-        "x": 7.229942399980383,
-        "y": 4.638284582391044
+        "x": 7.178678269528847,
+        "y": 4.875232951256298
       },
       "nextControl": {
-        "x": 6.961495373526232,
-        "y": 4.569452011505364
+        "x": 5.794479891384891,
+        "y": 4.72284413898357
       },
       "holonomicAngle": 0.7198378584355117,
       "isReversal": false,
-      "velOverride": 1.0,
+      "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -78,19 +79,19 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9652128006580691,
-        "y": 4.45015729540254
+        "x": 2.020778763383489,
+        "y": 4.482699521747118
       },
       "prevControl": {
-        "x": 4.568022599718418,
-        "y": 4.883958928579265
+        "x": 2.4438907080381913,
+        "y": 4.780021428801773
       },
       "nextControl": {
-        "x": 1.2768759678126684,
-        "y": 4.335434489928306
+        "x": 2.4438907080381913,
+        "y": 4.780021428801773
       },
       "holonomicAngle": -178.8982938847937,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
@@ -105,15 +106,70 @@
     },
     {
       "anchorPoint": {
-        "x": 7.301821928326596,
-        "y": 3.1779741153292824
+        "x": 2.545886887638525,
+        "y": 3.153266547964345
       },
       "prevControl": {
-        "x": 6.577808761894272,
-        "y": 6.03792180480224
+        "x": 1.8393372589090675,
+        "y": 3.153266547964345
+      },
+      "nextControl": {
+        "x": 3.302346006697094,
+        "y": 3.153266547964345
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": 1.0,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "cook"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.0,
+        "y": 3.184443524901863
+      },
+      "prevControl": {
+        "x": 4.006039447948153,
+        "y": 3.32629425378698
+      },
+      "nextControl": {
+        "x": 3.992846304761193,
+        "y": 3.016422061258443
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": 1.0,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "uncook",
+          "lock"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.0,
+        "y": 2.8701719261106486
+      },
+      "prevControl": {
+        "x": 3.9941522778503042,
+        "y": 2.98712636910458
       },
       "nextControl": null,
-      "holonomicAngle": -58.65,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -126,5 +182,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.5454545454545765,
+      "names": [
+        "intake-cube"
+      ]
+    },
+    {
+      "position": 2.109090909090831,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

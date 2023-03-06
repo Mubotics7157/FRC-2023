@@ -16,8 +16,8 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
-    //private LED led = LED.getInstance();
-    private LED led;
+    private LED led = LED.getInstance();
+    //private LED led;
     private boolean scoreHigh;
     private boolean idleIntake = true;
     
@@ -27,6 +27,7 @@ public class SuperStructure extends SubsystemBase {
         CONE_HIGH,
         CONE_MID,
         CUBE_HIGH,
+        CUBE_HIGH_SHOOT,
         CUBE_MID,
         CUBE_INTAKE,
         CONE_INTAKE,
@@ -70,7 +71,15 @@ public class SuperStructure extends SubsystemBase {
         intake.setIntakeState(IntakeState.INTAKE_CUBE);
     }
 
+    public void intake(double elevatorSetpoint, Rotation2d wristSetpoint, IntakeState intakeState){
+        elevator.setElevatorHeight(elevatorSetpoint);
+        wrist.setSetpoint(wristSetpoint);
+        intake.setIntakeState(intakeState);
+    }
+
     public void shoot(){
+        idleIntake = false;
+        
         if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
             intake.setIntakeState(IntakeState.OUTTAKE_CONE);
 
@@ -82,7 +91,8 @@ public class SuperStructure extends SubsystemBase {
 
         else if(scoringState == SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.CONE_SNIPER);
-
+        else if(scoringState == SuperStructureState.CUBE_HIGH_SHOOT)
+            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
         else 
             intake.setIntakeState(IntakeState.CUSTOM);
     }
@@ -119,14 +129,14 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
     if(scoringState==SuperStructureState.CUBE_INTAKE)
         idleIntake = false;
-    else if(state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH)
+    else if(state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH)
         idleIntake = true;
     else
         idleIntake = false;
     
         scoringState = state;
 
-        //setLedMode(scoringState);
+        setLedMode(scoringState);
 
         switch(scoringState){
             case CONE_HIGH:
@@ -143,6 +153,9 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUBE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID, SuperStructureConstants.WRIST_CUBE_MID);
+                Drive.getInstance().changeSlow();
+            case CUBE_HIGH_SHOOT:
+                goToPosition(0, Rotation2d.fromDegrees(-40));
                 Drive.getInstance().changeSlow();
                 break;
             case STOWED:
@@ -167,7 +180,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL);
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL, IntakeState.INTAKE_CONE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
             case ZERO:

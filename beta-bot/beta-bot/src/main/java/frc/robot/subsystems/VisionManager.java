@@ -69,15 +69,14 @@ public class VisionManager extends SubsystemBase{
     public Pose2d getBotPose(){
         if(targetLL.hasTargets() && targetLL.getPipelineIndex()==VisionConstants.TAG_PIPELINE_INDEX) 
             return targetLL.getBotPose();
-        else
+        else    
             return null;
         
     }
     
     public double getDistanceToTag(){
         if(targetLL.hasTargets()){
-            //
-            if(LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 7 || LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 3){
+            if(LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 7 || LimelightHelpers.getFiducialID(VisionConstants.TARGET_LL_NAME) == 2){
                 return LimelightHelpers.getTargetPose3d_CameraSpace(VisionConstants.TARGET_LL_NAME).getTranslation().getNorm();
             }
             else
@@ -119,12 +118,16 @@ public class VisionManager extends SubsystemBase{
 
     public void addFieldRelativePose(){
         if(Math.abs(Drive.getInstance().getDrivePitch()) < 1){
-
+            try{
             if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
                 Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
             if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
                 Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
         //lastTimeStamp = targetLL.getBootTimeStamp();
+            }
+            catch(Exception e){
+
+            }
         }
     }
 
@@ -174,10 +177,11 @@ public class VisionManager extends SubsystemBase{
     public void logData(){
         SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
         SmartDashboard.putNumber("Intake offset", coneOffset);
-        SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
-        SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
-        SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         try{
+        //SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
+        //SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
+        //SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
+        
         //SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
         //SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
         //SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());

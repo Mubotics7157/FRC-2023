@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
@@ -19,6 +20,7 @@ public class OpenDoor extends CommandBase {
 
     @Override
     public void initialize() {
+        Intake.getInstance().closeJaws();
         superStructure.setState(SuperStructureState.OPEN_DOOR);
         
     }

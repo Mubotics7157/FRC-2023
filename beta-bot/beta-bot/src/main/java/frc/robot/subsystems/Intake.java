@@ -25,6 +25,7 @@ public class Intake extends SubsystemBase {
         OUTTAKE_CUBE_HIGH,
         INTAKE_CONE,
         OUTTAKE_CONE,
+        INTAKE_CONE_SEAGUL,
         INTAKE,
         OUTTAKE,
         IDLE,
@@ -134,8 +135,11 @@ public class Intake extends SubsystemBase {
                 if(DriverStation.isTeleop())
                     setSpeed(.35*-3000);
                 else
-                    setSpeed(.5*-3000);
+                    setSpeed(.4*-3000);
                 //toggleIntake(true);
+                break;
+            case INTAKE_CONE_SEAGUL:
+                setSpeed(.375 * 5700);
                 break;
             case INTAKE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
@@ -190,11 +194,11 @@ public class Intake extends SubsystemBase {
     }
 
     public void closeJaws(){
-        solenoid.set(Value.kReverse);
+        solenoid.set(Value.kForward);
     }
 
     public void openJaws(){
-        solenoid.set(Value.kForward);
+        solenoid.set(Value.kReverse);
     }
 
     public boolean isClosed(){

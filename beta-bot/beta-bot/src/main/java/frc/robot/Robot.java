@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("preload + 1", "PL + 1");
     autoChooser.addOption("preload + 2","New PL +2");
     SmartDashboard.putData(autoChooser);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 weak");
 
   }
 
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //LED.getInstance().setOrangeFade();
+    LED.getInstance().setOrangeFade();
   }
 
   @Override

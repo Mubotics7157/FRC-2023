@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 108;
+      public static final double WRIST_GEARING = 75;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -221,6 +221,7 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_MID = -1600;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
+      public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
       public static final double CONE_SNIPER_SPEED = -5700;
