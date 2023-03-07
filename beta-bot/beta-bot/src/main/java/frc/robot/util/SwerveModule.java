@@ -7,11 +7,12 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenixpro.controls.NeutralOut;
+import com.ctre.phoenixpro.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -19,16 +20,16 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
-   private WPI_TalonFX turnMotor;
-   private WPI_TalonFX driveMotor;
+   private TalonFX driveMotor;
+   private TalonFX turnMotor;
    private WPI_CANCoder absEncoder;
 
     public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
-        driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
-        turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        driveMotor = new TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        turnMotor = new TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
-        turnMotor.configFactoryDefault();
-        driveMotor.configFactoryDefault();
+        turnMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
+        driveMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
 
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
@@ -42,7 +43,7 @@ public class SwerveModule {
         driveMotor.setSensorPhase(false);
         driveMotor.config_kP(0, SwerveModuleConstants.driveKP);
         
-        turnMotor.setSelectedSensorPosition(0);
+        turnMotor.setRotorPosition(0);
         turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
         turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(true);
@@ -61,7 +62,7 @@ public class SwerveModule {
 
         OrangeUtility.sleep(1000);
         System.out.println(getAbsHeading());
-        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        turnMotor.setRotorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public void setState(SwerveModuleState state){
@@ -75,7 +76,7 @@ public class SwerveModule {
         double driveFFVolts = SwerveModuleConstants.DRIVE_FEEDFORWARD.calculate(driveSetpoint);
 
         if(driveSetpoint==0){
-            driveMotor.set(ControlMode.PercentOutput, 0);
+            driveMotor.set(0);
         } 
         else 
             driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/12);
@@ -95,19 +96,19 @@ public class SwerveModule {
     }
 
     public Rotation2d getHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public double getDriveVelocity(){
-        return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getSelectedSensorVelocity());
+        return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getRotorVelocity().getValue());
     }
 
     public double getPosition(){
-        return CommonConversions.stepsToMeters(driveMotor.getSelectedSensorPosition());
+        return CommonConversions.stepsToMeters(driveMotor.getRotorPosition().getValue());
     }
 
     public Rotation2d getRelativeHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public void flip(double angle){
@@ -115,12 +116,12 @@ public class SwerveModule {
         
     }
     public void overrideMotors(){
-        driveMotor.set(ControlMode.PercentOutput,0);
-        turnMotor.set(ControlMode.PercentOutput,0);
+        driveMotor.set(0);
+        turnMotor.set(0);
     }
 
     public double getCurrentDraw(){
-        return driveMotor.getSupplyCurrent();
+        return driveMotor.getSupplyCurrent().getValue();
     }
 
 }
