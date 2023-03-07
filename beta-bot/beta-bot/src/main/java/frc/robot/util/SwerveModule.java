@@ -66,7 +66,7 @@ public class SwerveModule {
         var turnConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
         turnConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        turnConfig.Slot0.kP = SwerveModuleConstants.TURNING_KP;
+        turnConfig.Slot0.kP = SwerveModuleConstants.1/(2048*TURNING_KP/10);
         turnMotor.getConfigurator().apply(turnConfig);
         turnMotor.setRotorPosition(0);
         turnMotor.setInverted(true);
@@ -110,7 +110,9 @@ public class SwerveModule {
 
 
     private void setTurnRad(Rotation2d turnSetpointRad){
-        turnMotor.setRotorPosition(turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        //turnMotor.setRotorPosition(turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        var request = new PositionVoltage(0).withSlot(0);
+        turnMotor.setControl(request.withPosition(turnSetpointRad.getDegrees()/(360/(SwerveModuleConstants.TURN_GEAR_RATIO));
     }
 
     public SwerveModuleState getState(){
@@ -122,7 +124,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/(SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public double getDriveVelocity(){
@@ -135,7 +137,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getRelativeHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        return Rotation2d.fromDegrees(turnMotor.getRotorPosition().getValue()*(360/SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public void flip(double angle){
