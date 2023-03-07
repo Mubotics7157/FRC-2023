@@ -47,11 +47,12 @@ public class SwerveModule {
     
         var driveConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
         driveConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        driveConfig.Feedback.SensorToMechanismRatio = -1;
         
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0.kP = SwerveModuleConstants.driveKP*2048;
-        driveConfig.Slot0.kS = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKS,SwerveModuleConstants.DRIVE_GEAR_RATIO);
-        driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV,SwerveModuleConstants.DRIVE_GEAR_RATIO);;
+        driveConfig.Slot0.kS = SwerveModuleConstants.driveKS;
+        driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV, SwerveModuleConstants.DRIVE_GEAR_RATIO);
         driveConfig.Slot0.kD = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKA,SwerveModuleConstants.DRIVE_GEAR_RATIO);
         driveMotor.getConfigurator().apply(driveConfig);
         driveMotor.setControl(voltageComp);
@@ -121,12 +122,11 @@ public class SwerveModule {
     }
 
     public double getDriveVelocity(){
-        return -CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getRotorVelocity().getValue());
+        return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getRotorVelocity().getValue());
     }
 
     public double getPosition(){
-        return -
-        CommonConversions.stepsToMeters(driveMotor.getRotorPosition().getValue());
+        return CommonConversions.stepsToMeters(driveMotor.getRotorPosition().getValue());
     }
 
     public Rotation2d getRelativeHeading(){
