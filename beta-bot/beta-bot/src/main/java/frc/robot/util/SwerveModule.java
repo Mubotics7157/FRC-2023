@@ -11,8 +11,14 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenixpro.configs.CurrentLimitsConfigs;
+import com.ctre.phoenixpro.configs.MotorOutputConfigs;
 import com.ctre.phoenixpro.controls.NeutralOut;
+import com.ctre.phoenixpro.controls.VoltageOut;
 import com.ctre.phoenixpro.hardware.TalonFX;
+import com.ctre.phoenixpro.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenixpro.signals.InvertedValue;
+import com.ctre.phoenixpro.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -23,32 +29,43 @@ public class SwerveModule {
    private TalonFX driveMotor;
    private TalonFX turnMotor;
    private WPI_CANCoder absEncoder;
+   private VoltageOut voltageComp;
+   private CurrentLimitsConfigs currentLimitsConfigs;
 
     public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
+        voltageComp = new VoltageOut(12);
         driveMotor = new TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
         turnMotor = new TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
-        turnMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
-        driveMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
+        //turnMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
+        //driveMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
 
-
-        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
-        driveMotor.configAllSettings(driveConfig);
-        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
-        driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(isInverted);
-        driveMotor.configVoltageCompSaturation(12);
-        driveMotor.enableVoltageCompensation(true);
-        driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
-        driveMotor.setSensorPhase(false);
-        driveMotor.config_kP(0, SwerveModuleConstants.driveKP);
+        currentLimitsConfigs = new CurrentLimitsConfigs();
+        currentLimitsConfigs.SupplyCurrentLimit = 15;
+        currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+    
+        var driveConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
+        driveConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         
+        driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        driveConfig.Slot0.kP = SwerveModuleConstants.driveKP;
+        driveMotor.getConfigurator().apply(driveConfig);
+        driveMotor.setControl(voltageComp);
+        driveMotor.setInverted(isInverted);
+        var m = new MotorOutputConfigs();
+        driveMotor.getConfigurator().apply(currentLimitsConfigs);
+        //driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+        
+        var turnConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
+        turnConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        turnConfig.Slot0.kP = SwerveModuleConstants.TURNING_KP;
+        turnConfig.Slot0.kS = SwerveModuleConstants.driveKS;
+        turnConfig.Slot0.kV = SwerveModuleConstants.driveKV;
+        turnMotor.getConfigurator().apply(turnConfig);
         turnMotor.setRotorPosition(0);
-        turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
-        turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(true);
-        turnMotor.config_kP(0, SwerveModuleConstants.TURNING_KP);
-        turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+        //turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
 
         absEncoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
     
@@ -79,12 +96,13 @@ public class SwerveModule {
             driveMotor.set(0);
         } 
         else 
+            driveMotor.setControl(CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),true,DemandType.ArbitraryFeedForward,driveFFVolts/12);
             driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/12);
     }
 
 
     private void setTurnRad(Rotation2d turnSetpointRad){
-        turnMotor.set(ControlMode.Position, turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        turnMotor.setRotorPosition(turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }
 
     public SwerveModuleState getState(){
