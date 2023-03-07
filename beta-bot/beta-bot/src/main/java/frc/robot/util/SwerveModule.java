@@ -14,7 +14,9 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.ctre.phoenixpro.configs.CurrentLimitsConfigs;
 import com.ctre.phoenixpro.configs.MotorOutputConfigs;
 import com.ctre.phoenixpro.controls.NeutralOut;
+import com.ctre.phoenixpro.controls.VelocityDutyCycle;
 import com.ctre.phoenixpro.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenixpro.controls.VelocityVoltage;
 import com.ctre.phoenixpro.controls.VoltageOut;
 import com.ctre.phoenixpro.hardware.TalonFX;
 import com.ctre.phoenixpro.signals.FeedbackSensorSourceValue;
@@ -52,8 +54,8 @@ public class SwerveModule {
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         driveConfig.Slot0.kP = SwerveModuleConstants.driveKP*2048;
         driveConfig.Slot0.kS = SwerveModuleConstants.driveKS;
-        driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV, SwerveModuleConstants.DRIVE_GEAR_RATIO);
-        driveConfig.Slot0.kD = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKA,SwerveModuleConstants.DRIVE_GEAR_RATIO);
+        driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
+        driveConfig.Slot0.kD = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKA, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
         driveMotor.getConfigurator().apply(driveConfig);
         driveMotor.setControl(voltageComp);
         driveMotor.setInverted(isInverted);
@@ -94,12 +96,14 @@ public class SwerveModule {
 
     private void setVelocity(double driveSetpoint, double dt){
         double driveFFVolts = SwerveModuleConstants.DRIVE_FEEDFORWARD.calculate(driveSetpoint);
+        //assuming the gains are remeasured for the proper units it will be used! :P
 
         if(driveSetpoint==0){
             driveMotor.set(0);
         } 
         else 
-            driveMotor.setControl(new VelocityTorqueCurrentFOC(10*CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS)/2048));
+            driveMotor.setControl(new VelocityVoltage(CommonConversions.metersPerSecToRotationsPerSec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO), true, driveFFVolts / 12, 0, false));
+            //velocity, enable foc, FF, slot index, override neutral mode
             //driveMotor.setControl(CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),true,DemandType.ArbitraryFeedForward,driveFFVolts/12);
             //driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/12);
     }
@@ -122,7 +126,8 @@ public class SwerveModule {
     }
 
     public double getDriveVelocity(){
-        return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getRotorVelocity().getValue());
+        //getRotorVelocity().getValue() or getVelocity()?
+        return CommonConversions.RotationsPersecToMetersPerSec(driveMotor.getRotorVelocity().getValue(), DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
     }
 
     public double getPosition(){

@@ -82,8 +82,15 @@ public class CommonConversions {
     return steps/degPerStep;
   }
 
-  public static double metersPerSecToRotationsPerSec(double steps, double gearing){
-    double stepsPerDecisec = metersPerSecToStepsPerDecisec(steps, gearing);
-    return 10*stepsPerDecisec/2048;
+  public static double metersPerSecToRotationsPerSec(double metersPerSec, double wheelDiameter, double gearing){
+    //double stepsPerDecisec = metersPerSecToStepsPerDecisec(steps, gearing);
+    //based off of mps = (rps / gearing) * circum
+    double RPS = (metersPerSec / (wheelDiameter * Math.PI)) * gearing;
+    return RPS;
+  }
+
+  public static double RotationsPersecToMetersPerSec(double RotationsPerSec, double wheelDiameter, double gearing){
+    double mps = (RotationsPerSec / gearing) * (wheelDiameter * Math.PI);
+    return mps;
   }
 }
