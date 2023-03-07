@@ -131,7 +131,7 @@ public class SwerveModule {
     }
 
     public double getPosition(){
-        return CommonConversions.stepsToMeters(driveMotor.getRotorPosition().getValue());
+        return CommonConversions.RotationsToMeters(driveMotor.getRotorPosition().getValue(), DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
     }
 
     public Rotation2d getRelativeHeading(){
