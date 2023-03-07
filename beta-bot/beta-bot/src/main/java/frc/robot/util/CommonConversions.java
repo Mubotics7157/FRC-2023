@@ -81,4 +81,9 @@ public class CommonConversions {
     double degPerStep = 360 / (gearing * 2048);
     return steps/degPerStep;
   }
+
+  public static double metersPerSecToRotationsPerSec(double steps, double gearing){
+    double stepsPerDecisec = metersPerSecToStepsPerDecisec(steps, gearing);
+    return 10*stepsPerDecisec/2048;
+  }
 }
