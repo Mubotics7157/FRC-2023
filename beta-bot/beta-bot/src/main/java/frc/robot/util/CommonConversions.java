@@ -94,8 +94,8 @@ public class CommonConversions {
     return mps;
   }
 
-  public static double RotationsToMeters(double rotations, double wheelDiameter, double gearing){
-    double meters = (rotations / gearing) * (wheelDiameter * Math.PI);
+  public static double rotationsToMeters(double rotations, double wheelDiameter, double gearing){
+    double meters = (rotations * wheelDiameter * Math.PI)/2048;
     return meters;
   }
 }
