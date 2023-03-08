@@ -182,7 +182,7 @@ public class SuperStructure extends SubsystemBase {
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL, IntakeState.INTAKE_CONE_SEAGUL);
-                Drive.getInstance().changeSlow();
+                Drive.getInstance().changeVerySlow();
                 break;
             case ZERO:
                 zeroAll();

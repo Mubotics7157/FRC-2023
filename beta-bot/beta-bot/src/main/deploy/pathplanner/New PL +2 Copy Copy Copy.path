@@ -30,12 +30,12 @@
         "y": 4.3912158580379925
       },
       "prevControl": {
-        "x": 7.270439052802076,
-        "y": 4.378825857815643
+        "x": 7.253681175115679,
+        "y": 4.324147128602601
       },
       "nextControl": {
-        "x": 4.0531293123871155,
-        "y": 4.667662181045831
+        "x": 6.548501806703767,
+        "y": 4.714204286003947
       },
       "holonomicAngle": 0.7198378584355117,
       "isReversal": false,
@@ -155,16 +155,16 @@
     },
     {
       "anchorPoint": {
-        "x": 4.39983868796957,
-        "y": 3.109454655763916
+        "x": 3.93,
+        "y": 3.1664820868581436
       },
       "prevControl": {
-        "x": 4.960003308142127,
-        "y": 3.109454655763916
+        "x": 4.490164620172557,
+        "y": 3.1664820868581436
       },
       "nextControl": {
-        "x": 4.331225940187728,
-        "y": 3.109454655763916
+        "x": 3.8613872522181585,
+        "y": 3.1664820868581436
       },
       "holonomicAngle": -178.87669728592456,
       "isReversal": false,
@@ -182,12 +182,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.605,
-        "y": 3.0994533234218618
+        "x": 3.93,
+        "y": 3.1
       },
       "prevControl": {
-        "x": 3.605,
-        "y": 3.1566306132400643
+        "x": 3.93,
+        "y": 3.1571772898182027
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -198,8 +198,7 @@
       "stopEvent": {
         "names": [
           "snipe cube high",
-          "shoot",
-          "lock"
+          "shoot"
         ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
@@ -209,57 +208,9 @@
   ],
   "markers": [
     {
-      "position": 0.05,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 0.8145454545455074,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 3.05,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 0.8145454545455681,
-      "names": [
-        "snipe cube high"
-      ]
-    },
-    {
-      "position": 4.27636363636371,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 1.9,
-      "names": [
-        "shoot"
-      ]
-    },
-    {
       "position": 0.4,
       "names": [
         "intake-cube"
-      ]
-    },
-    {
-      "position": 6.058181818181836,
-      "names": [
-        "snipe cube high"
-      ]
-    },
-    {
-      "position": 6.567272727272691,
-      "names": [
-        "shoot"
       ]
     }
   ]

@@ -22,10 +22,10 @@ public final class Constants {
   }
 
   public static final class SwerveModuleConstants{
-    public static final double driveKS = 0.12256;
-    public static final double driveKV = 2.3396;
-    public static final double driveKA = 0.19701;
-    public static final double driveKP = 0.0018763;
+    public static final double driveKS = 0.22815;//0.12256;
+    public static final double driveKV = 2.5181;//2.3396;
+    public static final double driveKA = 0.58266;//0.19701;
+    public static final double driveKP = 2.9126;//0.0018763;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
     public static final double TURNING_KP = .6;
@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 108;
+      public static final double WRIST_GEARING = 75;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -191,8 +191,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 5;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 4;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -232,14 +232,14 @@ public final class Constants {
     public static final class LidarConstants {
       public static final double CALIBRATION_OFFSET = 0;
       public static final int DIO_PORT = 0;
-      public static final double ANGLE_OFFSET = 2;
+      public static final double ANGLE_OFFSET = 2;  
   }
 
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(12, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(15, 0, 2);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(15, 0, 3);
   }
 
   public static final class SuperStructureConstants{

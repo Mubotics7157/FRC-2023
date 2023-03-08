@@ -27,10 +27,10 @@ public class Drive extends SubsystemBase {
     private double angDeadband = 0.15;
 
     private static Drive instance = new Drive();
-    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
-    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
-    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,AltConstants.DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
-    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,Constants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,Constants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,Constants.DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,Constants.DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
     private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON,DriveConstants.CANIVORE_NAME);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
@@ -57,7 +57,7 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        logData();
+        //logData();
 
         // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
  
@@ -86,7 +86,7 @@ public class Drive extends SubsystemBase {
         frontRight.setState(states[1]);
         rearLeft.setState(states[2]);
         rearRight.setState(states[3]);
-
+/* 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
         SmartDashboard.putNumber("FL VEL", frontLeft.getDriveVelocity());
         SmartDashboard.putNumber("FL Turn Error", frontLeft.getHeading().rotateBy(states[0].angle.unaryMinus()).getDegrees());
@@ -100,7 +100,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Front Right Abs Heading", frontRight.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("Rear Left Abs Heading", rearLeft.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("Rear Right Abs Heading", rearRight.getAbsHeading().getDegrees());
-    
+    */
         lastTimeStamp = currentTime;
         lastReqVel = currVel;
 

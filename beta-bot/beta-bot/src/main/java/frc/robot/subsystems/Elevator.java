@@ -172,8 +172,8 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
-        elevatorMotor.setInverted(false);
-        elevatorSlave.setInverted(false);
+        elevatorMotor.setInverted(true);
+        elevatorSlave.setInverted(true);
 
         elevatorMotor.enableVoltageCompensation(10);
         elevatorSlave.enableVoltageCompensation(10);
