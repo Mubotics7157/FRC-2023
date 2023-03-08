@@ -89,13 +89,13 @@ public class CommonConversions {
     return RPS;
   }
 
-  public static double RotationsPersecToMetersPerSec(double RotationsPerSec, double wheelDiameter, double gearing){
+  public static double rotationsPersecToMetersPerSec(double RotationsPerSec, double wheelDiameter, double gearing){
     double mps = (RotationsPerSec / gearing) * (wheelDiameter * Math.PI);
     return mps;
   }
 
   public static double rotationsToMeters(double rotations, double wheelDiameter, double gearing){
-    double meters = (rotations * wheelDiameter * Math.PI)/2048;
+    double meters = (rotations * wheelDiameter * Math.PI);
     return meters;
   }
 }

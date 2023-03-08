@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("fallen cone wrist setpoint", 0);
+    SmartDashboard.putNumber("Turn kP", .3/5);
 
     autoChooser.setDefaultOption("preload + climb","left climb jawn");
     autoChooser.addOption("yeet auto","Climb jawn copy");

@@ -95,7 +95,7 @@ public class RobotContainer {
     m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
     
     //m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
-    m_driverController.povDown().whileTrue(new AutoBalance(drive));
+    //m_driverController.povDown().whileTrue(new AutoBalance(drive));
     //m_driverController.povDown().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_MID));
     //m_driverController.povDown().onFalse(new Stow(superStructure));
 
@@ -115,6 +115,8 @@ public class RobotContainer {
 
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
+
+    m_driverController.povDown().onTrue(new InstantCommand(drive::editTurnKP));
 
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
