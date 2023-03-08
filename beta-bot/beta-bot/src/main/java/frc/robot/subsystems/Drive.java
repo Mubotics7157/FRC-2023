@@ -75,6 +75,8 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
 
+        SmartDashboard.putNumber("left front position", frontLeft.getPosition());
+
     }
 
     public void setModuleStates(SwerveModuleState[] states){

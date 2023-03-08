@@ -57,7 +57,7 @@ public class SwerveModule {
         driveConfig.Feedback.SensorToMechanismRatio = -1;
         
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        driveConfig.Slot0.kP = SwerveModuleConstants.driveKP/5;
+        driveConfig.Slot0.kP = SwerveModuleConstants.driveKP*5;
         //driveConfig.Slot0.kS = SwerveModuleConstants.driveKS;
         //driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
         //driveConfig.Slot0.kD = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKA, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);

@@ -150,19 +150,19 @@ public class RobotContainer {
   public Command getAutonomousCommand(String auto) {
     HashMap<String, Command> eventMap = new HashMap<>();
     //eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("unstowed score cone", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
+    //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    //eventMap.put("unstowed score cone", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
-    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    //eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
-    eventMap.put("snipe cube high", new SequentialCommandGroup(new ScoreCubeHighShoot(superStructure), new ShootCone()));
+    eventMap.put("snipe cube high", new ParallelCommandGroup(new ScoreCubeHighShoot(superStructure), new ShootCone(),new WaitCommand(.3)));
     eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));

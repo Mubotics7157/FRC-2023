@@ -125,7 +125,7 @@ public final class Constants {
     }
 
     public static class WristConstants{
-      public static final double WRIST_GEARING = 75;
+      public static final double WRIST_GEARING = 108;
       public static final int DEVICE_ID_WRIST = 32;
 
       public static final double SOFT_LIMIT_FORWARD = 72456;
@@ -191,8 +191,8 @@ public final class Constants {
       public static final int DEVICE_ID_INTAKE_SLAVE = 21;
       public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 5;
-      public static final int DEVICE_ID_SOLENOID_REVERSE = 4;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 0;
+      public static final int DEVICE_ID_SOLENOID_REVERSE = 1;
 
       public static final boolean INVERT_MASTER = false;
 
@@ -218,7 +218,7 @@ public final class Constants {
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
       public static final double CUBE_OUTTAKE_HIGH = -750;
-      public static final double CUBE_OUTTAKE_MID = -1600;
+      public static final double CUBE_OUTTAKE_MID = -2000;
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
       public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
