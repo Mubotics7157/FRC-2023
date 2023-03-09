@@ -212,7 +212,7 @@ public class SuperStructure extends SubsystemBase {
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL, IntakeState.INTAKE_CONE_SEAGUL);
-                Drive.getInstance().changeVerySlow();
+                Drive.getInstance().changeSlow();
                 break;
             case ZERO:
                 zeroAll();
@@ -246,6 +246,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case SEAGUL:
                 led.setYellowStrobe();
+                break;
             default:
                 led.setStrobe();
                 break;

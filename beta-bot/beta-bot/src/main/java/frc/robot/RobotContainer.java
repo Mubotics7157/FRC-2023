@@ -78,8 +78,8 @@ public class RobotContainer {
     m_driverController.b().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
     m_driverController.b().onFalse(new Stow(superStructure));
 
-    //m_driverController.y().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_HIGH));
-    //m_driverController.y().onFalse(new Stow(superStructure));
+    m_driverController.y().whileTrue(new ScoreCubeHighShoot(superStructure));
+    m_driverController.y().onFalse(new Stow(superStructure));
 
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
@@ -151,27 +151,28 @@ public class RobotContainer {
     //m_driverController.leftStick().onFalse(new InstantCommand(drive::changeMax));
 
     //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
-    //m_operatorController.button(3).onFalse(new Stow(superStructure)); 
+    //m_operatorController.button(3).onFalse(new Stow(superStructure))
+    ; 
 
     //m_operatorController.button(1).whileTrue(new HorizontalLock(m_driverController::getLeftX, m_driverController::getRightY, drive));
   }
 
   public Command getAutonomousCommand(String auto) {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    eventMap.put("unstowed score cone", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
+    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.2)));
+    //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
-    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.25)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
-    eventMap.put("snipe cube high", new SequentialCommandGroup(new ScoreCubeHighShoot(superStructure), new WaitCommand(0.1), new ShootCone()));
+    eventMap.put("snipe cube high", new ScoreCubeHighShoot(superStructure));
     eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));

@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Tracker;
 
@@ -48,7 +50,7 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("preload + 1", "PL + 1");
     autoChooser.addOption("preload + 2","New PL +2");
     SmartDashboard.putData(autoChooser);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2 Copy Copy");
 
   }
 
@@ -131,4 +133,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  @Override
+  public void autonomousExit() {
+    Drive.getInstance().lockModules();
+  }
 }
