@@ -165,13 +165,13 @@ public class RobotContainer {
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
-    //eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
-    eventMap.put("snipe cube high", new ScoreCubeHighShoot(superStructure));
+    eventMap.put("snipe cube high", new SequentialCommandGroup(new ScoreCubeHighShoot(superStructure), new WaitCommand(0.1), new ShootCone()));
     eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));

@@ -130,7 +130,8 @@ public class Intake extends SubsystemBase {
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
                 break;
             case OUTTAKE_CUBE_HYBRID:
-                setSpeed(-700);
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HYBRID);
+                break;
             case OUTTAKE_CUBE_MID_SHOOT:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_MID_SHOOT);
                 //toggleIntake(false);

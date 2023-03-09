@@ -220,6 +220,7 @@ public final class Constants {
 
       public static final double CUBE_OUTTAKE_HIGH = -750;
       public static final double CUBE_OUTTAKE_MID = -750;
+      public static final double CUBE_OUTTAKE_HYBRID = -400;
 
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1900;
       public static final double CUBE_OUTTAKE_MID_SHOOT = -1500;
@@ -228,6 +229,7 @@ public final class Constants {
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
 
       public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
+      
 
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
       public static final double CUBE_OUTTAKE_SETPOINT=-0.9 * 5700;
@@ -248,7 +250,7 @@ public final class Constants {
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(12, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(10, 0, 0);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(5, 0, 0);
   }
 
   public static final class SuperStructureConstants{
@@ -275,7 +277,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_HYBRID = Rotation2d.fromDegrees(-50);
 
     public static final double ELEVATOR_CONE_SNIPER = 0;
-    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-50);
+    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-68);
     //==============================================================================
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-127); //-123
