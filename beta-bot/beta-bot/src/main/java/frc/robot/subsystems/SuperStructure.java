@@ -27,7 +27,6 @@ public class SuperStructure extends SubsystemBase {
     public enum SuperStructureState{
         CONE_HIGH,
         CONE_MID,
-        CONE_HYBRID,
         CUBE_HIGH,
         CUBE_MID_SHOOT,
         CUBE_HIGH_SHOOT,
@@ -107,8 +106,12 @@ public class SuperStructure extends SubsystemBase {
 
         else if(scoringState == SuperStructureState.CUBE_HIGH_SHOOT)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH_SHOOT);
+
         else if(scoringState == SuperStructureState.CUBE_MID_SHOOT)
             intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID_SHOOT);
+
+        else if(scoringState == SuperStructureState.CUBE_HYBRID)
+            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HYBRID);
         else
             intake.setIntakeState(IntakeState.CUSTOM);
     }
@@ -145,7 +148,7 @@ public class SuperStructure extends SubsystemBase {
     public void setState(SuperStructureState state){
     if(scoringState==SuperStructureState.CUBE_INTAKE)
         idleIntake = false;
-    else if(state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || state!=SuperStructureState.FALLEN_CONE && state!=SuperStructureState.CONE_INTAKE && state!=SuperStructureState.CUBE_INTAKE && !atSetpoint() && state!=SuperStructureState.SEAGUL && state!=SuperStructureState.CONE_SNIPER && state!=SuperStructureState.CUBE_HIGH)
+    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
         idleIntake = true;
     else
         idleIntake = false;
@@ -162,9 +165,6 @@ public class SuperStructure extends SubsystemBase {
             case CONE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
                 Drive.getInstance().changeSlow();
-                break;
-            case CONE_HYBRID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HYBRID, SuperStructureConstants.WRIST_CONE_HYBRID);
                 break;
             case CUBE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
@@ -184,18 +184,22 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUBE_HYBRID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID, SuperStructureConstants.WRIST_CUBE_HYRBID);
+                Drive.getInstance().changeSlow();
                 break;
             case STOWED:
                 Drive.getInstance().changeMax();
                 stowAll();
                 break;
             case CONE_INTAKE:
+                Drive.getInstance().changeMax();
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_UPRIGHT, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
                 break;
             case CUBE_INTAKE:
+                Drive.getInstance().changeMax();    
                 intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CUBE, SuperStructureConstants.WRIST_INTAKE_CUBE);
                 break;
             case FALLEN_CONE:
+                Drive.getInstance().changeMax();
                 intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
             case OPEN_DOOR:
@@ -214,7 +218,9 @@ public class SuperStructure extends SubsystemBase {
                 zeroAll();
                 break;
             case CONE_SNIPER:
+                Drive.getInstance().changeMax();
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER, SuperStructureConstants.WRIST_CONE_SNIPER);
+                break;
             default:
                 break;
         }

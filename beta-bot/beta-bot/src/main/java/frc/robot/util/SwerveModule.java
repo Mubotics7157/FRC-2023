@@ -38,7 +38,7 @@ public class SwerveModule {
         driveMotor.setInverted(isInverted);
         driveMotor.configVoltageCompSaturation(12);
         driveMotor.enableVoltageCompensation(true);
-        driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+        //driveMotor.configStatorCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
         driveMotor.setSensorPhase(false);
         driveMotor.config_kP(0, SwerveModuleConstants.driveKP);
         
@@ -47,7 +47,7 @@ public class SwerveModule {
         turnMotor.setNeutralMode(NeutralMode.Brake);
         turnMotor.setInverted(true);
         turnMotor.config_kP(0, SwerveModuleConstants.TURNING_KP);
-        turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+        //turnMotor.configStatorCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
 
         absEncoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
     

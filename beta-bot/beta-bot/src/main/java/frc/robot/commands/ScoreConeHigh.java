@@ -20,7 +20,7 @@ public class ScoreConeHigh extends CommandBase{
 
     @Override
     public void initialize() {
-        Drive.getInstance().changeVerySlow();
+        //Drive.getInstance().changeVerySlow();
         superStructure.setState(SuperStructureState.CONE_HIGH);
     }
 
@@ -31,7 +31,7 @@ public class ScoreConeHigh extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        Drive.getInstance().changeMax();
+        //Drive.getInstance().changeMax();
     }
 
 }

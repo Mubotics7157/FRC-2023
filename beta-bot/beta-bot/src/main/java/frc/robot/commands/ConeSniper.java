@@ -31,7 +31,7 @@ public class ConeSniper extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        Drive.getInstance().changeMax();
+        //Drive.getInstance().changeMax();
     }
 
 }

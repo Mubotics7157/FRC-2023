@@ -190,11 +190,4 @@ public class Drive extends SubsystemBase {
         rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     }
 
-    public void editTurnKP(){
-        frontLeft.changeTurnKP();
-        frontRight.changeTurnKP();
-        rearLeft.changeTurnKP();
-        rearRight.changeTurnKP();
-    }
-
 }

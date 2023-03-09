@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("preload + 1", "PL + 1");
     autoChooser.addOption("preload + 2","New PL +2");
     SmartDashboard.putData(autoChooser);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2 Copy Copy");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2");
 
   }
 

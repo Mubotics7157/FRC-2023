@@ -218,7 +218,7 @@ public final class Constants {
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
 
-      public static final double CUBE_OUTTAKE_HIGH = -160;
+      public static final double CUBE_OUTTAKE_HIGH = -750;
       public static final double CUBE_OUTTAKE_MID = -750;
 
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1900;
@@ -248,7 +248,7 @@ public final class Constants {
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(12, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(15, 0, 3);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(10, 0, 0);
   }
 
   public static final class SuperStructureConstants{

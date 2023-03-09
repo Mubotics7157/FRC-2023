@@ -19,14 +19,14 @@ public class ScoreCone extends CommandBase{
 
     @Override
     public void initialize() {
-        Drive.getInstance().changeVerySlow();
+        //Drive.getInstance().changeVerySlow();
 
         if (superStructure.getScoringPosition() == ScoringPosition.HIGH)
             superStructure.setState(SuperStructureState.CONE_HIGH);
         else if(superStructure.getScoringPosition() == ScoringPosition.MID)
             superStructure.setState(SuperStructureState.CONE_MID);
         else
-            superStructure.setState(SuperStructureState.CONE_HYBRID);
+            superStructure.setState(SuperStructureState.CONE_SNIPER);
     }
 
     @Override
@@ -36,6 +36,6 @@ public class ScoreCone extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        Drive.getInstance().changeMax();
+        //Drive.getInstance().changeMax();
     }
 }

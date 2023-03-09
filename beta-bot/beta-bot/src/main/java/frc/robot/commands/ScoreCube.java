@@ -19,7 +19,7 @@ public class ScoreCube extends CommandBase{
 
     @Override
     public void initialize() {
-        Drive.getInstance().changeVerySlow();
+        //Drive.getInstance().changeVerySlow();
 
         if (superStructure.getScoringPosition() == ScoringPosition.HIGH)
             superStructure.setState(SuperStructureState.CUBE_HIGH);
@@ -36,6 +36,6 @@ public class ScoreCube extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        Drive.getInstance().changeMax();
+        //Drive.getInstance().changeMax();
     }
 }
