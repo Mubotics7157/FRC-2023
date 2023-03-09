@@ -22,13 +22,13 @@ public final class Constants {
   }
 
   public static final class SwerveModuleConstants{
-    public static final double driveKS = 0.22815;//0.12256;
-    public static final double driveKV = 2.5181;//2.3396;
-    public static final double driveKA = 0.58266;//0.19701;
-    public static final double driveKP = 2.9126;//0.0018763;
+    public static final double driveKS = 0.12256;
+    public static final double driveKV = 2.3396;
+    public static final double driveKA = 0.19701;
+    public static final double driveKP = 0.0018763;
 
     public static final SimpleMotorFeedforward DRIVE_FEEDFORWARD = new SimpleMotorFeedforward(driveKS,driveKV,driveKA);
-    public static final double TURNING_KP = .6;
+    public static final double TURNING_KP = .3;
 
     public static final double CLOSED_LOOP_RAMP_RATE  = .2;
     public static final double OPEN_LOOP_RAMP_RATE  = .25;
