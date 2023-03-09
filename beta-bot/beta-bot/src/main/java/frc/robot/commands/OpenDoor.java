@@ -20,7 +20,7 @@ public class OpenDoor extends CommandBase {
 
     @Override
     public void initialize() {
-        Intake.getInstance().closeJaws();
+        //Intake.getInstance().closeJaws();
         superStructure.setState(SuperStructureState.OPEN_DOOR);
         
     }

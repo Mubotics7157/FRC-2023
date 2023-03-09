@@ -22,13 +22,17 @@ public class SuperStructure extends SubsystemBase {
     private boolean idleIntake = true;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
+    private ScoringPosition scoringPosition = ScoringPosition.HIGH;
 
     public enum SuperStructureState{
         CONE_HIGH,
         CONE_MID,
+        CONE_HYBRID,
         CUBE_HIGH,
+        CUBE_MID_SHOOT,
         CUBE_HIGH_SHOOT,
         CUBE_MID,
+        CUBE_HYBRID,
         CUBE_INTAKE,
         CONE_INTAKE,
         FALLEN_CONE,
@@ -40,11 +44,19 @@ public class SuperStructure extends SubsystemBase {
         ZERO
     }
 
+    public enum ScoringPosition{
+        HIGH,
+        MID,
+        HYBRID
+    }
+
+
     @Override
     public void periodic() {
         led = LED.getInstance();
         SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
+        SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
         if(idleIntake)
             intake.setIntakeState(IntakeState.IDLE);
@@ -92,9 +104,12 @@ public class SuperStructure extends SubsystemBase {
 
         else if(scoringState == SuperStructureState.CONE_SNIPER)
             intake.setIntakeState(IntakeState.CONE_SNIPER);
+
         else if(scoringState == SuperStructureState.CUBE_HIGH_SHOOT)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
-        else 
+            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH_SHOOT);
+        else if(scoringState == SuperStructureState.CUBE_MID_SHOOT)
+            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID_SHOOT);
+        else
             intake.setIntakeState(IntakeState.CUSTOM);
     }
 
@@ -148,6 +163,9 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
                 Drive.getInstance().changeSlow();
                 break;
+            case CONE_HYBRID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HYBRID, SuperStructureConstants.WRIST_CONE_HYBRID);
+                break;
             case CUBE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
                 Drive.getInstance().changeSlow();
@@ -155,9 +173,17 @@ public class SuperStructure extends SubsystemBase {
             case CUBE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID, SuperStructureConstants.WRIST_CUBE_MID);
                 Drive.getInstance().changeSlow();
+                break;
             case CUBE_HIGH_SHOOT:
-                goToPosition(0, Rotation2d.fromDegrees(-40));
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT, SuperStructureConstants.WRIST_CUBE_SHOOT);
                 Drive.getInstance().changeSlow();
+                break;
+            case CUBE_MID_SHOOT:
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT, SuperStructureConstants.WRIST_CUBE_SHOOT);
+                Drive.getInstance().changeSlow();
+                break;
+            case CUBE_HYBRID:
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID, SuperStructureConstants.WRIST_CUBE_HYRBID);
                 break;
             case STOWED:
                 Drive.getInstance().changeMax();
@@ -188,7 +214,7 @@ public class SuperStructure extends SubsystemBase {
                 zeroAll();
                 break;
             case CONE_SNIPER:
-                goToPosition(0, Rotation2d.fromDegrees(-50));
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER, SuperStructureConstants.WRIST_CONE_SNIPER);
             default:
                 break;
         }
@@ -220,12 +246,12 @@ public class SuperStructure extends SubsystemBase {
         }
     }
 
-    public void setScorePosition(boolean high){
-        scoreHigh = high;
+    public void setScorePosition(ScoringPosition position){
+        scoringPosition = position;
     }
 
-    public boolean wantScoreHigh(){
-        return scoreHigh;
+    public ScoringPosition getScoringPosition(){
+        return scoringPosition;
     }
 
     public void setIdleIntake(boolean idle){

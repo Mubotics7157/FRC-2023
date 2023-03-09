@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "stow"
+          "unstowed cone score"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",

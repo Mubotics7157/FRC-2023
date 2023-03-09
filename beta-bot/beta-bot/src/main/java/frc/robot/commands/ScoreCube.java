@@ -6,11 +6,11 @@ import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
-public class ScoreCone extends CommandBase{
+public class ScoreCube extends CommandBase{
       
     private SuperStructure superStructure;
 
-    public ScoreCone(SuperStructure instance){
+    public ScoreCube(SuperStructure instance){
 
         superStructure = instance;
 
@@ -22,11 +22,11 @@ public class ScoreCone extends CommandBase{
         Drive.getInstance().changeVerySlow();
 
         if (superStructure.getScoringPosition() == ScoringPosition.HIGH)
-            superStructure.setState(SuperStructureState.CONE_HIGH);
+            superStructure.setState(SuperStructureState.CUBE_HIGH);
         else if(superStructure.getScoringPosition() == ScoringPosition.MID)
-            superStructure.setState(SuperStructureState.CONE_MID);
+            superStructure.setState(SuperStructureState.CUBE_MID);
         else
-            superStructure.setState(SuperStructureState.CONE_HYBRID);
+            superStructure.setState(SuperStructureState.CUBE_HYBRID);
     }
 
     @Override

@@ -49,21 +49,21 @@ public class SwerveModule {
         //driveMotor.getConfigurator().apply(new com.ctre.phoenixpro.configs.TalonFXConfiguration());
 
         currentLimitsConfigs = new CurrentLimitsConfigs();
-        currentLimitsConfigs.SupplyCurrentLimit = 15;
-        currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+        currentLimitsConfigs.StatorCurrentLimit = 15;
+        currentLimitsConfigs.StatorCurrentLimitEnable = true;
     
         var driveConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
         driveConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
         driveConfig.Feedback.SensorToMechanismRatio = -1;
         
         driveConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        driveConfig.Slot0.kP = SwerveModuleConstants.driveKP*5;
+        driveConfig.Slot0.kP = SwerveModuleConstants.driveKP;
         //driveConfig.Slot0.kS = SwerveModuleConstants.driveKS;
         //driveConfig.Slot0.kV = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKV, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
         //driveConfig.Slot0.kD = CommonConversions.metersPerSecToRotationsPerSec(SwerveModuleConstants.driveKA, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO);
         driveMotor.getConfigurator().apply(driveConfig);
         driveMotor.setInverted(isInverted);
-        driveMotor.getConfigurator().apply(currentLimitsConfigs);
+        //driveMotor.getConfigurator().apply(currentLimitsConfigs);
         //driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
         
         var turnConfig = new com.ctre.phoenixpro.configs.TalonFXConfiguration();
@@ -102,7 +102,8 @@ public class SwerveModule {
     private void setVelocity(double driveSetpoint, double dt){
         double driveFFVolts = SwerveModuleConstants.DRIVE_FEEDFORWARD.calculate(driveSetpoint);
         //assuming the gains are remeasured for the proper units it will be used! :P
-
+        SmartDashboard.putNumber("Drive setpoint", CommonConversions.metersPerSecToRotationsPerSec(
+            driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO));
         if(driveSetpoint==0){
             driveMotor.set(0);
         } 
@@ -110,7 +111,7 @@ public class SwerveModule {
             driveMotor.setControl(new VelocityVoltage(
                 CommonConversions.metersPerSecToRotationsPerSec(
                     driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS, SwerveModuleConstants.DRIVE_GEAR_RATIO),
-                    true, driveFFVolts, 0, false));
+                    false, driveFFVolts, 0, false));
             //velocity, enable foc, FF, slot index, override neutral mode
             //driveMotor.setControl(CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),true,DemandType.ArbitraryFeedForward,driveFFVolts/12);
             //driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/12);

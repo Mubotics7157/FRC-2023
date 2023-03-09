@@ -17,6 +17,7 @@ public class DriveTele extends CommandBase {
                 val = 0;
             }
             //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+            val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getAng();
         }
         else{
@@ -24,6 +25,7 @@ public class DriveTele extends CommandBase {
                 val = 0;
             }
             //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+            val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getTan();
         }
     }

@@ -6,14 +6,16 @@ import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.JogForks;
 import frc.robot.commands.OpenDoor;
+import frc.robot.commands.ScoreCone;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
+import frc.robot.commands.ScoreCube;
 import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.ScoreCubeHighShoot;
 import frc.robot.commands.Seagul;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
-import frc.robot.commands.SetScoreHigh;
+import frc.robot.commands.SetScorePosition;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.ShootPosition;
@@ -33,6 +35,7 @@ import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
 import frc.robot.subsystems.Intake.IntakeState;
+import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
 import java.util.HashMap;
@@ -85,10 +88,10 @@ public class RobotContainer {
     //m_driverController.x().onFalse(new Stow(superStructure));
     m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
-    m_driverController.leftBumper().whileTrue(new ScoreConeHigh(superStructure));
+    m_driverController.leftBumper().whileTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.rightBumper().onTrue(new ScoreConeMid(superStructure));
+    m_driverController.rightBumper().onTrue(new ScoreCube(superStructure));
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().whileTrue(new ShootCone());
@@ -127,19 +130,23 @@ public class RobotContainer {
     //ground intake upright CONES
     
     //m_operatorController.button(7).onTrue(new Zero());
+    m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
+    m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
+    m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
+
+    /* 
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
     m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
     m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
     m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
     m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
-
+    */
     //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
-    m_operatorController.povDown().whileTrue(new SetScoreHigh(true));
-    m_operatorController.povDown().onFalse(new SetScoreHigh(false));
+    
 
-    m_operatorController.button(2).whileTrue(new JogForks(forks));
+    //m_operatorController.button(2).whileTrue(new JogForks(forks));
 
     //m_driverController.leftStick().whileTrue(new InstantCommand(drive::changeVerySlow));
     //m_driverController.leftStick().onFalse(new InstantCommand(drive::changeMax));
@@ -152,9 +159,9 @@ public class RobotContainer {
 
   public Command getAutonomousCommand(String auto) {
     HashMap<String, Command> eventMap = new HashMap<>();
-    //eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
-    //eventMap.put("unstowed score cone", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
+    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.5),new ScoreConeHigh(superStructure), new WaitCommand(1), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("unstowed score cone", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
