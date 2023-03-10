@@ -46,11 +46,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Turn kP", .3/5);
 
     autoChooser.setDefaultOption("preload + climb","left climb jawn");
-    autoChooser.addOption("yeet auto","Climb jawn copy");
-    autoChooser.addOption("preload + 1", "PL + 1");
-    autoChooser.addOption("preload + 2","New PL +2");
+    autoChooser.addOption("preload + 1", "New PL +2");
+    autoChooser.addOption("preload + 2 RED","New PL + 2 Red");
+    autoChooser.addOption("preload + 2 BLUE","New PL + 2 Blue");
     SmartDashboard.putData(autoChooser);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL + 2 Blue");
 
   }
 
@@ -79,7 +78,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
