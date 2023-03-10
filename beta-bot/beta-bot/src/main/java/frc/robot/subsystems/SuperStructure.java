@@ -154,6 +154,11 @@ public class SuperStructure extends SubsystemBase {
         idleIntake = false;
     
         scoringState = state;
+    
+    if(scoringState==SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CUBE_INTAKE)
+        wrist.configWristSlowMode();
+    else
+        wrist.configWristFastMode();
 
         setLedMode(scoringState);
 
@@ -233,10 +238,10 @@ public class SuperStructure extends SubsystemBase {
                 led.setStrobe();
                 break;
             case CUBE_INTAKE:
-                led.setPurpleStrobe();
+                led.setPurple();
                 break;
             case CONE_INTAKE:
-                led.setYellowStrobe();
+                led.setYellow();
                 break;
             case FALLEN_CONE:
                 led.setYellowStrobe();

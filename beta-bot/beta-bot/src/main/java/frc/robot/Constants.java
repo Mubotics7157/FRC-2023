@@ -219,11 +219,11 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
 
       public static final double CUBE_OUTTAKE_HIGH = -777;
-      public static final double CUBE_OUTTAKE_MID = -750;
-      public static final double CUBE_OUTTAKE_HYBRID = -650;
+      public static final double CUBE_OUTTAKE_MID = -900;
+      public static final double CUBE_OUTTAKE_HYBRID = -800;
 
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1775;
-      public static final double CUBE_OUTTAKE_MID_SHOOT = -1500;
+      public static final double CUBE_OUTTAKE_MID_SHOOT = -1750;
 
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
@@ -280,7 +280,8 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-68);
     //==============================================================================
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
-    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-127); //-123
+  
+    public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-124); //-123
 
     public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-127);
