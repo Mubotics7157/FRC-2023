@@ -4,27 +4,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
-public class Intake extends CommandBase {
+public class ZeroAll extends CommandBase{
+    
     private SuperStructure superStructure;
-    private boolean intakeCone;
 
-    public Intake(SuperStructure instance,boolean intakeCone){
+    public ZeroAll(SuperStructure instance){
         superStructure = instance;
-        this.intakeCone = intakeCone;
-
         addRequirements(superStructure);
     }
 
     @Override
     public void initialize() {
-        if(intakeCone)
-            superStructure.setState(SuperStructureState.FALLEN_CONE);
-        else
-            superStructure.setState(SuperStructureState.CUBE_INTAKE);
+        superStructure.setState(SuperStructureState.ZERO);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return superStructure.atSetpoint();
     }
 
     @Override
     public void end(boolean interrupted) {
-        superStructure.setState(SuperStructureState.STOWED);
     }
 }

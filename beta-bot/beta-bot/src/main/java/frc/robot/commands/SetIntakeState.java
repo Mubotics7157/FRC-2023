@@ -5,21 +5,17 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
 
-public class Outtake extends CommandBase {
+public class SetIntakeState extends CommandBase {
     private IntakeState state;
     
-    public Outtake(IntakeState state){
+    public SetIntakeState(IntakeState state){
         this.state = state;
     }
 
+    
     @Override
     public void execute() {
-        //Intake.getInstance().setIntakeState(state);
-        Intake.getInstance().setIntakeState(IntakeState.OUTTAKE);
+        Intake.getInstance().setIntakeState(state);
     }
 
-    @Override
-    public void end(boolean interrupted) {
-        Intake.getInstance().setIntakeState(IntakeState.OFF);
-    }
 }

@@ -4,13 +4,19 @@
 
 package frc.robot;
 
+import javax.swing.plaf.basic.BasicSliderUI.TrackListener;
+
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Tracker;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -22,8 +28,10 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
 
   Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_PCM , IntakeConstants.PNEUMATICS_MODULE_TYPE);
+  //DigitalInput test1 = new DigitalInput(0);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,6 +42,15 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    SmartDashboard.putNumber("fallen cone wrist setpoint", 0);
+    SmartDashboard.putNumber("Turn kP", .3/5);
+
+    autoChooser.setDefaultOption("preload + climb","left climb jawn");
+    autoChooser.addOption("preload + 1", "New PL +2");
+    autoChooser.addOption("preload + 2 RED","New PL + 2 Red");
+    autoChooser.addOption("preload + 2 BLUE","New PL + 2 Blue");
+    SmartDashboard.putData(autoChooser);
+
   }
 
   /**
@@ -45,30 +62,35 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    //SmartDashboard.putBoolean("test 1", test1.get());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    LED.getInstance().setOrange();
+    LED.getInstance().setOrangeFade();
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+      //Tracker.getInstance().resetViaVision();
     }
   }
 
@@ -78,6 +100,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+      compressor.enableDigital();
     
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -111,4 +134,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  @Override
+  public void autonomousExit() {
+    Drive.getInstance().lockModules();
+  }
 }

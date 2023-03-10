@@ -1,43 +1,51 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.ControlType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.SuperStructureConstants;
 
 public class Intake extends SubsystemBase {
 
     public enum IntakeState{
         OFF,
         INTAKE_CUBE,
-        OUTTAKE_CUBE,
+        OUTTAKE_CUBE_MID,
+        OUTTAKE_CUBE_HIGH,
+        OUTTAKE_CUBE_HYBRID,
+        OUTTAKE_CUBE_HIGH_SHOOT,
+        OUTTAKE_CUBE_MID_SHOOT,
         INTAKE_CONE,
         OUTTAKE_CONE,
+        INTAKE_CONE_SEAGUL,
         INTAKE,
         OUTTAKE,
-        IDLE
+        IDLE,
+        CONE_SNIPER,
+        CUSTOM
     }
 
     private CANSparkMax intakeMaster; 
     private CANSparkMax intakeSlave;
 
     private DoubleSolenoid solenoid; 
+
     private SparkMaxPIDController topController;
+    private SparkMaxPIDController botController;
+
     private RelativeEncoder topEncoder;
+    private RelativeEncoder botEncoder;
     private IntakeState intakeState;
 
     //private Ultrasonic tof;
@@ -58,20 +66,19 @@ public class Intake extends SubsystemBase {
         topController = intakeMaster.getPIDController();
         topEncoder = intakeMaster.getEncoder();
 
+        botController = intakeSlave.getPIDController();
+        botEncoder = intakeSlave.getEncoder();
+
         intakeMaster.restoreFactoryDefaults();
         intakeSlave.restoreFactoryDefaults();
 
         topController.setP(IntakeConstants.TOP_ROLLER_KP);
         topController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
-        //intakeAngle.setSoftLimit(SoftLimitDirection.kForward, 5000);
-        //intakeAngle.setSoftLimit(SoftLimitDirection.kReverse, 0);
+        botController.setP(IntakeConstants.TOP_ROLLER_KP);
+        botController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
-
-        //intakeMaster.setSmartCurrentLimit(20);
-        //intakeSlave.setSmartCurrentLimit(20);
-
-        intakeMaster.setInverted(true);
+        intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
         intakeSlave.setInverted(!intakeMaster.getInverted());
         intakeSlave.follow(intakeMaster);
         intakeMaster.setIdleMode(IdleMode.kBrake);
@@ -80,10 +87,12 @@ public class Intake extends SubsystemBase {
         //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
+        intakeMaster.setSmartCurrentLimit(100);
 
-        SmartDashboard.putNumber("Intake speed", 0.5);
-        SmartDashboard.putNumber("Outtake Setpoint", 1000);
-        
+        intakeMaster.enableVoltageCompensation(10);
+        intakeSlave.enableVoltageCompensation(10);
+
+        SmartDashboard.putNumber("custom intake", -1000);  
     }
 
     public static Intake getInstance(){
@@ -110,44 +119,71 @@ public class Intake extends SubsystemBase {
                 setMotors(0);
                 break;
             case INTAKE_CUBE:
-                setMotors(IntakeConstants.CUBE_INTAKE_SPEED);
-                //toggleIntake(false);
-                //value to be determined :P
+                setSpeed(IntakeConstants.CUBE_INTAKE_SPEED);
+                toggleIntake(false);
                 break;
-            case OUTTAKE_CUBE:
-                setMotors(IntakeConstants.CUBE_OUTTAKE_SPEED);
+            case OUTTAKE_CUBE_MID:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_MID);
                 //toggleIntake(false);
-                //value to be detemermined :P
+                break;
+            case OUTTAKE_CUBE_HIGH:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
+                break;
+            case OUTTAKE_CUBE_HYBRID:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HYBRID);
+                break;
+            case OUTTAKE_CUBE_MID_SHOOT:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_MID_SHOOT);
+                //toggleIntake(false);
+                break;
+            case OUTTAKE_CUBE_HIGH_SHOOT:
+                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
                 break;
             case INTAKE_CONE:
-                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 //setSpeed(2000);
-                //toggleIntake(true);
+                toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                setMotors(IntakeConstants.CONE_OUTTAKE_SPEED);
+                if(DriverStation.isTeleop())
+                    setSpeed(.35*-3000);
+                else
+                    setSpeed(.4*-3000);
                 //toggleIntake(true);
                 break;
+            case INTAKE_CONE_SEAGUL:
+                setSpeed(.375 * 5700);
+                break;
             case INTAKE:
-                setMotors(IntakeConstants.CONE_INTAKE_SPEED);
+                setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                //setMotors(-IntakeConstants.CONE_INTAKE_SPEED);
+                if(DriverStation.isTeleop())
+                    setSpeed(.35*-IntakeConstants.CONE_INTAKE_SPEED);
+                else
+                setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
+
                 //setSpeed(-3000);
-                setSpeed(distanceMap.get(VisionManager.getInstance().getDistanceToTarget()));
                 break;
             case IDLE:
-                setMotors(IntakeConstants.IDLE_SPEED);
+                setSpeed(IntakeConstants.IDLE_SPEED);
+                break;
+            case CONE_SNIPER:
+                setSpeed(IntakeConstants.CONE_SNIPER_SPEED);
+                break;
+            case CUSTOM:
+                setSpeed(SmartDashboard.getNumber("custom intake", -1000));
                 break;
         }
         
     }
 
+
     public void setIntakeState(IntakeState state){
-        if(state==IntakeState.IDLE)
-            currentLimit(true);
-        else
+        if(state != IntakeState.IDLE)//state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID || state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
             currentLimit(false);
+        else
+            currentLimit(true);
             
         intakeState = state;
     }
@@ -158,6 +194,7 @@ public class Intake extends SubsystemBase {
 
     private void setSpeed(double speedRPM){
         topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        //topController.setReference(0, ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){
@@ -170,31 +207,31 @@ public class Intake extends SubsystemBase {
     }
 
     public void closeJaws(){
-        solenoid.set(Value.kReverse);
+        solenoid.set(Value.kForward);
     }
 
     public void openJaws(){
-        solenoid.set(Value.kForward);
+        solenoid.set(Value.kReverse);
     }
 
     public boolean isClosed(){
         if(solenoid.get() == Value.kForward){
-            return false;
+            return true;
         }
         else if(solenoid.get() == Value.kReverse){
-            return true;
+            return false;
         }
         else
-            return true;
+            return false;
     }
 
     public void currentLimit(boolean enable){
-        if(enable){
-            intakeMaster.setSmartCurrentLimit(10, 20);
-        }
-        else{
-            intakeMaster.setSmartCurrentLimit(50);
-        }
+        if(enable)
+            intakeMaster.setSmartCurrentLimit(30, 40);
+        
+        else
+            intakeMaster.setSmartCurrentLimit(70);
+         
     }
 
     public double getObjDistance(){

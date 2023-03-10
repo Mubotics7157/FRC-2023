@@ -1,10 +1,8 @@
 package frc.robot.subsystems;
 
-
-import java.util.TreeMap;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,7 +11,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.AltConstants.IntakeConstants;
+import frc.robot.AltConstants.SuperStructureConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.subsystems.SuperStructure.SuperStructureState;
 import frc.robot.util.CommonConversions;
 
 public class Wrist extends SubsystemBase {
@@ -42,15 +44,15 @@ public class Wrist extends SubsystemBase {
   
         holdAtWantedState = false;
 
-        magSensor = new DigitalInput(1);
+        magSensor = new DigitalInput(WristConstants.DEVICE_ID_MAG_SENSOR);
 
         configWristDefault();
 
         wristState = WristState.STOW;
         
-        SmartDashboard.putNumber("Wrist setpoint", -117);
+        //SmartDashboard.putNumber("Wrist setpoint", -117);
         SmartDashboard.putNumber("mid score", -135);
-       
+        SmartDashboard.putNumber("custom wrist", -104);
     }
 
     public static Wrist getInstance(){
@@ -60,7 +62,7 @@ public class Wrist extends SubsystemBase {
     @Override
     public void periodic() {
         if(holdAtWantedState)
-            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
+            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
 
         logData();
 
@@ -76,6 +78,7 @@ public class Wrist extends SubsystemBase {
                 setState();
                 break;
             case STOW:
+                if(Elevator.getInstance().getElevatorHeight()>-24)
                 setState();
                 break;
             case ZERO:
@@ -93,22 +96,38 @@ public class Wrist extends SubsystemBase {
         setpoint = requestedAngle;
     }
 
-    public boolean zeroRoutine(){
-        if(!magSensor.get()){ //assuming !get() means not triggered
-            wristMotor.set(ControlMode.PercentOutput, 0.1);
-            return false;
+    public void zeroRoutine(){
+        if(magSensor.get() != WristConstants.MAG_DETECTED){
+            wristMotor.set(ControlMode.PercentOutput, WristConstants.ZEROING_SPEED);
         }
         
         else{
             wristMotor.set(ControlMode.PercentOutput, 0);
-            zeroOnboardEncoder();
-            return true;
+            zeroOnboardEncoder(); 
+            setWristState(WristState.STOW);
+            
         }
-        //this returns if the wrist has been zeroed
+    }
+
+    public boolean isZeroed(){
+        return magSensor.get() == WristConstants.MAG_DETECTED;
     }
 
     private void setState(){
-        wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), 96));
+        
+        if(SuperStructure.getInstance().getState() == SuperStructureState.CONE_HIGH || SuperStructure.getInstance().getState() == SuperStructureState.CUBE_HIGH){
+            if(Elevator.getInstance().getElevatorHeight() > -2)
+                wristMotor.set(0);
+            else
+                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
+        }
+        else{
+
+            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
+        }
+
+        if(magSensor.get()==WristConstants.MAG_DETECTED)
+            wristMotor.setSelectedSensorPosition(0);
     }
 
     public void setGains(){
@@ -117,7 +136,12 @@ public class Wrist extends SubsystemBase {
 
 
     public boolean atSetpoint(){
-        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), 96)) - Units.radiansToDegrees(setpoint.getRadians())) < 3;
+        return getError() <3;
+    }
+
+    private double getError(){
+        return Math.abs(Units.radiansToDegrees(CommonConversions.stepsToRadians(wristMotor.getSelectedSensorPosition(), Constants.WristConstants.WRIST_GEARING)) - Units.radiansToDegrees(setpoint.getRadians()));
+
     }
 
     public void zeroOnboardEncoder(){
@@ -129,13 +153,18 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.configFactoryDefault();
 
+
+        wristMotor.setInverted(true);
         wristMotor.setNeutralMode(NeutralMode.Brake);
         wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
+        wristMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 1));
+        wristMotor.configVoltageCompSaturation(10);
+        wristMotor.enableVoltageCompensation(true);
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
-        config.motionCruiseVelocity = 60000;
-        config.motionAcceleration = 60000;
+        config.motionCruiseVelocity = 80000;
+        config.motionAcceleration = 85000;
         wristMotor.configAllSettings(config);
 
         zeroOnboardEncoder();
@@ -147,15 +176,41 @@ public class Wrist extends SubsystemBase {
 
     }
 
+    public void configWristSlowMode(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
+        config.motionCruiseVelocity = 80000/2;
+        config.motionAcceleration = 85000/2;
+        wristMotor.configAllSettings(config);
+
+    }
+
+    public void configWristFastMode(){
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
+        config.motionCruiseVelocity = 80000;
+        config.motionAcceleration = 85000;
+        wristMotor.configAllSettings(config);
+    }
+
     public void setWristState(WristState state){
         wristState = state;
 
-        if(state==WristState.STOW)
-            setpoint = Rotation2d.fromDegrees(-7);
+        if(state==WristState.STOW){
+            if(Intake.getInstance().isClosed())
+                setpoint = frc.robot.Constants.SuperStructureConstants.WRIST_STOW;
+            else
+                setpoint = Rotation2d.fromDegrees(-25);
+
+        }
     }
 
     private void logData(){
         SmartDashboard.putString("Wrist State", wristState.toString());
+        SmartDashboard.putBoolean("Mag Sensor", magSensor.get());
+        SmartDashboard.putNumber("Wrist Setpoint", setpoint.getDegrees());
+        SmartDashboard.putNumber("Wrist Error Deg", getError());
+        SmartDashboard.putNumber("Wrist Velocity", wristMotor.getSelectedSensorVelocity());
     }
 
 }

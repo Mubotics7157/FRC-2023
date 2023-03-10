@@ -13,17 +13,19 @@ public class DriveTele extends CommandBase {
 
     private double modifyInputs(double val, boolean isRot){
         if(isRot){
-            if(Math.abs(val)<.15){
+            if(Math.abs(val)<drive.getAngDeadband()){
                 val = 0;
             }
             //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
+            //val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getAng();
         }
         else{
-            if(Math.abs(val)<.1){
+            if(Math.abs(val)<drive.getTanDeadband()){
                 val = 0;
             }
             //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
+            //val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getTan();
         }
     }
@@ -48,7 +50,7 @@ public class DriveTele extends CommandBase {
 
     @Override
     public void initialize() {
-        
+        //drive.changeMax();
     }
 
     @Override
@@ -57,7 +59,7 @@ public class DriveTele extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getOdometry().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
     }
 
     @Override

@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.LinkedHashMap;
-
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -15,7 +12,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.util.OrangeUtility;
+import frc.robot.Constants.SuperStructureConstants;
 
 
 public class Elevator extends SubsystemBase {
@@ -65,7 +62,8 @@ public class Elevator extends SubsystemBase {
         elevatorSlave.follow(elevatorMotor);
 
 
-        SmartDashboard.putNumber("elevator setpoint", -26);
+        //SmartDashboard.putNumber("elevator setpoint", -26);
+        SmartDashboard.putNumber("custom elevator", -24.5);
         zeroElevator();
 
 
@@ -118,18 +116,17 @@ public class Elevator extends SubsystemBase {
     }
 
 
-    public boolean zeroRoutine(){
-        if(!limitSwitch.get()){//assuming !get() means not triggered
-            elevatorMotor.set(0.1);
-            return false;
+    public void zeroRoutine(){
+        if(limitSwitch.get() != ElevatorConstants.MAG_DETECTED){
+            elevatorMotor.set(ElevatorConstants.ZEROING_SPEED);
+            //go down until mag is hit
         }
 
         else{
             elevatorMotor.set(0);
             zeroElevator();
-            return true;
+            setState(ElevatorState.STOW);
         }
-        //this returns if the elevator has been zeroed
     }
 
 
@@ -175,6 +172,11 @@ public class Elevator extends SubsystemBase {
 
         //elevatorMotor.setSmartCurrentLimit(20);
         //elevatorSlave.setSmartCurrentLimit(20);
+        elevatorMotor.setInverted(true);
+        elevatorSlave.setInverted(true);
+
+        elevatorMotor.enableVoltageCompensation(10);
+        elevatorSlave.enableVoltageCompensation(10);
 
         elevatorMotor.setControlFramePeriodMs(50);
         elevatorMotor.setIdleMode(IdleMode.kBrake);
@@ -183,27 +185,28 @@ public class Elevator extends SubsystemBase {
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-1, .35, 0);
+        elevatorController.setOutputRange(-1, 1, 0);
 
         elevatorController.setP(.00003);
         elevatorController.setFF(0.0002);
 
-        elevatorController.setSmartMotionMaxVelocity(9500, 0);
-        elevatorController.setSmartMotionMaxAccel(10000, 0);
+        elevatorController.setSmartMotionMaxVelocity(10500, 0);
+        elevatorController.setSmartMotionMaxAccel(11000, 0);
 
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
     }
 
     private void configElevatorDownwardConstraints(){
-        elevatorController.setSmartMotionMaxVelocity(3500, 0);
-        elevatorController.setSmartMotionMaxAccel(2000, 0);
+        elevatorController.setSmartMotionMaxVelocity(8000, 0);
+        elevatorController.setSmartMotionMaxAccel(8000, 0);
     }
 
     private void logData(){
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
-        SmartDashboard.putNumber("bruddah", elevatorEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator Position", elevatorEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator Height", getElevatorHeight());
     }
 
     public void setState(ElevatorState state){
@@ -211,7 +214,7 @@ public class Elevator extends SubsystemBase {
 
         if(state==ElevatorState.STOW){
             configElevatorDownwardConstraints();
-            setpoint = 0;
+            setpoint = SuperStructureConstants.ELEVATOR_STOW;
         }
         else
             configElevatorMotor();
