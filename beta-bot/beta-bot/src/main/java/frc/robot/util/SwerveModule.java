@@ -59,7 +59,7 @@ public class SwerveModule {
         config.magnetOffsetDegrees = angleOffset;
         absEncoder.configAllSettings(config,50);
 
-        OrangeUtility.sleep(1000);
+        OrangeUtility.sleep(2000);
         System.out.println(getAbsHeading());
         turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
     }

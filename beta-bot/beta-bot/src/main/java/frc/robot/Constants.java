@@ -188,8 +188,8 @@ public final class Constants {
     }
 
     public static class IntakeConstants{
-      public static final int DEVICE_ID_INTAKE_SLAVE = 21;
-      public static final int DEVICE_ID_INTAKE_MASTER = 20;
+      public static final int DEVICE_ID_INTAKE_SLAVE = 20;
+      public static final int DEVICE_ID_INTAKE_MASTER = 21;
 
       public static final int DEVICE_ID_SOLENOID_FORWARD = 4;
       public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
@@ -223,7 +223,7 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_HYBRID = -800;
 
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1775;
-      public static final double CUBE_OUTTAKE_MID_SHOOT = -1750;
+      public static final double CUBE_OUTTAKE_MID_SHOOT = -1300;
 
       public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;

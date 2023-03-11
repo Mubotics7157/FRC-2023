@@ -24,7 +24,7 @@ public class ScoreCube extends CommandBase{
         if (superStructure.getScoringPosition() == ScoringPosition.HIGH)
             superStructure.setState(SuperStructureState.CUBE_HIGH);
         else if(superStructure.getScoringPosition() == ScoringPosition.MID)
-            superStructure.setState(SuperStructureState.CUBE_MID);
+            superStructure.setState(SuperStructureState.CUBE_MID_SHOOT);
         else
             superStructure.setState(SuperStructureState.CUBE_HYBRID);
     }

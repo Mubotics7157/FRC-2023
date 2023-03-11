@@ -150,7 +150,6 @@ public class RobotContainer {
     //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
     
-
     //m_operatorController.button(2).whileTrue(new JogForks(forks));
 
     //m_driverController.leftStick().whileTrue(new InstantCommand(drive::changeVerySlow));
@@ -182,7 +181,7 @@ public class RobotContainer {
     eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
-    //eventMap.put("rezero drive", new InstantCommand(drive::reZeroTurnMotors));
+    eventMap.put("rezero drive", new InstantCommand(drive::reZeroTurnMotors));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));

@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
 
-        PathPlannerServer.startServer(5811);
+        //PathPlannerServer.startServer(5811);
     }
 
     public static Drive getInstance(){

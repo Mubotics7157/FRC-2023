@@ -182,45 +182,5 @@
       }
     }
   ],
-  "maxVelocity": 3.0,
-  "maxAcceleration": 2.5,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.8145454545455074,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 2.45,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 0.8145454545455681,
-      "names": [
-        "snipe cube high"
-      ]
-    },
-    {
-      "position": 0.35,
-      "names": [
-        "intake-cube"
-      ]
-    },
-    {
-      "position": 4.712727272727363,
-      "names": [
-        "snipe cube high"
-      ]
-    },
-    {
-      "position": 3.2727272727273222,
-      "names": [
-        "stow"
-      ]
-    }
-  ]
+  "markers": []
 }

@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.39439111070044,
-        "y": 4.658047885632871
+        "x": 2.430214890689103,
+        "y": 4.574434022749873
       },
       "holonomicAngle": 179.97841696001902,
       "isReversal": false,
@@ -18,7 +18,8 @@
       "stopEvent": {
         "names": [
           "stow",
-          "unstowed score cone"
+          "score",
+          "stow"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -27,46 +28,19 @@
     },
     {
       "anchorPoint": {
-        "x": 5.179798460598903,
-        "y": 4.700994694992539
+        "x": 6.911123282151503,
+        "y": 4.37607441748494
       },
       "prevControl": {
-        "x": 4.232324998392328,
-        "y": 4.725166695126141
+        "x": 5.598169027468908,
+        "y": 4.877103219226405
       },
       "nextControl": {
-        "x": 6.014628496667279,
-        "y": 4.679696460742912
-      },
-      "holonomicAngle": 0.8839909731806372,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [
-          "go-to-shoot"
-        ],
-        "executionBehavior": "sequential",
-        "waitBehavior": "after",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 7.061279601287664,
-        "y": 4.616712394382531
-      },
-      "prevControl": {
-        "x": 7.195708002371932,
-        "y": 4.583105294111464
-      },
-      "nextControl": {
-        "x": 6.551508096984215,
-        "y": 4.744155270458394
+        "x": 5.598169027468908,
+        "y": 4.877103219226405
       },
       "holonomicAngle": 0.7198378584355117,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -79,16 +53,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8892709968016221,
-        "y": 4.414086773965274
+        "x": 1.8607966631187456,
+        "y": 4.410946444622479
       },
       "prevControl": {
-        "x": 3.2183867226924243,
-        "y": 4.7245486741390295
+        "x": 3.839495390575638,
+        "y": 4.9457298844756945
       },
       "nextControl": {
-        "x": 3.2183867226924243,
-        "y": 4.7245486741390295
+        "x": 3.839495390575638,
+        "y": 4.9457298844756945
       },
       "holonomicAngle": -180.0,
       "isReversal": true,
@@ -97,7 +71,7 @@
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "snipe cube high"
+          "shoot"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -131,16 +105,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.65,
-        "y": 3.1786666613606838
+        "x": 5.1359106189672845,
+        "y": 3.1725387624096633
       },
       "prevControl": {
-        "x": 6.07286221160898,
-        "y": 3.2587995180657146
+        "x": 5.566298496039287,
+        "y": 3.1725387624096633
       },
       "nextControl": {
-        "x": 4.906768154686271,
-        "y": 3.037823404800759
+        "x": 4.796596571086433,
+        "y": 3.1725387624096633
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -158,16 +132,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.93,
-        "y": 3.1664820868581436
+        "x": 3.4727155318135985,
+        "y": 3.1725387624096633
       },
       "prevControl": {
-        "x": 4.490164620172557,
-        "y": 3.1664820868581436
+        "x": 4.032880151986153,
+        "y": 3.1725387624096633
       },
       "nextControl": {
-        "x": 3.8613872522181585,
-        "y": 3.1664820868581436
+        "x": 3.404102784031757,
+        "y": 3.1725387624096633
       },
       "holonomicAngle": -178.87669728592456,
       "isReversal": false,
@@ -185,12 +159,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.93,
-        "y": 3.1
+        "x": 3.4393403795630233,
+        "y": 2.716411681651797
       },
       "prevControl": {
-        "x": 3.93,
-        "y": 3.1571772898182027
+        "x": 3.4393403795630233,
+        "y": 2.7735889714699997
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -211,25 +185,19 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.65,
+      "position": 0.4799999999997401,
       "names": [
         "intake-cube"
       ]
     },
     {
-      "position": 2.072727272727273,
+      "position": 1.0909090909091401,
       "names": [
-        "stow"
+        "snipe cube high"
       ]
     },
     {
-      "position": 0.05,
-      "names": [
-        "stow"
-      ]
-    },
-    {
-      "position": 5.447272727272595,
+      "position": 4.538181818181808,
       "names": [
         "uncook"
       ]
