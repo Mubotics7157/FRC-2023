@@ -219,7 +219,7 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
 
       public static final double CUBE_OUTTAKE_HIGH = -777;
-      public static final double CUBE_OUTTAKE_MID = -900;
+      public static final double CUBE_OUTTAKE_MID = -925;
       public static final double CUBE_OUTTAKE_HYBRID = -800;
 
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1775;

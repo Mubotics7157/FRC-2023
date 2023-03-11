@@ -48,11 +48,13 @@ public class Robot extends TimedRobot {
 
     autoChooser.setDefaultOption("preload + climb","left climb jawn");
     autoChooser.addOption("preload + 1", "New PL +2");
-    autoChooser.addOption("preload + 2 RED","New PL + 2 Red");
+    autoChooser.addOption("preload + 2 RED","New PL + 2 Comp");
     autoChooser.addOption("preload + 2 BLUE","New PL + 2 Blue");
     autoChooser.addOption("preload + taxi", "PL + taxi");
     autoChooser.addOption("preload only", "PL only");
+    autoChooser.addOption("preload + taxi + cube", "PL + taxi + cube");
     SmartDashboard.putData(autoChooser);
+
     currentSelectedAuto = autoChooser.getSelected();
 
   }
@@ -83,9 +85,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if(!autoChooser.getSelected().equals(currentSelectedAuto))
-      m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
-    currentSelectedAuto = autoChooser.getSelected();
+    
+  try{
+      if(!autoChooser.getSelected().equals(currentSelectedAuto))
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand(currentSelectedAuto);
+        currentSelectedAuto = autoChooser.getSelected();
+  }
+    
+  catch(NullPointerException e){
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL only");
+  }
+
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
