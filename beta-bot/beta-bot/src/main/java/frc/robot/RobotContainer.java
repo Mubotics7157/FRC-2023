@@ -87,7 +87,7 @@ public class RobotContainer {
 
     //m_driverController.x().whileTrue(new ConeSniper(superStructure));
     //m_driverController.x().onFalse(new Stow(superStructure));
-    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
+    //m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     m_driverController.leftBumper().whileTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -135,6 +135,8 @@ public class RobotContainer {
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
     m_operatorController.button(2).whileTrue(new InstantCommand(led::setRainbow));
 
+    m_operatorController.button(1).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
+    m_operatorController.button(5).onTrue(new InstantCommand(drive::reZeroTurnMotors));
     /* 
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
@@ -178,6 +180,7 @@ public class RobotContainer {
     eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
+    //eventMap.put("rezero drive", new InstantCommand(drive::reZeroTurnMotors));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));

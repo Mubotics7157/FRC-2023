@@ -137,7 +137,10 @@ public class Intake extends SubsystemBase {
                 //toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH_SHOOT:
-                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
+                if(DriverStation.isAutonomous())
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT-150);
+                else
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
                 break;
             case INTAKE_CONE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);

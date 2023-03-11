@@ -123,4 +123,8 @@ public class SwerveModule {
         return driveMotor.getSupplyCurrent();
     }
 
+    public void reZeroTurnEncoder(){
+        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+    }
+
 }

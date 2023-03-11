@@ -190,4 +190,10 @@ public class Drive extends SubsystemBase {
         rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     }
 
+    public void reZeroTurnMotors(){
+        frontLeft.reZeroTurnEncoder();
+        frontRight.reZeroTurnEncoder();
+        rearLeft.reZeroTurnEncoder();
+        rearRight.reZeroTurnEncoder();
+    }
 }
