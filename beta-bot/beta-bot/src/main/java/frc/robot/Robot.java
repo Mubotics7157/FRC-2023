@@ -57,9 +57,9 @@ public class Robot extends TimedRobot {
 
     */
 
-    // = autoChooser.getSelected();
+    // = autoChooser.getSelected();   
 
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("New PL +2");
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 only");
 
 
   }

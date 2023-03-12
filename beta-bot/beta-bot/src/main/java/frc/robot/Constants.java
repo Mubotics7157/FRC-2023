@@ -188,10 +188,10 @@ public final class Constants {
     }
 
     public static class IntakeConstants{
-      public static final int DEVICE_ID_INTAKE_SLAVE = 20;
-      public static final int DEVICE_ID_INTAKE_MASTER = 21;
+      public static final int DEVICE_ID_INTAKE_SLAVE = 21;
+      public static final int DEVICE_ID_INTAKE_MASTER = 20;
 
-      public static final int DEVICE_ID_SOLENOID_FORWARD = 4;
+      public static final int DEVICE_ID_SOLENOID_FORWARD = 4; 
       public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
 
       public static final boolean INVERT_MASTER = false;

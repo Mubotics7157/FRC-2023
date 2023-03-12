@@ -1,0 +1,118 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8035050620743176,
+        "y": 4.9972951301109445
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.530920000048564,
+        "y": 4.809053751054513
+      },
+      "holonomicAngle": 179.97841696001902,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "score",
+          "stow"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.245513284890422,
+        "y": 4.509001767779261
+      },
+      "prevControl": {
+        "x": 5.932559030207828,
+        "y": 5.010030569520726
+      },
+      "nextControl": {
+        "x": 5.932559030207828,
+        "y": 5.010030569520726
+      },
+      "holonomicAngle": 0.7198378584355117,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.8607966631187456,
+        "y": 4.410946444622479
+      },
+      "prevControl": {
+        "x": 3.8780998304006773,
+        "y": 4.879773856429665
+      },
+      "nextControl": {
+        "x": 3.8780998304006773,
+        "y": 4.879773856429665
+      },
+      "holonomicAngle": -180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "score cube high",
+          "stow"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.3479431117150105,
+        "y": 4.686212470746723
+      },
+      "prevControl": {
+        "x": 4.722027471978302,
+        "y": 4.864288945575028
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.4799999999999972,
+      "names": [
+        "intake-cube"
+      ]
+    },
+    {
+      "position": 1.09,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
+}
