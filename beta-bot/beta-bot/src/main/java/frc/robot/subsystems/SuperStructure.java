@@ -52,13 +52,14 @@ public class SuperStructure extends SubsystemBase {
     public SuperStructure(){
         SmartDashboard.putNumber("custom wrist adjustment", 0);
         SmartDashboard.putNumber("custom elevator adjustment", 0);
+        //led = LED.getInstance();
+
     }
 
     @Override
     public void periodic() {
-        led = LED.getInstance();
-        SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
-        SmartDashboard.putString("SuperStructure state", scoringState.toString());
+        //SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
+        //SmartDashboard.putString("SuperStructure state", scoringState.toString());
         //SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
         if(idleIntake)

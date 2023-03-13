@@ -59,7 +59,7 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         //logData();
 
-        // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
+        SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
  
  
         // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());

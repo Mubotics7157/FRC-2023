@@ -64,7 +64,7 @@ public class Wrist extends SubsystemBase {
         if(holdAtWantedState)
             wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
 
-        logData();
+        //logData();
 
         switch(wristState){
             case OFF:
