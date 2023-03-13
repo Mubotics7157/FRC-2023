@@ -28,7 +28,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  //private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  //private String currentSelectedAuto;
 
   Compressor compressor = new Compressor(IntakeConstants.DEVICE_ID_PCM , IntakeConstants.PNEUMATICS_MODULE_TYPE);
   //DigitalInput test1 = new DigitalInput(0);
@@ -44,12 +45,22 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SmartDashboard.putNumber("fallen cone wrist setpoint", 0);
     SmartDashboard.putNumber("Turn kP", .3/5);
-
-    autoChooser.setDefaultOption("preload + climb","left climb jawn");
+/* 
+    autoChooser.setDefaultOption("preload + climb","New PL + 2 Comp");
     autoChooser.addOption("preload + 1", "New PL +2");
-    autoChooser.addOption("preload + 2 RED","New PL + 2 Red");
+    autoChooser.addOption("preload + 2 COMP","New PL + 2 Comp");
     autoChooser.addOption("preload + 2 BLUE","New PL + 2 Blue");
-    SmartDashboard.putData(autoChooser);
+    autoChooser.addOption("preload + taxi", "PL + taxi");
+    autoChooser.addOption("preload only", "PL only");
+    autoChooser.addOption("preload + taxi + cube", "PL + taxi + cube");
+    SmartDashboard.putData(autoChooser)
+
+    */
+
+    // = autoChooser.getSelected();   
+
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 only");
+
 
   }
 
@@ -79,14 +90,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(autoChooser.getSelected());
+
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    
+    Drive.getInstance().reZeroTurnMotors();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -139,4 +150,5 @@ public class Robot extends TimedRobot {
   public void autonomousExit() {
     Drive.getInstance().lockModules();
   }
+
 }

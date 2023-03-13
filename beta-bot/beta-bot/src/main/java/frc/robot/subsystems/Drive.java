@@ -48,7 +48,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
 
-        PathPlannerServer.startServer(5811);
+        //PathPlannerServer.startServer(5811);
     }
 
     public static Drive getInstance(){
@@ -59,7 +59,7 @@ public class Drive extends SubsystemBase {
     public void periodic() {
         //logData();
 
-        // SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
+        SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
  
  
         // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
@@ -190,4 +190,10 @@ public class Drive extends SubsystemBase {
         rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     }
 
+    public void reZeroTurnMotors(){
+        frontLeft.reZeroTurnEncoder();
+        frontRight.reZeroTurnEncoder();
+        rearLeft.reZeroTurnEncoder();
+        rearRight.reZeroTurnEncoder();
+    }
 }

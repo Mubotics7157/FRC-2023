@@ -79,18 +79,24 @@ public class Intake extends SubsystemBase {
         botController.setFF(IntakeConstants.TOP_ROLLER_KF);
 
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
-        intakeSlave.setInverted(!intakeMaster.getInverted());
-        intakeSlave.follow(intakeMaster);
+        intakeSlave.setInverted(intakeMaster.getInverted());
+        //intakeSlave.follow(intakeMaster);
         intakeMaster.setIdleMode(IdleMode.kBrake);
         intakeSlave.setIdleMode(intakeMaster.getIdleMode());
+
+        intakeMaster.setSmartCurrentLimit(70);
+        intakeSlave.setSmartCurrentLimit(70);
 
         //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
         filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
 
-        intakeMaster.setSmartCurrentLimit(100);
+        //intakeMaster.setSmartCurrentLimit(100);
 
         intakeMaster.enableVoltageCompensation(10);
         intakeSlave.enableVoltageCompensation(10);
+
+        intakeMaster.burnFlash();
+        intakeSlave.burnFlash();
 
         SmartDashboard.putNumber("custom intake", -1000);  
     }
@@ -107,14 +113,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
 
-        IntakeState snapIntakeState;       
-        synchronized(this){
-            snapIntakeState = intakeState;
-        }
+
         
-        SmartDashboard.putString("intake state", snapIntakeState.toString());
+        SmartDashboard.putString("intake state", intakeState.toString());
         
-        switch(snapIntakeState){
+        switch(intakeState){
             case OFF:
                 setMotors(0);
                 break;
@@ -137,7 +140,10 @@ public class Intake extends SubsystemBase {
                 //toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH_SHOOT:
-                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
+                if(DriverStation.isAutonomous())
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT-150);
+                else
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
                 break;
             case INTAKE_CONE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
@@ -190,10 +196,13 @@ public class Intake extends SubsystemBase {
 
     public void setMotors(double speed){
         intakeMaster.set(speed);
+        intakeSlave.set(speed);
     }
 
     private void setSpeed(double speedRPM){
         topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        botController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+
         //topController.setReference(0, ControlType.kVelocity);
     }
 
@@ -226,11 +235,15 @@ public class Intake extends SubsystemBase {
     }
 
     public void currentLimit(boolean enable){
-        if(enable)
+        if(enable){
             intakeMaster.setSmartCurrentLimit(30, 40);
+            intakeSlave.setSmartCurrentLimit(30,40);
+        }
         
-        else
+        else{
             intakeMaster.setSmartCurrentLimit(70);
+            intakeSlave.setSmartCurrentLimit(70);
+        }
          
     }
 

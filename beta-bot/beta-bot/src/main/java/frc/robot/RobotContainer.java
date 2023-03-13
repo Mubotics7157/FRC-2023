@@ -41,6 +41,8 @@ import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
 import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -87,7 +89,7 @@ public class RobotContainer {
 
     //m_driverController.x().whileTrue(new ConeSniper(superStructure));
     //m_driverController.x().onFalse(new Stow(superStructure));
-    m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
+    //m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
 
     m_driverController.leftBumper().whileTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
@@ -135,6 +137,8 @@ public class RobotContainer {
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
     m_operatorController.button(2).whileTrue(new InstantCommand(led::setRainbow));
 
+    m_operatorController.button(1).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
+    m_operatorController.button(5).onTrue(new InstantCommand(drive::reZeroTurnMotors));
     /* 
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
@@ -146,7 +150,6 @@ public class RobotContainer {
     //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
 
     
-
     //m_operatorController.button(2).whileTrue(new JogForks(forks));
 
     //m_driverController.leftStick().whileTrue(new InstantCommand(drive::changeVerySlow));
@@ -175,9 +178,10 @@ public class RobotContainer {
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
     eventMap.put("snipe cube high", new ScoreCubeHighShoot(superStructure));
-    eventMap.put("score-cube", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(.2), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)));
+    eventMap.put("score cube high", new SequentialCommandGroup(new Stow(superStructure), new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
+    eventMap.put("rezero drive", new InstantCommand(drive::reZeroTurnMotors));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
@@ -195,7 +199,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine(auto, new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine(auto, new PathConstraints(3, 3)/*PathPlanner.getConstraintsFromPath(auto)*/, eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 

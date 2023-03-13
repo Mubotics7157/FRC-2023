@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.804648607870682,
-        "y": 5.029314412409141
+        "x": 1.8035050620743176,
+        "y": 4.9972951301109445
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2501100972928496,
-        "y": 4.956234623526698
+        "x": 2.530920000048564,
+        "y": 4.809053751054513
       },
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 179.97841696001902,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -27,19 +27,19 @@
     },
     {
       "anchorPoint": {
-        "x": 5.754455788512147,
-        "y": 4.688537765092648
+        "x": 7.1610171180399425,
+        "y": 4.597054101383524
       },
       "prevControl": {
-        "x": 3.840644938402173,
-        "y": 4.806052466415189
+        "x": 5.469538425606622,
+        "y": 4.544051070992939
       },
       "nextControl": {
-        "x": 7.058097996367176,
-        "y": 4.608489559347165
+        "x": 5.469538425606622,
+        "y": 4.544051070992939
       },
-      "holonomicAngle": -180.0,
-      "isReversal": false,
+      "holonomicAngle": 0.7198378584355117,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -52,56 +52,67 @@
     },
     {
       "anchorPoint": {
-        "x": 5.21698926422104,
-        "y": 3.1676218559284477
+        "x": 1.8607966631187456,
+        "y": 4.410946444622479
       },
       "prevControl": {
-        "x": 6.570482004451191,
-        "y": 3.491283163374789
+        "x": 3.8780998304006773,
+        "y": 4.879773856429665
       },
       "nextControl": {
-        "x": 4.690958197893572,
-        "y": 3.0418318183284008
+        "x": 3.8780998304006773,
+        "y": 4.879773856429665
       },
       "holonomicAngle": -180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
         "names": [
-          "cook"
+          "score cube high",
+          "stow"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "after",
+        "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 3.54741240152951,
-        "y": 3.156186397964807
+        "x": 6.3479431117150105,
+        "y": 4.686212470746723
       },
       "prevControl": {
-        "x": 4.462249038620761,
-        "y": 3.133315482037526
+        "x": 4.722027471978302,
+        "y": 4.864288945575028
       },
       "nextControl": null,
-      "holonomicAngle": -178.3276056389107,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [
-          "uncook",
-          "lock"
-        ],
+        "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.4799999999999972,
+      "names": [
+        "intake-cube"
+      ]
+    },
+    {
+      "position": 1.09,
+      "names": [
+        "stow"
+      ]
+    }
+  ]
 }

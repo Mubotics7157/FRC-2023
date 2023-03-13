@@ -49,13 +49,18 @@ public class SuperStructure extends SubsystemBase {
         HYBRID
     }
 
+    public SuperStructure(){
+        SmartDashboard.putNumber("custom wrist adjustment", 0);
+        SmartDashboard.putNumber("custom elevator adjustment", 0);
+        //led = LED.getInstance();
+
+    }
 
     @Override
     public void periodic() {
-        led = LED.getInstance();
-        SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
-        SmartDashboard.putString("SuperStructure state", scoringState.toString());
-        SmartDashboard.putString("Scoring Position", scoringPosition.toString());
+        //SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
+        //SmartDashboard.putString("SuperStructure state", scoringState.toString());
+        //SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
         if(idleIntake)
             intake.setIntakeState(IntakeState.IDLE);
@@ -146,6 +151,9 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void setState(SuperStructureState state){
+    Rotation2d wristAdj = Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0));
+    double elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
+
     if(scoringState==SuperStructureState.CUBE_INTAKE)
         idleIntake = false;
     else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
@@ -164,31 +172,31 @@ public class SuperStructure extends SubsystemBase {
 
         switch(scoringState){
             case CONE_HIGH:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH, SuperStructureConstants.WRIST_CONE_HIGH);
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH + elevAdj, SuperStructureConstants.WRIST_CONE_HIGH.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CONE_MID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID, SuperStructureConstants.WRIST_CONE_MID);
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID + elevAdj, SuperStructureConstants.WRIST_CONE_MID.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CUBE_HIGH:
-                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH, SuperStructureConstants.WRIST_CUBE_HIGH);
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH + elevAdj, SuperStructureConstants.WRIST_CUBE_HIGH.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CUBE_MID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID, SuperStructureConstants.WRIST_CUBE_MID);
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID + elevAdj, SuperStructureConstants.WRIST_CUBE_MID.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CUBE_HIGH_SHOOT:
-                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT, SuperStructureConstants.WRIST_CUBE_SHOOT);
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT + elevAdj, SuperStructureConstants.WRIST_CUBE_SHOOT.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CUBE_MID_SHOOT:
-                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT, SuperStructureConstants.WRIST_CUBE_SHOOT);
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT + elevAdj, SuperStructureConstants.WRIST_CUBE_SHOOT.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case CUBE_HYBRID:
-                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID, SuperStructureConstants.WRIST_CUBE_HYRBID);
+                goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID + elevAdj, SuperStructureConstants.WRIST_CUBE_HYRBID.plus(wristAdj));
                 Drive.getInstance().changeSlow();
                 break;
             case STOWED:
@@ -197,18 +205,18 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CONE_INTAKE:
                 Drive.getInstance().changeMax();
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_UPRIGHT, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT);
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_UPRIGHT + elevAdj, SuperStructureConstants.WRIST_INTAKE_CONE_UPRIGHT.plus(wristAdj));
                 break;
             case CUBE_INTAKE:
                 Drive.getInstance().changeMax();    
-                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CUBE, SuperStructureConstants.WRIST_INTAKE_CUBE);
+                intakeCube(SuperStructureConstants.ELEVATOR_INTAKE_CUBE + elevAdj, SuperStructureConstants.WRIST_INTAKE_CUBE.plus(wristAdj));
                 break;
             case FALLEN_CONE:
                 Drive.getInstance().changeMax();
-                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                intakeCone(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN + elevAdj, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN.plus(wristAdj));//SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
                 break;
             case OPEN_DOOR:
-                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN);
+                goToPosition(SuperStructureConstants.ELEVATOR_INTAKE_CONE_FALLEN + elevAdj, SuperStructureConstants.WRIST_INTAKE_CONE_FALLEN.plus(wristAdj));
                 break;
             case CUSTOM:
                 goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
@@ -216,7 +224,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case SEAGUL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
-                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL, SuperStructureConstants.WRIST_INTAKE_SEAGUL, IntakeState.INTAKE_CONE_SEAGUL);
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
             case ZERO:
@@ -224,7 +232,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CONE_SNIPER:
                 Drive.getInstance().changeMax();
-                goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER, SuperStructureConstants.WRIST_CONE_SNIPER);
+                goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER + elevAdj, SuperStructureConstants.WRIST_CONE_SNIPER.plus(wristAdj));
                 break;
             default:
                 break;
@@ -232,10 +240,15 @@ public class SuperStructure extends SubsystemBase {
 
     }
 
+    public void emergencySetpointReset(){
+        SmartDashboard.putNumber("custom wrist adjustment", 0);
+        SmartDashboard.putNumber("custom elevator adjustment", 0);
+    }
+
     private void setLedMode(SuperStructureState state){
         switch(state){
             case CONE_HIGH:
-                led.setStrobe();
+                led.setGreen();
                 break;
             case CUBE_INTAKE:
                 led.setPurple();
@@ -244,16 +257,16 @@ public class SuperStructure extends SubsystemBase {
                 led.setYellow();
                 break;
             case FALLEN_CONE:
-                led.setYellowStrobe();
+                led.setYellow();
                 break;
             case STOWED:
                 led.setCurrentIntake();
                 break;
             case SEAGUL:
-                led.setYellowStrobe();
+                led.setYellow();
                 break;
             default:
-                led.setStrobe();
+                led.setYellow();
                 break;
         }
     }
