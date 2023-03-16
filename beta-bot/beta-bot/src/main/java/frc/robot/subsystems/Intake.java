@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SuperStructureConstants;
+import frc.robot.util.CommonConversions;
 
 public class Intake extends SubsystemBase {
 
@@ -36,20 +38,18 @@ public class Intake extends SubsystemBase {
         CUSTOM
     }
 
-    private CANSparkMax intakeMaster; 
-    private CANSparkMax intakeSlave;
+    private TalonFX intakeMaster; 
+    private TalonFX intakeSlave;
+
+    private TalonFXConfiguration masterConfig;
+    private TalonFXConfiguration slaveConfig;
 
     private DoubleSolenoid solenoid; 
 
-    private SparkMaxPIDController topController;
-    private SparkMaxPIDController botController;
-
-    private RelativeEncoder topEncoder;
-    private RelativeEncoder botEncoder;
     private IntakeState intakeState;
 
     //private Ultrasonic tof;
-    private  MedianFilter filter;
+
 
     private static Intake instance = new Intake();
 
@@ -60,43 +60,36 @@ public class Intake extends SubsystemBase {
 
         intakeState = IntakeState.OFF;
 
-        intakeMaster = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_MASTER, MotorType.kBrushless);
-        intakeSlave = new CANSparkMax(IntakeConstants.DEVICE_ID_INTAKE_SLAVE, MotorType.kBrushless);
+        intakeMaster = new TalonFX(IntakeConstants.DEVICE_ID_INTAKE_MASTER);
+        intakeSlave = new TalonFX(IntakeConstants.DEVICE_ID_INTAKE_SLAVE);
 
-        topController = intakeMaster.getPIDController();
-        topEncoder = intakeMaster.getEncoder();
+        intakeMaster.configFactoryDefault();
+        intakeSlave.configFactoryDefault();
 
-        botController = intakeSlave.getPIDController();
-        botEncoder = intakeSlave.getEncoder();
+        masterConfig.slot0.kP = IntakeConstants.TOP_ROLLER_KP;
+        masterConfig.slot0.kF = IntakeConstants.TOP_ROLLER_KF;
 
-        intakeMaster.restoreFactoryDefaults();
-        intakeSlave.restoreFactoryDefaults();
+        slaveConfig.slot0.kP = IntakeConstants.TOP_ROLLER_KP;
+        slaveConfig.slot0.kF = IntakeConstants.TOP_ROLLER_KF;
 
-        topController.setP(IntakeConstants.TOP_ROLLER_KP);
-        topController.setFF(IntakeConstants.TOP_ROLLER_KF);
-
-        botController.setP(IntakeConstants.TOP_ROLLER_KP);
-        botController.setFF(IntakeConstants.TOP_ROLLER_KF);
+        intakeMaster.configAllSettings(masterConfig);
+        intakeSlave.configAllSettings(slaveConfig);
 
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
-        intakeSlave.setInverted(intakeMaster.getInverted());
-        //intakeSlave.follow(intakeMaster);
-        intakeMaster.setIdleMode(IdleMode.kBrake);
-        intakeSlave.setIdleMode(intakeMaster.getIdleMode());
+        intakeSlave.setInverted(!intakeMaster.getInverted());
+       
+        intakeMaster.setNeutralMode(NeutralMode.Brake);
+        intakeSlave.setNeutralMode(NeutralMode.Brake);
 
-        intakeMaster.setSmartCurrentLimit(70);
-        intakeSlave.setSmartCurrentLimit(70);
+        intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 70, 1)); 
+        intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 70, 1));
 
-        //tof = new Ultrasonic(IntakeConstants.ULTRASONIC_PING_PORT,IntakeConstants.ULTRASONIC_RESPONSE_PORT);
-        filter = new MedianFilter(IntakeConstants.FILTER_SAMPLE_WINDOW);
+        intakeMaster.configVoltageCompSaturation(10);
+        intakeSlave.configVoltageCompSaturation(10);
 
-        //intakeMaster.setSmartCurrentLimit(100);
+       intakeMaster.enableVoltageCompensation(true);
+       intakeSlave.enableVoltageCompensation(true);
 
-        intakeMaster.enableVoltageCompensation(10);
-        intakeSlave.enableVoltageCompensation(10);
-
-        intakeMaster.burnFlash();
-        intakeSlave.burnFlash();
 
         SmartDashboard.putNumber("custom intake", -1000);  
     }
@@ -195,13 +188,13 @@ public class Intake extends SubsystemBase {
     }
 
     public void setMotors(double speed){
-        intakeMaster.set(speed);
-        intakeSlave.set(speed);
+        intakeMaster.set(ControlMode.PercentOutput,speed);
+        intakeSlave.set(ControlMode.PercentOutput,speed);
     }
 
     private void setSpeed(double speedRPM){
-        topController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
-        botController.setReference(speedRPM, com.revrobotics.CANSparkMax.ControlType.kVelocity);
+        intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
+        intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
 
         //topController.setReference(0, ControlType.kVelocity);
     }
@@ -236,13 +229,13 @@ public class Intake extends SubsystemBase {
 
     public void currentLimit(boolean enable){
         if(enable){
-            intakeMaster.setSmartCurrentLimit(30, 40);
-            intakeSlave.setSmartCurrentLimit(30,40);
+            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1)); 
+            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1));
         }
         
         else{
-            intakeMaster.setSmartCurrentLimit(70);
-            intakeSlave.setSmartCurrentLimit(70);
+            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1)); 
+            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1));
         }
          
     }
