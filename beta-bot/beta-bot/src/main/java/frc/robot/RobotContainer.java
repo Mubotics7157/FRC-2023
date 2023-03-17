@@ -4,7 +4,6 @@ import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
-import frc.robot.commands.JogForks;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreCone;
 import frc.robot.commands.ScoreConeHigh;
@@ -28,8 +27,6 @@ import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.drive.HorizontalLock;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Forks;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.SuperStructure;
@@ -52,7 +49,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -121,7 +117,7 @@ public class RobotContainer {
 
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
-
+    
    
     //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
     //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));

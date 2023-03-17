@@ -66,6 +66,9 @@ public class Intake extends SubsystemBase {
         intakeMaster.configFactoryDefault();
         intakeSlave.configFactoryDefault();
 
+        masterConfig = new TalonFXConfiguration();
+        slaveConfig = new TalonFXConfiguration();
+
         masterConfig.slot0.kP = IntakeConstants.TOP_ROLLER_KP;
         masterConfig.slot0.kF = IntakeConstants.TOP_ROLLER_KF;
 
@@ -76,7 +79,7 @@ public class Intake extends SubsystemBase {
         intakeSlave.configAllSettings(slaveConfig);
 
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
-        intakeSlave.setInverted(!intakeMaster.getInverted());
+        intakeSlave.setInverted(intakeMaster.getInverted());
        
         intakeMaster.setNeutralMode(NeutralMode.Brake);
         intakeSlave.setNeutralMode(NeutralMode.Brake);
@@ -196,6 +199,9 @@ public class Intake extends SubsystemBase {
         intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
         intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
 
+        //intakeMaster.set(ControlMode.PercentOutput,speedRPM/6000);
+        //intakeSlave.set(ControlMode.PercentOutput, speedRPM/6000);
+
         //topController.setReference(0, ControlType.kVelocity);
     }
 
@@ -225,6 +231,10 @@ public class Intake extends SubsystemBase {
         }
         else
             return false;
+    }
+
+    public IntakeState getState(){
+        return intakeState;
     }
 
     public void currentLimit(boolean enable){

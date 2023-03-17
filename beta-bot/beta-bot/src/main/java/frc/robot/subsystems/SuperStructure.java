@@ -62,7 +62,7 @@ public class SuperStructure extends SubsystemBase {
         //SmartDashboard.putString("SuperStructure state", scoringState.toString());
         //SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
-        if(idleIntake)
+        if(idleIntake && Intake.getInstance().getState() != IntakeState.IDLE)
             intake.setIntakeState(IntakeState.IDLE);
 
     }

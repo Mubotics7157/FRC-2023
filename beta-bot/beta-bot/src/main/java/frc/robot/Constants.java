@@ -188,8 +188,8 @@ public final class Constants {
     }
 
     public static class IntakeConstants{
-      public static final int DEVICE_ID_INTAKE_SLAVE = 21;
-      public static final int DEVICE_ID_INTAKE_MASTER = 20;
+      public static final int DEVICE_ID_INTAKE_SLAVE = 20;
+      public static final int DEVICE_ID_INTAKE_MASTER = 21;
 
       public static final int DEVICE_ID_SOLENOID_FORWARD = 4; 
       public static final int DEVICE_ID_SOLENOID_REVERSE = 5;
@@ -210,10 +210,10 @@ public final class Constants {
 
       public static final double IDLE_SPEED = .8/2 * 5700;
 
-      public static final double TOP_ROLLER_KP = .00001;
-      public static final double TOP_ROLLER_KF = .0002;
-      public static final double BOT_ROLLER_KF = .00001;
-      public static final double BOT_ROLLER_KP = .0002;
+      public static final double TOP_ROLLER_KP = .1;
+      public static final double TOP_ROLLER_KF = .045;
+      public static final double BOT_ROLLER_KF = .1;
+      public static final double BOT_ROLLER_KP = .045;
 
       public static final double CONE_OUTTAKE_SPEED=-1 * 5700;
       public static final double CUBE_OUTTAKE_SPEED=-.45 * 5700;
