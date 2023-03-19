@@ -23,8 +23,8 @@ public class Drive extends SubsystemBase {
     
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
-    private double tanDeadband = 0.10;
-    private double angDeadband = 0.15;
+    private double tanDeadband = 0;
+    private double angDeadband = 0;
 
     private static Drive instance = new Drive();
     /* 
@@ -54,7 +54,6 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("align P", 0.25);
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
-        reZeroTurnMotors();
 
         //PathPlannerServer.startServer(5811);
     }
@@ -77,13 +76,14 @@ public class Drive extends SubsystemBase {
     }
     
     public void logData(){
-        SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
+        //SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
          
-        SmartDashboard.putNumber("left front", frontLeft.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("left rear", rearLeft.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("right front", frontRight.getPosition().angle.getDegrees());
-        SmartDashboard.putNumber("right rear", rearRight.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("left front", frontLeft.getHeading().getDegrees());
+        SmartDashboard.putNumber("left rear", rearLeft.getHeading().getDegrees());
+        SmartDashboard.putNumber("right front", frontRight.getHeading().getDegrees());
+        SmartDashboard.putNumber("right rear", rearRight.getHeading().getDegrees());
 
+        
         SmartDashboard.putNumber("left front abs", frontLeft.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("left rear abs", rearLeft.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("right front abs", frontRight.getAbsHeading().getDegrees());
@@ -116,7 +116,7 @@ public class Drive extends SubsystemBase {
         rearLeft.apply(states[2]);
         rearRight.apply(states[3]);
 
-        SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
+        //SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
  /* 
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
@@ -167,8 +167,8 @@ public class Drive extends SubsystemBase {
     }
     
     public void changeMax(){
-        tanDeadband = 0.10;
-        angDeadband = 0.15;
+        tanDeadband = 0.009;
+        angDeadband = 0.009;
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
@@ -225,16 +225,6 @@ public class Drive extends SubsystemBase {
         frontRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         rearLeft.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
         rearRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-    }
-
-    public void reZeroTurnMotors(){
-        
-        frontLeft.reZeroTurnMotors();
-        frontRight.reZeroTurnMotors();
-        rearLeft.reZeroTurnMotors();
-        rearRight.reZeroTurnMotors();
-
-        
     }
 
     public void changeMotorGains(){

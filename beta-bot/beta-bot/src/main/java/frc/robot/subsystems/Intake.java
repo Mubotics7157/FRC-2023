@@ -47,6 +47,7 @@ public class Intake extends SubsystemBase {
     private DoubleSolenoid solenoid; 
 
     private IntakeState intakeState;
+    private Value commandedSolenoidState;
 
     //private Ultrasonic tof;
 
@@ -57,6 +58,7 @@ public class Intake extends SubsystemBase {
 
     public Intake(){
         solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_PCM, IntakeConstants.PNEUMATICS_MODULE_TYPE, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+        commandedSolenoidState = Value.kForward;
 
         intakeState = IntakeState.OFF;
 
@@ -208,10 +210,11 @@ public class Intake extends SubsystemBase {
     public void toggleIntake(boolean forward){
         
         if(forward)
-            solenoid.set(Value.kForward);
+            commandedSolenoidState = Value.kForward;
         else
-            solenoid.set(Value.kReverse);
+            commandedSolenoidState = Value.kReverse;
         
+        solenoid.set(commandedSolenoidState);
     }
 
     public void closeJaws(){
@@ -223,14 +226,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isClosed(){
-        if(solenoid.get() == Value.kForward){
-            return true;
-        }
-        else if(solenoid.get() == Value.kReverse){
-            return false;
-        }
-        else
-            return false;
+        return commandedSolenoidState==Value.kForward;  
     }
 
     public IntakeState getState(){

@@ -58,19 +58,12 @@ public class Tracker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        //editNodePose();
         updatePose();
         m_field.setRobotPose(estimator.getEstimatedPosition());
-        //node = new Pose2d(new Translation2d(FieldConstants.BlueConstants.NODE_CONE_BLUE_1.getX(), getPose().getY()), Rotation2d.fromDegrees(0));
 
-        //SmartDashboard.putNumber("estim x", getPose().getX());
-        //SmartDas1hboard.putNumber("estim y", getPose().getY());
-        m_field.getObject("gyro").setPose(new Pose2d(getPose().getTranslation(),Drive.getInstance().getDriveHeading()));
-        SmartDashboard.putNumber("estim r", getPose().getRotation().getDegrees());
     }
 
     private void updatePose(){
-        
         estimator.updateWithTime(Timer.getFPGATimestamp(),Drive.getInstance().getDriveHeading(), Drive.getInstance().getModulePositions());
     }
 

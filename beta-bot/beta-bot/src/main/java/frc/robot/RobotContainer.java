@@ -58,9 +58,7 @@ public class RobotContainer {
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
   private final Tracker tracker = Tracker.getInstance();
-  private final LED led = LED.getInstance();
-  //private final VisionManager poleCam = VisionManager.getInstance();
-  //private final LED led = LED.getInstance()
+  private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
 
   public RobotContainer() {
@@ -83,10 +81,6 @@ public class RobotContainer {
     m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    //m_driverController.x().whileTrue(new ConeSniper(superStructure));
-    //m_driverController.x().onFalse(new Stow(superStructure));
-    //m_driverController.x().onTrue(new InstantCommand(tracker::resetViaVision));
-
     m_driverController.leftBumper().whileTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
@@ -96,70 +90,17 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
     
-    //m_driverController.povDown().whileTrue(new AlignStrafe(drive, tracker));
-    //m_driverController.povDown().whileTrue(new AutoBalance(drive));
-    //m_driverController.povDown().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_MID));
-    //m_driverController.povDown().onFalse(new Stow(superStructure));
-
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
-    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws), new InstantCommand(led::setYellow)));
-    //m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws), new InstantCommand(led::setPurple)));
 
     m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
     m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
 
-    //m_driverController.y().onTrue(new InstantCommand(poleCam::togglePipeline));
-
-    //m_driverController.a().onTrue(new InstantCommand(tracker::adjustDeviation));
-    //m_driverController.a().onTrue(new InstantCommand(poleCam::useVision));
-    //m_driverController.b().onTrue(new InstantCommand(poleCam::noUseVision));
     m_driverController.button(7).onTrue(new Zero());
 
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
     
    
-    //m_driverController.b().whileTrue(new ParallelCommandGroup(new SetElevatorHeight(0, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-123), wrist, false, false), new RunIntake(intake, IntakeState.INTAKE_CUBE)));
-    //m_driverController.b().onFalse(new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false)/* , new InstantCommand(intake::closeJaws)*/));
-    //intake CUBES (slower intake speed)
-    
-    //m_driverController.y().whileTrue(new ParallelCommandGroup(new RunIntake(intake, IntakeState.INTAKE), new SetElevatorHeight(-5, elevator, false), new SetWristAngle(Rotation2d.fromDegrees(-135), wrist, false, false)));
-    //m_driverController.y().onFalse(new ParallelCommandGroup(new RunIntake(intake, IntakeState.OFF), new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new SetElevatorHeight(-0.25, elevator, false)));
-    //ground intake upright CONES
-    
-    //m_operatorController.button(7).onTrue(new Zero());
-    /* 
-    m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
-    m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
-    m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
-    m_operatorController.button(2).whileTrue(new InstantCommand(led::setRainbow));
-
-    m_operatorController.button(1).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
-    m_operatorController.button(5).onTrue(new InstantCommand(drive::reZeroTurnMotors));
-     */
-    m_driverController.povDown().onTrue(new InstantCommand(drive::reZeroTurnMotors));
-
-    /* 
-    m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
-    m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
-    m_operatorController.button(11).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_4.getY()));
-    m_operatorController.button(8).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_3.getY()));
-    m_operatorController.button(10).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_2.getY()));
-    m_operatorController.button(12).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_1.getY()));
-    */
-    //m_operatorController.button(3).onTrue(new InstantCommand(tracker::setOffset));
-
-    
-    //m_operatorController.button(2).whileTrue(new JogForks(forks));
-
-    //m_driverController.leftStick().whileTrue(new InstantCommand(drive::changeVerySlow));
-    //m_driverController.leftStick().onFalse(new InstantCommand(drive::changeMax));
-
-    //m_operatorController.button(3).whileTrue(new CustomSetpoints(superStructure, false)); //bottom left
-    //m_operatorController.button(3).onFalse(new Stow(superStructure))
-    ; 
-
-    //m_operatorController.button(1).whileTrue(new HorizontalLock(m_driverController::getLeftX, m_driverController::getRightY, drive));
   }
 
   public Command getAutonomousCommand(String auto) {
@@ -181,7 +122,6 @@ public class RobotContainer {
     eventMap.put("score cube high", new SequentialCommandGroup(new Stow(superStructure), new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
-    eventMap.put("rezero drive", new InstantCommand(drive::reZeroTurnMotors));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));

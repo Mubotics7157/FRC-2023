@@ -15,9 +15,11 @@ import com.ctre.phoenixpro.controls.PositionVoltage;
 import com.ctre.phoenixpro.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenixpro.hardware.CANcoder;
 import com.ctre.phoenixpro.hardware.TalonFX;
+import com.ctre.phoenixpro.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenixpro.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenixpro.signals.InvertedValue;
 import com.ctre.phoenixpro.signals.NeutralModeValue;
+import com.ctre.phoenixpro.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -25,28 +27,29 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.AltConstants.DriveConstants;
-import frc.robot.AltConstants.SwerveModuleConstants;
+import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
-    private TalonFX m_driveMotor;
-    private TalonFX m_steerMotor;
-    private WPI_CANCoder m_cancoder;
+    private TalonFX driveMotor;
+    private TalonFX steerMotor;
+    private CANcoder cancoder;
 
-    private StatusSignalValue<Double> m_drivePosition;
-    private StatusSignalValue<Double> m_driveVelocity;
-    private StatusSignalValue<Double> m_steerPosition;
-    private StatusSignalValue<Double> m_steerVelocity;
-    private BaseStatusSignalValue[] m_signals;
-    private double m_driveRotationsPerMeter = 0;
+    private StatusSignalValue<Double> drivePosition;
+    private StatusSignalValue<Double> driveVelocity;
+    private StatusSignalValue<Double> steerPosition;
+    private StatusSignalValue<Double> steerVelocity;
+    private BaseStatusSignalValue[] signals;
+    private double driveRotationsPerMeter = 0;
 
-    private PositionVoltage m_angleSetter = new PositionVoltage(0, true, 0, 0, true);
-    private VelocityTorqueCurrentFOC m_velocitySetter = new VelocityTorqueCurrentFOC(0);
+    private PositionVoltage angleSetter = new PositionVoltage(0, true, 0, 0, true);
+    private VelocityTorqueCurrentFOC velocitySetter = new VelocityTorqueCurrentFOC(0);
+    private StatusCode initializationStatus = StatusCode.StatusCodeNotInitialized;
 
-    private SwerveModulePosition m_internalState = new SwerveModulePosition();
+    private SwerveModulePosition internalState = new SwerveModulePosition();
 
     public SwerveModule(int drivePort,int turnPort,int encoderPort,double encoderOffset, boolean invertDrive) {
-        m_driveMotor = new TalonFX(drivePort, "swerve");
-        m_steerMotor = new TalonFX(turnPort, "swerve");
+        driveMotor = new TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        steerMotor = new TalonFX(turnPort,SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
         TalonFXConfiguration talonConfigs = new TalonFXConfiguration();
         Slot0Configs driveConfigs = new Slot0Configs();
@@ -59,118 +62,122 @@ public class SwerveModule {
         else 
             talonConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        m_driveMotor.getConfigurator().apply(talonConfigs);
-        m_driveMotor.setInverted(invertDrive);
+        for(int i=0;i<5;i++){
+            initializationStatus = driveMotor.getConfigurator().apply(talonConfigs);
+            if(initializationStatus.isOK())
+                break;
+            else if(!initializationStatus.isOK())
+                System.out.println("Failed to Configure CAN ID" + drivePort);
+            
+        }
+        driveMotor.setInverted(invertDrive);
 
-        /* Undo changes for torqueCurrent */
         talonConfigs.TorqueCurrent = new TorqueCurrentConfigs();
         Slot0Configs turnConfig = new Slot0Configs();
         turnConfig.kP = 50;
         turnConfig.kD = 0.1;
         talonConfigs.Slot0 = turnConfig;
-        // Modify configuration to use remote CANcoder fused
-        //talonConfigs.Feedback.FeedbackRemoteSensorID = encoderPort;
-        talonConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        //talonConfigs.Feedback.RotorToSensorRatio = SwerveModuleConstants.TURN_GEAR_RATIO;
-        talonConfigs.Feedback.SensorToMechanismRatio = SwerveModuleConstants.TURN_GEAR_RATIO;
+        talonConfigs.Feedback.FeedbackRemoteSensorID = encoderPort;
+        talonConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        talonConfigs.Feedback.RotorToSensorRatio = SwerveModuleConstants.TURN_GEAR_RATIO;
         talonConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         talonConfigs.ClosedLoopGeneral.ContinuousWrap = true;
-        //talonConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        for(int i=0;i<5;i++){
+            initializationStatus = steerMotor.getConfigurator().apply(talonConfigs);
+            if(initializationStatus.isOK())
+                break;
+            else if(!initializationStatus.isOK())
+                System.out.println("Failed to Configure CAN ID" + turnPort);
+            
+        }
 
-        //talonConfigs.ClosedLoopGeneral.ContinuousWrap = false; // Enable continuous wrap for swerve modules
-        m_steerMotor.getConfigurator().apply(talonConfigs);
+        cancoder = new CANcoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
 
-        m_cancoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+        CANcoderConfiguration config = new CANcoderConfiguration();
+        config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        config.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        config.MagnetSensor.MagnetOffset = encoderOffset / 360;
+        for(int i=0;i<5;i++){
+            initializationStatus = cancoder.getConfigurator().apply(config);
+            if(initializationStatus.isOK())
+                break;
+            else if(!initializationStatus.isOK())
+                System.out.println("Failed to Configure CAN ID" + encoderPort);
+            
+        }
 
-        m_cancoder.configFactoryDefault();
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
-        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        config.magnetOffsetDegrees = encoderOffset;
-        m_cancoder.configAllSettings(config,50);
+        drivePosition = driveMotor.getPosition();
+        driveVelocity = driveMotor.getVelocity();
+        steerPosition = cancoder.getPosition();
+        steerVelocity = cancoder.getVelocity();
 
-        m_drivePosition = m_driveMotor.getPosition();
-        m_driveVelocity = m_driveMotor.getVelocity();
-        m_steerPosition = m_steerMotor.getPosition();
-        m_steerVelocity = m_steerMotor.getVelocity();
+        signals = new BaseStatusSignalValue[4];
+        signals[0] = drivePosition;
+        signals[1] = driveVelocity;
+        signals[2] = steerPosition;
+        signals[3] = steerVelocity;
 
-        m_signals = new BaseStatusSignalValue[4];
-        m_signals[0] = m_drivePosition;
-        m_signals[1] = m_driveVelocity;
-        m_signals[2] = m_steerPosition;
-        m_signals[3] = m_steerVelocity;
-
-        /* Calculate the ratio of drive motor rotation to meter on ground */
         double rotationsPerWheelRotation = 6.75;
         double metersPerWheelRotation = Math.PI * DriveConstants.WHEEL_DIAMETER_METERS;
-        m_driveRotationsPerMeter = rotationsPerWheelRotation / metersPerWheelRotation;
-
-        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
-        OrangeUtility.sleep(2000);
+        driveRotationsPerMeter = rotationsPerWheelRotation / metersPerWheelRotation;
     }
 
     public SwerveModulePosition getPosition() {
         /* Refresh all signals */
-        m_drivePosition.refresh();
-        m_driveVelocity.refresh();
-        m_steerPosition.refresh();
-        m_steerVelocity.refresh();
+        drivePosition.refresh();
+        driveVelocity.refresh();
+        steerPosition.refresh();
+        steerVelocity.refresh();
 
         /* Now latency-compensate our signals */
         double drive_rot =
-                m_drivePosition.getValue();
-                        //+ (m_driveVelocity.getValue() * m_drivePosition.getTimestamp().getLatency());
+                drivePosition.getValue();
+                        //+ (driveVelocity.getValue() * drivePosition.getTimestamp().getLatency());
         double angle_rot =
-                m_steerPosition.getValue();
-                        //+ (m_steerVelocity.getValue() * m_steerPosition.getTimestamp().getLatency());
+                steerPosition.getValue();
+                        //+ (steerVelocity.getValue() * steerPosition.getTimestamp().getLatency());
 
-        /* And push them into a SwerveModuleState object to return */
-        m_internalState.distanceMeters = drive_rot / m_driveRotationsPerMeter;
-        /* Angle is already in terms of steer rotations */
-        m_internalState.angle = Rotation2d.fromRotations(angle_rot);
+        internalState.distanceMeters = drive_rot / driveRotationsPerMeter;
+        internalState.angle = Rotation2d.fromRotations(angle_rot);
 
-        return m_internalState;
+        return internalState;
     }
 
     public void apply(SwerveModuleState state) {
-        var optimized = CTREUtils.optimize(state, m_internalState.angle);
+        var optimized = CTREUtils.optimize(state, internalState.angle);
 
         double angleToSetDeg = optimized.angle.getRotations();
-        //SmartDashboard.putNumber("angle to set", Units.rotationsToDegrees(angleToSetDeg));
-        m_steerMotor.setControl(m_angleSetter.withPosition(angleToSetDeg));
-        double velocityToSet = optimized.speedMetersPerSecond * m_driveRotationsPerMeter;
-        m_driveMotor.setControl(m_velocitySetter.withVelocity(velocityToSet));
+        steerMotor.setControl(angleSetter.withPosition(angleToSetDeg));
+        double velocityToSet = optimized.speedMetersPerSecond * driveRotationsPerMeter;
+        driveMotor.setControl(velocitySetter.withVelocity(velocityToSet));
     }
 
     public BaseStatusSignalValue[] getSignals() {
-        return m_signals;
+        return signals;
     }
 
     public double getDriveVelocity(){
-        m_driveVelocity.refresh();
-        return (m_driveVelocity.getValue() / SwerveModuleConstants.DRIVE_GEAR_RATIO) * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
+        driveVelocity.refresh();
+        return (driveVelocity.getValue() / SwerveModuleConstants.DRIVE_GEAR_RATIO) * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
     }
 
     public void changeTurnKP(){
         Slot0Configs turnConfig = new Slot0Configs();
         turnConfig.kP = SmartDashboard.getNumber("Turn kP", 1);
-        m_steerMotor.getConfigurator().refresh(turnConfig);
+        steerMotor.getConfigurator().refresh(turnConfig);
     }
 
     public void changeDriveKP(){
         Slot0Configs driveConfig = new Slot0Configs();
         driveConfig.kP = SmartDashboard.getNumber("Drive kP", 1);
-        m_driveMotor.getConfigurator().refresh(driveConfig);
+        driveMotor.getConfigurator().refresh(driveConfig);
     }
 
     public Rotation2d getAbsHeading(){
-        return Rotation2d.fromDegrees(m_cancoder.getAbsolutePosition());
+        return Rotation2d.fromDegrees(cancoder.getAbsolutePosition().getValue());
     }
 
-    public void reZeroTurnMotors(){
-        var dill = m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
-        System.out.println(dill.toString());
-        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
-
+    public Rotation2d getHeading(){
+        return Rotation2d.fromRotations(steerMotor.getRotorPosition().getValue());
     }
 }

@@ -97,7 +97,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
-    Drive.getInstance().reZeroTurnMotors();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -125,7 +124,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    compressor.enableDigital();
   }
 
   @Override
