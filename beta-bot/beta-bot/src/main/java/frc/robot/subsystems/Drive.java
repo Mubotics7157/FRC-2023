@@ -77,7 +77,7 @@ public class Drive extends SubsystemBase {
     }
     
     public void logData(){
-        //SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
+        SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
          
         SmartDashboard.putNumber("left front", frontLeft.getPosition().angle.getDegrees());
         SmartDashboard.putNumber("left rear", rearLeft.getPosition().angle.getDegrees());
@@ -116,7 +116,7 @@ public class Drive extends SubsystemBase {
         rearLeft.apply(states[2]);
         rearRight.apply(states[3]);
 
-        //SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
  /* 
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));

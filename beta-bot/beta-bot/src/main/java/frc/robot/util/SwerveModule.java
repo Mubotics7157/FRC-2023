@@ -105,7 +105,7 @@ public class SwerveModule {
         double metersPerWheelRotation = Math.PI * DriveConstants.WHEEL_DIAMETER_METERS;
         m_driveRotationsPerMeter = rotationsPerWheelRotation / metersPerWheelRotation;
 
-        m_steerMotor.setRotorPosition(4000);
+        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
         OrangeUtility.sleep(2000);
     }
 
@@ -168,7 +168,9 @@ public class SwerveModule {
     }
 
     public void reZeroTurnMotors(){
-        
-        m_steerMotor.setRotorPosition(4000);
+        var dill = m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
+        System.out.println(dill.toString());
+        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
+
     }
 }
