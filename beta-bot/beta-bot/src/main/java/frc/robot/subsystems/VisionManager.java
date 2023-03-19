@@ -48,7 +48,7 @@ public class VisionManager extends SubsystemBase{
     public void periodic() {
         logData();
         //coneOffset = getConeOffset();
-        //addFieldRelativePose();
+        addFieldRelativePose();
     }
 
     public Rotation2d getNodeAngle(){
@@ -121,8 +121,8 @@ public class VisionManager extends SubsystemBase{
             try{
             if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
                 Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-            if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-                Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
+           // if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+                //Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
         //lastTimeStamp = targetLL.getBootTimeStamp();
             }
             catch(Exception e){
@@ -175,9 +175,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public void logData(){
-        SmartDashboard.putNumber("Intake Target Yaw", getConeOffset());
-        SmartDashboard.putNumber("Intake offset", coneOffset);
-        try{
+
         //SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
         //SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
         //SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
@@ -188,11 +186,6 @@ public class VisionManager extends SubsystemBase{
 
         //SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
 
-        SmartDashboard.putNumber("Distance to Tag", getDistanceToTag());
-        }
-        catch(Exception e ){
-
-        }
+ 
     }
-
 }   

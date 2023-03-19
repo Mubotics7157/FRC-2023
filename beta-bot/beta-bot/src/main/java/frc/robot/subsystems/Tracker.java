@@ -39,9 +39,9 @@ public class Tracker extends SubsystemBase{
             .1
         ),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
-            15,
-            15,
-            15
+            1,
+            1,
+            5
         )
     );
 
@@ -77,6 +77,7 @@ public class Tracker extends SubsystemBase{
     public void addVisionMeasurement(Pose2d visionPose,double latency){
         if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))<1)
             estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
+        m_field.getObject("vision pose").setPose(visionPose);
     }
 
     public void regeneratePath(){

@@ -249,8 +249,8 @@ public final class Constants {
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
-    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(12, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(5, 0, 0);
+    public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(2.5, 0, 0);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.75, 0, 0);
   }
 
   public static final class SuperStructureConstants{

@@ -128,6 +128,7 @@ public class RobotContainer {
     //ground intake upright CONES
     
     //m_operatorController.button(7).onTrue(new Zero());
+    /* 
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
@@ -135,6 +136,7 @@ public class RobotContainer {
 
     m_operatorController.button(1).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
     m_operatorController.button(5).onTrue(new InstantCommand(drive::reZeroTurnMotors));
+     */
     /* 
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));
@@ -195,7 +197,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine(auto, new PathConstraints(3, 3)/*PathPlanner.getConstraintsFromPath(auto)*/, eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+  return new AutoRoutine("Straight-line", new PathConstraints(3, 4)/*PathPlanner.getConstraintsFromPath(auto)*/, eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
