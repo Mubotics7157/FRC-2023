@@ -65,10 +65,10 @@ public final class Constants {
     public static final int FRONT_LEFT_ENCODER_PORT = 6;
     public static final int REAR_LEFT_ENCODER_PORT = 3;
 
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -115.48219;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = 25.048828125;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = -153.28125;
-    public static final double REAR_LEFT_ENCODER_OFFSET = -77.78;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = 65.39;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = -153.786128;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = 24.96;
+    public static final double REAR_LEFT_ENCODER_OFFSET = 104.942810;
 
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);

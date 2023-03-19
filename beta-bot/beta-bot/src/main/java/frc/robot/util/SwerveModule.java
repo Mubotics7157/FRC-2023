@@ -131,11 +131,11 @@ public class SwerveModule {
 
         /* Now latency-compensate our signals */
         double drive_rot =
-                drivePosition.getValue();
-                        //+ (driveVelocity.getValue() * drivePosition.getTimestamp().getLatency());
+                drivePosition.getValue()
+                        + (driveVelocity.getValue() * drivePosition.getTimestamp().getLatency());
         double angle_rot =
-                steerPosition.getValue();
-                        //+ (steerVelocity.getValue() * steerPosition.getTimestamp().getLatency());
+                steerPosition.getValue()
+                        + (steerVelocity.getValue() * steerPosition.getTimestamp().getLatency());
 
         internalState.distanceMeters = drive_rot / driveRotationsPerMeter;
         internalState.angle = Rotation2d.fromRotations(angle_rot);
@@ -174,7 +174,7 @@ public class SwerveModule {
     }
 
     public Rotation2d getAbsHeading(){
-        return Rotation2d.fromDegrees(cancoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromRotations(cancoder.getAbsolutePosition().getValue());
     }
 
     public Rotation2d getHeading(){

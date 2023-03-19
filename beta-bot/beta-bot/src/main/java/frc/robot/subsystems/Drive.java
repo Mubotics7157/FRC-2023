@@ -18,8 +18,8 @@ public class Drive extends SubsystemBase {
     
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
-    private double tanDeadband = 0;
-    private double angDeadband = 0;
+    private double tanDeadband = 0.1;
+    private double angDeadband = 0.15;
 
     private static Drive instance = new Drive();
     /* 
@@ -73,8 +73,9 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("right front abs", frontRight.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("right rear abs", rearRight.getAbsHeading().getDegrees());
         
-        /* 
+        
         SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
+        /* 
         SmartDashboard.putNumber("left rear velocity", rearLeft.getDriveVelocity());
         SmartDashboard.putNumber("right front velocity", frontRight.getDriveVelocity());
         SmartDashboard.putNumber("right rear velocity", rearRight.getDriveVelocity());
@@ -100,7 +101,7 @@ public class Drive extends SubsystemBase {
         rearLeft.setState(states[2]);
         rearRight.setState(states[3]);
 
-        //SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
  /* 
 
         SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
@@ -150,8 +151,8 @@ public class Drive extends SubsystemBase {
     }
     
     public void changeMax(){
-        tanDeadband = 0.009;
-        angDeadband = 0.009;
+        tanDeadband = 0.1;
+        angDeadband = 0.15;
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     }
