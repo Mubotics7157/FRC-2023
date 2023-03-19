@@ -36,8 +36,6 @@ public class Drive extends SubsystemBase {
     private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON,DriveConstants.CANIVORE_NAME);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
-    private double lastTimeStamp = Timer.getFPGATimestamp();
-    private double lastReqVel = 0;
 
 
     public Drive(){
@@ -124,7 +122,6 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Rear Left Abs Heading", rearLeft.getAbsHeading().getDegrees());
         SmartDashboard.putNumber("Rear Right Abs Heading", rearRight.getAbsHeading().getDegrees());
     */
-        lastTimeStamp = currentTime;
         //lastReqVel = currVel;
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
@@ -189,12 +186,6 @@ public class Drive extends SubsystemBase {
         return angDeadband;
     }
     public SwerveModulePosition[] getModulePositions(){
-        /* 
-        SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
-        SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
-        SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
-        SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
-*/
         SwerveModulePosition[] modulePositions = {frontLeft.getPosition(),frontRight.getPosition(),rearLeft.getPosition(),rearRight.getPosition()};
 
         return modulePositions;
@@ -203,8 +194,6 @@ public class Drive extends SubsystemBase {
     public ProfiledPIDController getRotationController(){
         return rotController;
     }
-
- 
 
     public void lockModules(){
         frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
