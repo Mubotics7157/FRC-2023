@@ -50,7 +50,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public Tracker(){
-        resetViaVision();
+        //resetViaVision();
         initTunableFields();
         SmartDashboard.putNumber("custom offset", 0);
     }

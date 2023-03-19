@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.ctre.phoenixpro.BaseStatusSignalValue;
+import com.ctre.phoenixpro.StatusCode;
 import com.ctre.phoenixpro.StatusSignalValue;
 import com.ctre.phoenixpro.configs.CANcoderConfiguration;
 import com.ctre.phoenixpro.configs.Slot0Configs;
@@ -104,7 +105,8 @@ public class SwerveModule {
         double metersPerWheelRotation = Math.PI * DriveConstants.WHEEL_DIAMETER_METERS;
         m_driveRotationsPerMeter = rotationsPerWheelRotation / metersPerWheelRotation;
 
-        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
+        m_steerMotor.setRotorPosition(4000);
+        OrangeUtility.sleep(2000);
     }
 
     public SwerveModulePosition getPosition() {
@@ -166,6 +168,7 @@ public class SwerveModule {
     }
 
     public void reZeroTurnMotors(){
-        m_steerMotor.setRotorPosition(Rotation2d.fromDegrees(m_cancoder.getAbsolutePosition()).getRotations());
+        
+        m_steerMotor.setRotorPosition(4000);
     }
 }

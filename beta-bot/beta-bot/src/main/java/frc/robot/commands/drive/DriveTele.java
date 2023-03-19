@@ -59,7 +59,7 @@ public class DriveTele extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, omega, Tracker.getInstance().getPose().getRotation()));
     }
 
     @Override

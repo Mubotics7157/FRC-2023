@@ -137,6 +137,8 @@ public class RobotContainer {
     m_operatorController.button(1).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
     m_operatorController.button(5).onTrue(new InstantCommand(drive::reZeroTurnMotors));
      */
+    m_driverController.povDown().onTrue(new InstantCommand(drive::reZeroTurnMotors));
+
     /* 
     m_operatorController.button(7).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_6.getY()));
     m_operatorController.button(9).onTrue(new ChangeNode(RedConstants.NODE_CONE_RED_5.getY()));

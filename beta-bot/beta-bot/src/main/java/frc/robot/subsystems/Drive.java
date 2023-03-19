@@ -27,10 +27,17 @@ public class Drive extends SubsystemBase {
     private double angDeadband = 0.15;
 
     private static Drive instance = new Drive();
+    /* 
+    private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
+    private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,AltConstants.DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
+    private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,AltConstants.DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
+    */
     private SwerveModule frontLeft = new SwerveModule(DriveConstants.FRONT_LEFT_DRIVE_PORT,DriveConstants.FRONT_LEFT_TURN_PORT,DriveConstants.FRONT_LEFT_ENCODER_PORT,Constants.DriveConstants.FRONT_LEFT_ENCODER_OFFSET, false);
-    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,Constants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, true);
+    private SwerveModule frontRight = new SwerveModule(DriveConstants.FRONT_RIGHT_DRIVE_PORT,DriveConstants.FRONT_RIGHT_TURN_PORT,DriveConstants.FRONT_RIGHT_ENCODER_PORT,Constants.DriveConstants.FRONT_RIGHT_ENCODER_OFFSET, false);
     private SwerveModule rearLeft = new SwerveModule(DriveConstants.REAR_LEFT_DRIVE_PORT,DriveConstants.REAR_LEFT_TURN_PORT,DriveConstants.REAR_LEFT_ENCODER_PORT,Constants.DriveConstants.REAR_LEFT_ENCODER_OFFSET, false);
     private SwerveModule rearRight = new SwerveModule(DriveConstants.REAR_RIGHT_DRIVE_PORT,DriveConstants.REAR_RIGHT_TURN_PORT,DriveConstants.REAR_RIGHT_ENCODER_PORT,Constants.DriveConstants.REAR_RIGHT_ENCODER_OFFSET, false);
+    
     private WPI_Pigeon2 gyro = new WPI_Pigeon2(DriveConstants.DEVICE_ID_PIGEON,DriveConstants.CANIVORE_NAME);
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
@@ -47,8 +54,9 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("align P", 0.25);
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
+        reZeroTurnMotors();
 
-        PathPlannerServer.startServer(5811);
+        //PathPlannerServer.startServer(5811);
     }
 
     public static Drive getInstance(){
@@ -57,7 +65,7 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //logData();
+        logData();
 
         SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
  
@@ -69,20 +77,53 @@ public class Drive extends SubsystemBase {
     }
     
     public void logData(){
+        //SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
+         
+        SmartDashboard.putNumber("left front", frontLeft.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("left rear", rearLeft.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("right front", frontRight.getPosition().angle.getDegrees());
+        SmartDashboard.putNumber("right rear", rearRight.getPosition().angle.getDegrees());
+
+        SmartDashboard.putNumber("left front abs", frontLeft.getAbsHeading().getDegrees());
+        SmartDashboard.putNumber("left rear abs", rearLeft.getAbsHeading().getDegrees());
+        SmartDashboard.putNumber("right front abs", frontRight.getAbsHeading().getDegrees());
+        SmartDashboard.putNumber("right rear abs", rearRight.getAbsHeading().getDegrees());
+        
+        /* 
+        SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
+        SmartDashboard.putNumber("left rear velocity", rearLeft.getDriveVelocity());
+        SmartDashboard.putNumber("right front velocity", frontRight.getDriveVelocity());
+        SmartDashboard.putNumber("right rear velocity", rearRight.getDriveVelocity());
+        */
+        /* 
+        SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
+        SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
+        SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
+        SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
 
-
+        SmartDashboard.putNumber("left front position", frontLeft.getPosition());
+*/
     }
 
     public void setModuleStates(SwerveModuleState[] states){
         double currentTime = Timer.getFPGATimestamp();
-        double currVel = frontLeft.getDriveVelocity();
+        
+        //SmartDashboard.putNumber("angle apply", states[0].angle.getDegrees());
+        //double currVel = frontLeft.getDriveVelocity();
         frontLeft.apply(states[0]);
         frontRight.apply(states[1]);
         rearLeft.apply(states[2]);
         rearRight.apply(states[3]);
- 
-        //SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
+
+        //SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
+ /* 
+
+        SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
+        SmartDashboard.putNumber("FL Velocity", frontLeft.getDriveVelocity());
+        SmartDashboard.putNumber("FL Turn Error", frontLeft.getHeading().rotateBy(states[0].angle.unaryMinus()).getDegrees());
+        SmartDashboard.putNumber("FL Heading", frontLeft.getHeading().getDegrees());
+        */
         /* 
         SmartDashboard.putNumber("FL VEL", frontLeft.getDriveVelocity());
         SmartDashboard.putNumber("FL Turn Error", frontLeft.getHeading().rotateBy(states[0].angle.unaryMinus()).getDegrees());
@@ -98,7 +139,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("Rear Right Abs Heading", rearRight.getAbsHeading().getDegrees());
     */
         lastTimeStamp = currentTime;
-        lastReqVel = currVel;
+        //lastReqVel = currVel;
 
         //double flError = states[0].angle.rotateBy(frontLeft.getState().angle).getDegrees();
         //SmartDashboard.putNumber("left front error", flError);
@@ -162,7 +203,12 @@ public class Drive extends SubsystemBase {
         return angDeadband;
     }
     public SwerveModulePosition[] getModulePositions(){
-
+        /* 
+        SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
+        SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
+        SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
+        SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
+*/
         SwerveModulePosition[] modulePositions = {frontLeft.getPosition(),frontRight.getPosition(),rearLeft.getPosition(),rearRight.getPosition()};
 
         return modulePositions;
@@ -182,9 +228,25 @@ public class Drive extends SubsystemBase {
     }
 
     public void reZeroTurnMotors(){
-        frontLeft.reZeroTurnEncoder();
-        frontRight.reZeroTurnEncoder();
-        rearLeft.reZeroTurnEncoder();
-        rearRight.reZeroTurnEncoder();
+        
+        frontLeft.reZeroTurnMotors();
+        frontRight.reZeroTurnMotors();
+        rearLeft.reZeroTurnMotors();
+        rearRight.reZeroTurnMotors();
+
+        
+    }
+
+    public void changeMotorGains(){
+        frontLeft.changeDriveKP();
+        frontRight.changeDriveKP();
+        rearLeft.changeDriveKP();
+        rearRight.changeDriveKP();
+
+        //frontLeft.changeTurnKP();
+        //frontRight.changeTurnKP();
+        //rearLeft.changeTurnKP();
+        //rearRight.changeTurnKP();
+        
     }
 }
