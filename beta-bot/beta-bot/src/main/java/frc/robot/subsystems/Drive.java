@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -214,5 +218,19 @@ public class Drive extends SubsystemBase {
         //rearLeft.changeTurnKP();
         //rearRight.changeTurnKP();
         
+    }
+
+    public PPSwerveControllerCommand followPath(PathPlannerTrajectory traj){
+            return new PPSwerveControllerCommand(
+                 traj,
+                 Tracker.getInstance()::getPose, // Pose supplier
+                 DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+                 new PIDController(0, 0, 0),
+                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
+                 new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 this::setModuleStates,  
+                 true,
+                 this
+             );
     }
 }
