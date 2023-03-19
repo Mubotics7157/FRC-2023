@@ -43,14 +43,11 @@ public class AlignObject extends CommandBase {
 
     @Override
     public void execute() {
-            double errorRad = Rotation2d.fromDegrees(0).rotateBy(vision.getCubeYaw()).getRadians();
             if(!(strafeController.atSetpoint()))
                 deltaSpeed = strafeController.calculate(vision.getCubeYaw().getRadians());
             else
                 deltaSpeed = 0;
             
-            SmartDashboard.putBoolean("Aligned To Cube?", strafeController.atSetpoint());
-            SmartDashboard.putNumber("controller output speed", deltaSpeed);
             driveFromChassis(new ChassisSpeeds(0, deltaSpeed*frc.robot.Constants.DriveConstants.MAX_TANGENTIAL_VELOCITY, 0));
         
     }

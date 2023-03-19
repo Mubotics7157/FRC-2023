@@ -21,6 +21,7 @@ import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
+import frc.robot.commands.auto.PreloadPlusOne;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AutoBalance;
@@ -142,7 +143,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-  return new AutoRoutine("PL + intake", new PathConstraints(3, 4)/*PathPlanner.getConstraintsFromPath(auto)*/, eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    return new PreloadPlusOne(drive, vision, superStructure);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
