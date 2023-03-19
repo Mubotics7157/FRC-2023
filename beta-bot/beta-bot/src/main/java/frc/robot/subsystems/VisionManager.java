@@ -26,7 +26,7 @@ public class VisionManager extends SubsystemBase{
 
     public enum VisionState{
         TAG,
-        TAPE,
+        CUBE,
         OFF
     }
 
@@ -47,7 +47,6 @@ public class VisionManager extends SubsystemBase{
     @Override
     public void periodic() {
         logData();
-        //coneOffset = getConeOffset();
         addFieldRelativePose();
     }
 
@@ -141,7 +140,7 @@ public class VisionManager extends SubsystemBase{
 
 
     public void togglePipeline(){
-        targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.TAPE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.TAPE_PIPELINE_INDEX);
+        targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.CUBE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.CUBE_PIPELINE_INDEX);
     }
 
     public void setTargetLLState(VisionState state){
@@ -149,14 +148,26 @@ public class VisionManager extends SubsystemBase{
             case TAG:
                 targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
                 break;
-            case TAPE:
-                targetLL.setPipelineIndex(VisionConstants.TAPE_PIPELINE_INDEX);
+            case CUBE:
+                targetLL.setPipelineIndex(VisionConstants.CUBE_PIPELINE_INDEX);
                 break;
             default:
                 targetLL.setPipelineIndex(VisionConstants.TAG_PIPELINE_INDEX);
                 break;
         }
     }
+
+    public VisionState getTargetLLPipelineState(){
+        switch((int)targetLL.getPipelineIndex()){
+            case 0:
+                return VisionState.TAG;
+            case 1:
+                return VisionState.CUBE;
+            default:
+                return VisionState.TAG;
+        }
+    }
+
 
     private void initAlignmentMap(){
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_1.getY(), BlueConstants.NODE_CONE_BLUE_1.getY());
@@ -186,6 +197,26 @@ public class VisionManager extends SubsystemBase{
 
         //SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
 
- 
+        try{
+            SmartDashboard.putNumber("Cube Yaw", getCubeYaw().getDegrees());
+        }
+        catch(Exception e){
+
+        }
+
+
+    }
+
+    public Rotation2d getCubeYaw(){
+        if(targetLL.getPipelineIndex()==1){
+            try{
+                return targetLL.getTargetYaw();
+            }
+            catch(Exception e){
+                return Rotation2d.fromDegrees(0);
+            }
+        }
+        else
+            return null;
     }
 }   

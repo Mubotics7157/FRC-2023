@@ -164,7 +164,7 @@ public final class Constants {
       public static final int LIMELIGHT_ON = 0;
       public static final int LIMELIGHT_OFF = 1;
 
-      public static final int TAPE_PIPELINE_INDEX = 1;
+      public static final int CUBE_PIPELINE_INDEX = 1;
       public static final int TAG_PIPELINE_INDEX = 0;
       public static final int CONE_PIPELINE_INDEX = 0;
 
