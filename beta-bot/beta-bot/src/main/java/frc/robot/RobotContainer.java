@@ -21,6 +21,7 @@ import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
+import frc.robot.commands.drive.AlignObject;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.ChangeNode;
@@ -99,6 +100,8 @@ public class RobotContainer {
 
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
+
+    m_driverController.povDown().onTrue(new AlignObject(drive, vision));
     
    
   }
