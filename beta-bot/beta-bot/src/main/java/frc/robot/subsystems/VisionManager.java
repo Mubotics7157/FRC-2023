@@ -46,8 +46,8 @@ public class VisionManager extends SubsystemBase{
 
     @Override
     public void periodic() {
-        logData();
-        addFieldRelativePose();
+        //logData();
+        //addFieldRelativePose();
     }
 
     public Rotation2d getNodeAngle(){

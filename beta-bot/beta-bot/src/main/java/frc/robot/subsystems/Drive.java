@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -48,7 +50,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("strafe P", 0.25);
         SmartDashboard.putNumber("offset strafe", 0);
 
-        //PathPlannerServer.startServer(5811);
+        PathPlannerServer.startServer(5811);
     }
 
     public static Drive getInstance(){

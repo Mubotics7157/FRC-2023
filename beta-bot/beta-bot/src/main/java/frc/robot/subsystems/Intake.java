@@ -198,10 +198,10 @@ public class Intake extends SubsystemBase {
     }
 
     private void setSpeed(double speedRPM){
-        // intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
-        // intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
-        intakeMaster.set(ControlMode.PercentOutput, 0);
-        intakeSlave.set(ControlMode.PercentOutput, 0);
+        intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
+        intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
+        //intakeMaster.set(ControlMode.PercentOutput, 0);
+        //intakeSlave.set(ControlMode.PercentOutput, 0);
 
         //intakeMaster.set(ControlMode.PercentOutput,speedRPM/6000);
         //intakeSlave.set(ControlMode.PercentOutput, speedRPM/6000);
