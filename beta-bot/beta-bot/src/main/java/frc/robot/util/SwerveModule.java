@@ -1,129 +1,171 @@
 package frc.robot.util;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenixpro.BaseStatusSignalValue;
+import com.ctre.phoenixpro.StatusSignalValue;
+import com.ctre.phoenixpro.configs.CANcoderConfiguration;
+import com.ctre.phoenixpro.configs.Slot0Configs;
+import com.ctre.phoenixpro.configs.TalonFXConfiguration;
+import com.ctre.phoenixpro.configs.TorqueCurrentConfigs;
+import com.ctre.phoenixpro.controls.PositionVoltage;
+import com.ctre.phoenixpro.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenixpro.hardware.CANcoder;
+import com.ctre.phoenixpro.hardware.TalonFX;
+import com.ctre.phoenixpro.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenixpro.signals.InvertedValue;
+import com.ctre.phoenixpro.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.SwerveModuleConstants;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.AltConstants.DriveConstants;
+import frc.robot.AltConstants.SwerveModuleConstants;
 
 public class SwerveModule {
-   private WPI_TalonFX turnMotor;
-   private WPI_TalonFX driveMotor;
-   private WPI_CANCoder absEncoder;
+    private TalonFX m_driveMotor;
+    private TalonFX m_steerMotor;
+    private WPI_CANCoder m_cancoder;
 
-    public SwerveModule(int drivePort, int turnPort, int encoderPort, double angleOffset, boolean isInverted){
-        driveMotor = new WPI_TalonFX(drivePort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
-        turnMotor = new WPI_TalonFX(turnPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+    private StatusSignalValue<Double> m_drivePosition;
+    private StatusSignalValue<Double> m_driveVelocity;
+    private StatusSignalValue<Double> m_steerPosition;
+    private StatusSignalValue<Double> m_steerVelocity;
+    private BaseStatusSignalValue[] m_signals;
+    private double m_driveRotationsPerMeter = 0;
 
-        turnMotor.configFactoryDefault();
-        driveMotor.configFactoryDefault();
+    private PositionVoltage m_angleSetter = new PositionVoltage(0, true, 0, 0, true);
+    private VelocityTorqueCurrentFOC m_velocitySetter = new VelocityTorqueCurrentFOC(0);
 
+    private SwerveModulePosition m_internalState = new SwerveModulePosition();
 
-        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
-        driveMotor.configAllSettings(driveConfig);
-        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
-        driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(isInverted);
-        driveMotor.configVoltageCompSaturation(12);
-        driveMotor.enableVoltageCompensation(true);
-        //driveMotor.configStatorCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
-        driveMotor.setSensorPhase(false);
-        driveMotor.config_kP(0, SwerveModuleConstants.driveKP);
-        
-        turnMotor.setSelectedSensorPosition(0);
-        turnMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,SwerveModuleConstants.TIMEOUT_MS);
-        turnMotor.setNeutralMode(NeutralMode.Brake);
-        turnMotor.setInverted(true);
-        turnMotor.config_kP(0, SwerveModuleConstants.TURNING_KP);
-        //turnMotor.configStatorCurrentLimit(new SupplyCurrentLimitConfiguration(true, 15, 15, 0));
+    public SwerveModule(int drivePort,int turnPort,int encoderPort,double encoderOffset, boolean invertDrive) {
+        m_driveMotor = new TalonFX(drivePort, "swerve");
+        m_steerMotor = new TalonFX(turnPort, "swerve");
 
-        absEncoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
-    
+        TalonFXConfiguration talonConfigs = new TalonFXConfiguration();
+        Slot0Configs driveConfigs = new Slot0Configs();
+        driveConfigs.kP =3;
+        talonConfigs.Slot0 = driveConfigs;
+        talonConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-        absEncoder.configFactoryDefault();
+        if(invertDrive)
+            talonConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        else 
+            talonConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+        m_driveMotor.getConfigurator().apply(talonConfigs);
+        m_driveMotor.setInverted(invertDrive);
+
+        /* Undo changes for torqueCurrent */
+        talonConfigs.TorqueCurrent = new TorqueCurrentConfigs();
+        Slot0Configs turnConfig = new Slot0Configs();
+        turnConfig.kP = 50;
+        turnConfig.kD = 0.1;
+        talonConfigs.Slot0 = turnConfig;
+        // Modify configuration to use remote CANcoder fused
+        //talonConfigs.Feedback.FeedbackRemoteSensorID = encoderPort;
+        talonConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        //talonConfigs.Feedback.RotorToSensorRatio = SwerveModuleConstants.TURN_GEAR_RATIO;
+        talonConfigs.Feedback.SensorToMechanismRatio = SwerveModuleConstants.TURN_GEAR_RATIO;
+        talonConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        talonConfigs.ClosedLoopGeneral.ContinuousWrap = true;
+        //talonConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+        //talonConfigs.ClosedLoopGeneral.ContinuousWrap = false; // Enable continuous wrap for swerve modules
+        m_steerMotor.getConfigurator().apply(talonConfigs);
+
+        m_cancoder = new WPI_CANCoder(encoderPort, SwerveModuleConstants.SWERVE_CANIVORE_ID);
+
+        m_cancoder.configFactoryDefault();
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        config.magnetOffsetDegrees = angleOffset;
-        absEncoder.configAllSettings(config,50);
+        config.magnetOffsetDegrees = encoderOffset;
+        m_cancoder.configAllSettings(config,50);
 
-        OrangeUtility.sleep(2000);
-        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+        m_drivePosition = m_driveMotor.getPosition();
+        m_driveVelocity = m_driveMotor.getVelocity();
+        m_steerPosition = m_steerMotor.getPosition();
+        m_steerVelocity = m_steerMotor.getVelocity();
+
+        m_signals = new BaseStatusSignalValue[4];
+        m_signals[0] = m_drivePosition;
+        m_signals[1] = m_driveVelocity;
+        m_signals[2] = m_steerPosition;
+        m_signals[3] = m_steerVelocity;
+
+        /* Calculate the ratio of drive motor rotation to meter on ground */
+        double rotationsPerWheelRotation = 6.75;
+        double metersPerWheelRotation = Math.PI * DriveConstants.WHEEL_DIAMETER_METERS;
+        m_driveRotationsPerMeter = rotationsPerWheelRotation / metersPerWheelRotation;
+
+        m_steerMotor.setRotorPosition(m_cancoder.getAbsolutePosition() / 360);
     }
 
-    public void setState(SwerveModuleState state){
-        SwerveModuleState optimizedState = CTREUtils.optimize(state, getHeading());
+    public SwerveModulePosition getPosition() {
+        /* Refresh all signals */
+        m_drivePosition.refresh();
+        m_driveVelocity.refresh();
+        m_steerPosition.refresh();
+        m_steerVelocity.refresh();
 
-        setVelocity(optimizedState.speedMetersPerSecond,.2); 
-        setTurnRad(optimizedState.angle);
+        /* Now latency-compensate our signals */
+        double drive_rot =
+                m_drivePosition.getValue();
+                        //+ (m_driveVelocity.getValue() * m_drivePosition.getTimestamp().getLatency());
+        double angle_rot =
+                m_steerPosition.getValue();
+                        //+ (m_steerVelocity.getValue() * m_steerPosition.getTimestamp().getLatency());
+
+        /* And push them into a SwerveModuleState object to return */
+        m_internalState.distanceMeters = drive_rot / m_driveRotationsPerMeter;
+        /* Angle is already in terms of steer rotations */
+        m_internalState.angle = Rotation2d.fromRotations(angle_rot);
+
+        return m_internalState;
     }
 
-    private void setVelocity(double driveSetpoint, double dt){
-        double driveFFVolts = SwerveModuleConstants.DRIVE_FEEDFORWARD.calculate(driveSetpoint);
+    public void apply(SwerveModuleState state) {
+        var optimized = CTREUtils.optimize(state, m_internalState.angle);
 
-        if(driveSetpoint==0){
-            driveMotor.set(ControlMode.PercentOutput, 0);
-        } 
-        else 
-            driveMotor.set(ControlMode.Velocity, CommonConversions.metersPerSecToStepsPerDecisec(driveSetpoint, DriveConstants.WHEEL_DIAMETER_METERS),DemandType.ArbitraryFeedForward,driveFFVolts/12);
+        double angleToSetDeg = optimized.angle.getRotations();
+        //SmartDashboard.putNumber("angle to set", Units.rotationsToDegrees(angleToSetDeg));
+        m_steerMotor.setControl(m_angleSetter.withPosition(angleToSetDeg));
+        double velocityToSet = optimized.speedMetersPerSecond * m_driveRotationsPerMeter;
+        m_driveMotor.setControl(m_velocitySetter.withVelocity(velocityToSet));
     }
 
-
-    private void setTurnRad(Rotation2d turnSetpointRad){
-        turnMotor.set(ControlMode.Position, turnSetpointRad.getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
-    }
-
-    public SwerveModuleState getState(){
-        return new SwerveModuleState(getDriveVelocity(), getHeading()); 
-    }
-
-    private Rotation2d getAbsHeading(){
-        return Rotation2d.fromDegrees(absEncoder.getAbsolutePosition());
-    }
-
-    public Rotation2d getHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+    public BaseStatusSignalValue[] getSignals() {
+        return m_signals;
     }
 
     public double getDriveVelocity(){
-        return CommonConversions.stepsPerDecisecToMetersPerSec(driveMotor.getSelectedSensorVelocity());
+        m_driveVelocity.refresh();
+        return (m_driveVelocity.getValue() / SwerveModuleConstants.DRIVE_GEAR_RATIO) * (Math.PI * DriveConstants.WHEEL_DIAMETER_METERS);
     }
 
-    public double getPosition(){
-        return CommonConversions.stepsToMeters(driveMotor.getSelectedSensorPosition());
+    public void changeTurnKP(){
+        Slot0Configs turnConfig = new Slot0Configs();
+        turnConfig.kP = SmartDashboard.getNumber("Turn kP", 1);
+        m_steerMotor.getConfigurator().refresh(turnConfig);
     }
 
-    public Rotation2d getRelativeHeading(){
-        return Rotation2d.fromDegrees(turnMotor.getSelectedSensorPosition()*(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
+    public void changeDriveKP(){
+        Slot0Configs driveConfig = new Slot0Configs();
+        driveConfig.kP = SmartDashboard.getNumber("Drive kP", 1);
+        m_driveMotor.getConfigurator().refresh(driveConfig);
     }
 
-    public void flip(double angle){
-        absEncoder.configMagnetOffset(absEncoder.configGetMagnetOffset()+angle);
-        
-    }
-    public void overrideMotors(){
-        driveMotor.set(ControlMode.PercentOutput,0);
-        turnMotor.set(ControlMode.PercentOutput,0);
+    public Rotation2d getAbsHeading(){
+        return Rotation2d.fromDegrees(m_cancoder.getAbsolutePosition());
     }
 
-    public double getCurrentDraw(){
-        return driveMotor.getSupplyCurrent();
+    public void reZeroTurnMotors(){
+        m_steerMotor.setRotorPosition(Rotation2d.fromDegrees(m_cancoder.getAbsolutePosition()).getRotations());
     }
-
-    public void reZeroTurnEncoder(){
-        turnMotor.setSelectedSensorPosition(getAbsHeading().getDegrees()/(360/(2048*SwerveModuleConstants.TURN_GEAR_RATIO)));
-    }
-
 }

@@ -69,25 +69,20 @@ public class Drive extends SubsystemBase {
     }
     
     public void logData(){
-        SmartDashboard.putNumber("left front", frontLeft.getState().angle.getDegrees());
-        SmartDashboard.putNumber("left rear", rearLeft.getState().angle.getDegrees());
-        SmartDashboard.putNumber("right rear", rearRight.getState().angle.getDegrees());
-        SmartDashboard.putNumber("front right", frontRight.getState().angle.getDegrees());
         SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
 
-        SmartDashboard.putNumber("left front position", frontLeft.getPosition());
 
     }
 
     public void setModuleStates(SwerveModuleState[] states){
         double currentTime = Timer.getFPGATimestamp();
         double currVel = frontLeft.getDriveVelocity();
-        frontLeft.setState(states[0]);
-        frontRight.setState(states[1]);
-        rearLeft.setState(states[2]);
-        rearRight.setState(states[3]);
+        frontLeft.apply(states[0]);
+        frontRight.apply(states[1]);
+        rearLeft.apply(states[2]);
+        rearRight.apply(states[3]);
  
-        SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
+        //SmartDashboard.putNumber("FL VEL Error", Math.abs(Math.abs(states[0].speedMetersPerSecond)-Math.abs(frontLeft.getDriveVelocity())));
         /* 
         SmartDashboard.putNumber("FL VEL", frontLeft.getDriveVelocity());
         SmartDashboard.putNumber("FL Turn Error", frontLeft.getHeading().rotateBy(states[0].angle.unaryMinus()).getDegrees());
@@ -167,12 +162,8 @@ public class Drive extends SubsystemBase {
         return angDeadband;
     }
     public SwerveModulePosition[] getModulePositions(){
-        SwerveModulePosition frontLeftPos = new SwerveModulePosition(frontLeft.getPosition(),frontLeft.getRelativeHeading());
-        SwerveModulePosition rearLeftPos = new SwerveModulePosition(rearLeft.getPosition(),rearLeft.getRelativeHeading());
-        SwerveModulePosition frontRightPos = new SwerveModulePosition(frontRight.getPosition(),frontRight.getRelativeHeading());
-        SwerveModulePosition rearRightPos = new SwerveModulePosition(rearRight.getPosition(),rearRight.getRelativeHeading());
 
-        SwerveModulePosition[] modulePositions = {frontLeftPos,frontRightPos,rearLeftPos,rearRightPos};
+        SwerveModulePosition[] modulePositions = {frontLeft.getPosition(),frontRight.getPosition(),rearLeft.getPosition(),rearRight.getPosition()};
 
         return modulePositions;
     }
@@ -184,10 +175,10 @@ public class Drive extends SubsystemBase {
  
 
     public void lockModules(){
-        frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        frontLeft.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        frontRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        rearLeft.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        rearRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     }
 
     public void reZeroTurnMotors(){
