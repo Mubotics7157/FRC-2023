@@ -143,7 +143,7 @@ public class SwerveModule {
         return internalState;
     }
 
-    public void apply(SwerveModuleState state) {
+    public void setState(SwerveModuleState state) {
         var optimized = CTREUtils.optimize(state, internalState.angle);
 
         double angleToSetDeg = optimized.angle.getRotations();

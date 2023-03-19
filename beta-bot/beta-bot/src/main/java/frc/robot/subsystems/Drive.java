@@ -2,11 +2,8 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -14,8 +11,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
-import frc.robot.AltConstants;
-import frc.robot.Constants;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 
@@ -65,18 +60,9 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         logData();
-
-        SmartDashboard.putNumber("gyro yaw", getDriveHeading().getDegrees());
- 
- 
-        // SmartDashboard.putNumber("left rear adjusted angle",rearLeft.getState().angle.getDegrees() -  rearLeft.getRelativeHeading().getDegrees());
- 
- 
-        // SmartDashboard.putNumber("rotation controller error", rotController.getPositionError());
     }
     
     public void logData(){
-        //SmartDashboard.putNumber("left front velocity", frontLeft.getDriveVelocity());
          
         SmartDashboard.putNumber("left front", frontLeft.getHeading().getDegrees());
         SmartDashboard.putNumber("left rear", rearLeft.getHeading().getDegrees());
@@ -109,12 +95,12 @@ public class Drive extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] states){
         double currentTime = Timer.getFPGATimestamp();
         
-        //SmartDashboard.putNumber("angle apply", states[0].angle.getDegrees());
+        //SmartDashboard.putNumber("angle setState", states[0].angle.getDegrees());
         //double currVel = frontLeft.getDriveVelocity();
-        frontLeft.apply(states[0]);
-        frontRight.apply(states[1]);
-        rearLeft.apply(states[2]);
-        rearRight.apply(states[3]);
+        frontLeft.setState(states[0]);
+        frontRight.setState(states[1]);
+        rearLeft.setState(states[2]);
+        rearRight.setState(states[3]);
 
         //SmartDashboard.putNumber("front left drive setpoint", states[0].speedMetersPerSecond);
  /* 
@@ -221,10 +207,10 @@ public class Drive extends SubsystemBase {
  
 
     public void lockModules(){
-        frontLeft.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        frontRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        rearLeft.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        rearRight.apply(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
     }
 
     public void changeMotorGains(){

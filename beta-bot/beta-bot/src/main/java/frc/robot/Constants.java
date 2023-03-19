@@ -65,17 +65,11 @@ public final class Constants {
     public static final int FRONT_LEFT_ENCODER_PORT = 6;
     public static final int REAR_LEFT_ENCODER_PORT = 3;
 
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -22.93;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = 27.15;//-61.60;//.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = 27.49;//8.1 0169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_LEFT_ENCODER_OFFSET = 14.06;
+    public static final double REAR_RIGHT_ENCODER_OFFSET = -115.48219;
+    public static final double FRONT_RIGHT_ENCODER_OFFSET = 25.048828125;
+    public static final double FRONT_LEFT_ENCODER_OFFSET = -153.28125;
+    public static final double REAR_LEFT_ENCODER_OFFSET = -77.78;
 
-/* 
-    public static final double REAR_LEFT_ENCODER_OFFSET = 9.7503662109375;//-97.3;//178.857;//174.0234375;//11.162109375;//2.724609375;
-    public static final double FRONT_LEFT_ENCODER_OFFSET = 124.07684326171876; //-167;//-4.219;//176.1328125;//-110.830078125 ;// -111.263671875;
-    public static final double FRONT_RIGHT_ENCODER_OFFSET = -47.72186279296875;//-168.1;//-169.277;//-4.74609375;//-6.328125;//6-2.263671875;
-    public static final double REAR_RIGHT_ENCODER_OFFSET = -154.852294921875;//-107;
-*/
 
     public static final Translation2d FRONT_LEFT_MODULE_POSITION = new Translation2d(WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
     public static final Translation2d REAR_LEFT_MODULE_POSITION = new Translation2d(-WHEELBASE_WIDTH/2,WHEELBASE_LENGTH/2);
