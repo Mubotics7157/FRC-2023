@@ -35,7 +35,8 @@ public class AlignObject extends CommandBase {
 
     @Override
     public void initialize() {
-        vision.setTargetLLState(VisionState.CUBE);
+        System.out.println("RUNNING********************");
+        //vision.setTargetLLState(VisionState.CUBE);
         strafeController.reset();
         strafeController.setSetpoint(0);
     }
@@ -43,10 +44,10 @@ public class AlignObject extends CommandBase {
 
     @Override
     public void execute() {
-            if(!(strafeController.atSetpoint()))
+            if(!(strafeController.atSetpoint()) )
                 deltaSpeed = strafeController.calculate(vision.getCubeYaw().getRadians());
             else
-                deltaSpeed = 0;
+                strafeController.calculate(0);
             
             driveFromChassis(new ChassisSpeeds(0, deltaSpeed*frc.robot.Constants.DriveConstants.MAX_TANGENTIAL_VELOCITY, 0));
         

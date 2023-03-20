@@ -217,6 +217,6 @@ public class VisionManager extends SubsystemBase{
             }
         }
         else
-            return null;
+            return Rotation2d.fromDegrees(0);
     }
 }   

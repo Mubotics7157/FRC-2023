@@ -2,18 +2,27 @@ package frc.robot.subsystems;
 
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.PathPoint;
+
+import frc.robot.util.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants;
@@ -222,16 +231,50 @@ public class Drive extends SubsystemBase {
     }
 
     public PPSwerveControllerCommand followPath(PathPlannerTrajectory traj){
+            traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+
+            Tracker.getInstance().setPose(traj.getInitialHolonomicPose());
             return new PPSwerveControllerCommand(
                  traj,
                  Tracker.getInstance()::getPose, // Pose supplier
                  DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
-                 new PIDController(0, 0, 0),
-                 new PIDController(0, 0, 0), // Y controller (usually the same values as X controller)
-                 new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 new PIDController(2.5
+                 , 0, 0),
+                 new PIDController(2.5, 0, 0), // Y controller (usually the same values as X controller)
+                 new PIDController(1.75, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
                  this::setModuleStates,  
-                 true,
+                 false,
                  this
-             );
+            );
+    }
+        public PPSwerveControllerCommand followPath(Pose2d starting,double distMeters){
+            Pose2d offsetPose = starting.plus(new Transform2d(new Translation2d(distMeters, 0),Rotation2d.fromDegrees(0)));
+            PathPlannerTrajectory traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(3, 4),
+                new PathPoint(starting.getTranslation(),starting.getRotation(),starting.getRotation()), // position, heading
+                new PathPoint(offsetPose.getTranslation(), offsetPose.getRotation(),starting.getRotation()) // position, heading
+            );
+            traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
+
+            Tracker.getInstance().setPose(traj.getInitialHolonomicPose());
+            return new PPSwerveControllerCommand(
+                 traj,
+                 Tracker.getInstance()::getPose, // Pose supplier
+                 DriveConstants.DRIVE_KINEMATICS, // SwerveDriveKinematics
+                 new PIDController(2.5
+                 , 0, 0),
+                 new PIDController(2.5, 0, 0), // Y controller (usually the same values as X controller)
+                 new PIDController(1.75, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+                 this::setModuleStates,  
+                 false,
+                 this
+            );
+    }
+
+    private void stop(){
+        frontLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+        frontRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+        rearLeft.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+        rearRight.setState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
     }
 }
