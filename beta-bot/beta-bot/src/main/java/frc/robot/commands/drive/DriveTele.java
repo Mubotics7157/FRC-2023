@@ -37,29 +37,31 @@ public class DriveTele extends CommandBase {
     }
     private DoubleSupplier fwd,str,rot;
     private Drive drive;
+    private Tracker tracker;
 
-    public DriveTele(DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot,Drive instance){
+    public DriveTele(DoubleSupplier fwd, DoubleSupplier str, DoubleSupplier rot,Drive instance,Tracker tracker){
         this.fwd = fwd;
         this.str = str;
         this.rot = rot;
 
         drive = instance;
+        this.tracker = tracker;
 
-        addRequirements(drive);
+        addRequirements(drive,tracker);
     }
 
     @Override
     public void initialize() {
-        //drive.changeMax();
+        drive.changeMax();
     }
 
     @Override
     public void execute() {
-        double vx =  modifyInputs(fwd.getAsDouble(),false);
-        double vy =  modifyInputs(str.getAsDouble(),false);
-        double omega = modifyInputs(rot.getAsDouble(), true);
+        
+        
+       
 
-        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
+        driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-modifyInputs(fwd.getAsDouble(),false), -modifyInputs(str.getAsDouble(),false),  -modifyInputs(rot.getAsDouble(), true), tracker.getPose().getRotation()));
     }
 
     @Override

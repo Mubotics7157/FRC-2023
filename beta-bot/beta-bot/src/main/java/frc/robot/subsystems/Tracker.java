@@ -58,8 +58,10 @@ public class Tracker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        updatePose();
-        m_field.setRobotPose(estimator.getEstimatedPosition());
+        if(DriverStation.isEnabled()){
+            updatePose();
+            m_field.setRobotPose(estimator.getEstimatedPosition());
+        }
 
     }
 

@@ -29,10 +29,8 @@ public class Wrist extends SubsystemBase {
     }
 
     private WPI_TalonFX wristMotor;
-    private DutyCycleEncoder wristEncoder;
     private Rotation2d setpoint = Rotation2d.fromDegrees(0);
     private static Wrist instance = new Wrist();
-    private boolean holdAtWantedState;
     private double jogVal;
     private WristState wristState;
     private DigitalInput magSensor;
@@ -42,7 +40,6 @@ public class Wrist extends SubsystemBase {
         jogVal = 0;
         wristMotor = new WPI_TalonFX(WristConstants.DEVICE_ID_WRIST);
   
-        holdAtWantedState = false;
 
         magSensor = new DigitalInput(WristConstants.DEVICE_ID_MAG_SENSOR);
 
@@ -61,11 +58,8 @@ public class Wrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(holdAtWantedState)
-            wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
 
         //logData();
-
         switch(wristState){
             case OFF:
                 jog(0);

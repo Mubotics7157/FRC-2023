@@ -14,7 +14,7 @@ import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignObject extends CommandBase {
 
-    private PIDController strafeController = new PIDController(1.15
+    private PIDController strafeController = new PIDController(1
     ,0,0);
     private Drive drive;
     private VisionManager vision;

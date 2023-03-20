@@ -21,6 +21,7 @@ import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
+import frc.robot.commands.auto.DriveBackwards;
 import frc.robot.commands.auto.PreloadPlusOne;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.commands.drive.AlignStrafe;
@@ -63,27 +64,28 @@ public class RobotContainer {
   private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
 
+
   public RobotContainer() {
     configureBindings();
-    drive.setDefaultCommand(new ParallelCommandGroup(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive), new InstantCommand(drive::changeMax)));
+    drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive,tracker));
 
   }
 
   private void configureBindings() {
 
-    m_driverController.leftTrigger().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
+    m_driverController.leftTrigger().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
 
-    m_driverController.b().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
+    m_driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
     m_driverController.b().onFalse(new Stow(superStructure));
 
-    m_driverController.y().whileTrue(new ScoreCubeHighShoot(superStructure));
+    m_driverController.y().onTrue(new ScoreCubeHighShoot(superStructure));
     m_driverController.y().onFalse(new Stow(superStructure));
 
-    m_driverController.a().whileTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
+    m_driverController.a().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    m_driverController.leftBumper().whileTrue(new ScoreCone(superStructure));
+    m_driverController.leftBumper().onTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightBumper().onTrue(new ScoreCube(superStructure));
@@ -94,15 +96,17 @@ public class RobotContainer {
     
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
-    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
-    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
+    // m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
+    // m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
 
     m_driverController.button(7).onTrue(new Zero());
 
     m_driverController.button(8).whileTrue(new Seagul(superStructure));
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
-    m_driverController.povDown().onTrue(new AlignObject(drive, vision));
+    //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
+    m_driverController.povDown().onTrue(new DriveBackwards(1, drive, tracker));
+
     
    
   }

@@ -4,13 +4,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.AltConstants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 
 public class DriveBackwards extends CommandBase {
-    private PIDController controller = new PIDController(2.5, 0, 0);
+    private PIDController controller = new PIDController(1, 0, 0);
 
     private Pose2d initial;
     private double distance;
@@ -28,7 +29,7 @@ public class DriveBackwards extends CommandBase {
         this.drive = drive;
         this.tracker = tracker;
         addRequirements(drive,tracker);
-        controller.setTolerance(.2);
+        controller.setTolerance(.05);
     }
 
     @Override
@@ -42,6 +43,9 @@ public class DriveBackwards extends CommandBase {
     public void execute() {
         deltaSpeed = controller.calculate(tracker.getPose().getX());
         driveFromChassis(new ChassisSpeeds(deltaSpeed*frc.robot.Constants.DriveConstants.MAX_TANGENTIAL_VELOCITY, 0, 0));
+        SmartDashboard.putNumber("Drive Distance Setpoint", controller.getSetpoint());
+        SmartDashboard.putBoolean("Drive At Setpoint", controller.atSetpoint());
+        SmartDashboard.putNumber("Drive Distance Error", controller.getPositionError());
     }
 
     @Override

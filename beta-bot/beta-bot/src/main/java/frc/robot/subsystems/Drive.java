@@ -71,7 +71,7 @@ public class Drive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        logData();
+        //logData();
     }
     
     public void logData(){

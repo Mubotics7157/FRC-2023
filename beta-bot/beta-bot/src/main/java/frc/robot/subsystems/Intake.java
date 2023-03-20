@@ -112,7 +112,6 @@ public class Intake extends SubsystemBase {
     public void periodic() {
 
 
-        
         SmartDashboard.putString("intake state", intakeState.toString());
         
         switch(intakeState){
@@ -200,13 +199,10 @@ public class Intake extends SubsystemBase {
     private void setSpeed(double speedRPM){
         intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
         intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
-        //intakeMaster.set(ControlMode.PercentOutput, 0);
-        //intakeSlave.set(ControlMode.PercentOutput, 0);
+        // intakeMaster.set(ControlMode.PercentOutput, 0);
+        // intakeSlave.set(ControlMode.PercentOutput, 0);
 
-        //intakeMaster.set(ControlMode.PercentOutput,speedRPM/6000);
-        //intakeSlave.set(ControlMode.PercentOutput, speedRPM/6000);
 
-        //topController.setReference(0, ControlType.kVelocity);
     }
 
     public void toggleIntake(boolean forward){

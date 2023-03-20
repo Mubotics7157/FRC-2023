@@ -17,10 +17,11 @@ public class SetIntakingHeight extends InstantCommand {
         addRequirements(superStructure);
     }
 
-    @Override
-    public void initialize() {
-        superStructure.setState(state);
 
-    }
+        @Override
+        public void execute() {
+            superStructure.setState(state);
+        }
+
 
 }
