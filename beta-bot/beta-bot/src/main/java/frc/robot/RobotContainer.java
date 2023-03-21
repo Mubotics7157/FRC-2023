@@ -4,6 +4,7 @@ import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
+import frc.robot.commands.IntakePortal;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreCone;
 import frc.robot.commands.ScoreConeHigh;
@@ -11,6 +12,7 @@ import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.ScoreCube;
 import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.ScoreCubeHighShoot;
+import frc.robot.commands.ScoreCubeHybrid;
 import frc.robot.commands.Seagul;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
@@ -23,6 +25,7 @@ import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.auto.DriveBackwards;
 import frc.robot.commands.auto.PreloadPlusOne;
+import frc.robot.commands.auto.PreloadPlusTwo;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AutoBalance;
@@ -86,6 +89,9 @@ public class RobotContainer {
     m_driverController.a().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
+    m_driverController.leftStick().onTrue(new IntakePortal(superStructure));
+    m_driverController.leftStick().onFalse(new Stow(superStructure));
+
     m_driverController.leftBumper().onTrue(new ScoreCone(superStructure));
     m_driverController.leftBumper().onFalse(new Stow(superStructure));
 
@@ -100,8 +106,8 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
-    // m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
-    // m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
+    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
+    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
 
     m_driverController.button(7).onTrue(new Zero());
 
@@ -114,6 +120,7 @@ public class RobotContainer {
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
+    m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
   }
 
   public Command getAutonomousCommand(String auto) {
@@ -128,7 +135,7 @@ public class RobotContainer {
     eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.25)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
-    eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new WaitCommand(0.15), new ShootCone(), new WaitCommand(0.1), new Stow(superStructure)));
+    eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(0.3), new Stow(superStructure)));
     eventMap.put("go-to-shoot", new ShootPosition());
     eventMap.put("shoot", new ShootCone());
     eventMap.put("snipe cube high", new ScoreCubeHighShoot(superStructure));
@@ -152,7 +159,7 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
 
-    return new PreloadPlusOne(drive, vision, superStructure,tracker);
+    return new PreloadPlusTwo(drive, vision, superStructure,tracker);
     //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 

@@ -157,7 +157,7 @@ public class SuperStructure extends SubsystemBase {
 
     if(scoringState==SuperStructureState.CUBE_INTAKE)
         idleIntake = false;
-    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
+    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.PORTAL || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
         idleIntake = true;
     else
         idleIntake = false;
@@ -198,7 +198,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUBE_HYBRID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID + elevAdj, SuperStructureConstants.WRIST_CUBE_HYRBID.plus(wristAdj));
-                Drive.getInstance().changeSlow();
+                Drive.getInstance().changeMax();
                 break;
             case STOWED:
                 Drive.getInstance().changeMax();
@@ -230,6 +230,8 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case PORTAL:
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_PORTAL, SuperStructureConstants.WRIST_INTAKE_PORTAL.plus(wristAdj), IntakeState.INTAKE_CONE);
+                Drive.getInstance().changeVerySlow();
+                break;
             case ZERO:
                 zeroAll();
                 break;
