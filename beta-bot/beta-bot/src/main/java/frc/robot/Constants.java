@@ -202,7 +202,7 @@ public final class Constants {
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
       public static final double CONE_INTAKE_SPEED = 1 * 5700;
 
-      public static final double IDLE_SPEED = .8/2 * 5700;
+      public static final double IDLE_SPEED = .4/2 * 5700;
 
       public static final double TOP_ROLLER_KP = .1;
       public static final double TOP_ROLLER_KF = .045;
@@ -271,7 +271,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_HYBRID = Rotation2d.fromDegrees(-50);
 
     public static final double ELEVATOR_CONE_SNIPER = 0;
-    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-68);
+    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-70);
     //==============================================================================
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
   

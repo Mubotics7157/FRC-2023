@@ -20,7 +20,7 @@ public class ConeSniper extends CommandBase{
 
     @Override
     public void initialize() {
-        Drive.getInstance().changeVerySlow();
+        Drive.getInstance().changeMax();
         superStructure.setState(SuperStructureState.CONE_SNIPER);
     }
 

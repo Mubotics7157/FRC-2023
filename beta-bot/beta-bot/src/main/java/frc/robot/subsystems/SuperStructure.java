@@ -265,6 +265,9 @@ public class SuperStructure extends SubsystemBase {
             case SEAGUL:
                 led.setYellow();
                 break;
+            case CONE_SNIPER:
+                led.setRedStrobe();
+                break;
             default:
                 led.setYellow();
                 break;
