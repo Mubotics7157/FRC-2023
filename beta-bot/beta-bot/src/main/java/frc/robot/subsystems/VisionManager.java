@@ -208,7 +208,7 @@ public class VisionManager extends SubsystemBase{
     }
 
     public Rotation2d getCubeYaw(){
-        if(targetLL.getPipelineIndex()==1){
+        if(targetLL.getPipelineIndex()==0){
             try{
                 return targetLL.getTargetYaw();
             }

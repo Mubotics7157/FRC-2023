@@ -219,7 +219,7 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1775;
       public static final double CUBE_OUTTAKE_MID_SHOOT = -1300;
 
-      public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
+      public static final double CUBE_INTAKE_SETPOINT= .2 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
 
       public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
