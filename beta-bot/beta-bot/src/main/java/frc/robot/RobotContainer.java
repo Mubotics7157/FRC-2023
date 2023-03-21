@@ -94,6 +94,9 @@ public class RobotContainer {
     m_driverController.rightTrigger().whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
     
+    m_driverController.rightStick().onTrue(new ConeSniper(superStructure));
+    m_driverController.rightStick().onFalse(new Stow(superStructure));
+
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
     // m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
