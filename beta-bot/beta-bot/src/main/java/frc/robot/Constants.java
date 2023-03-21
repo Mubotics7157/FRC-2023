@@ -289,6 +289,8 @@ public final class Constants {
     public static final double ELEVATOR_INTAKE_SEAGUL = 0;
     public static final Rotation2d WRIST_INTAKE_SEAGUL = Rotation2d.fromDegrees(-40);
 
+    public static final double ELEVATOR_INTAKE_PORTAL = -16;
+    public static final Rotation2d WRIST_INTAKE_PORTAL = Rotation2d.fromDegrees(-104);
     
   }
 

@@ -35,6 +35,7 @@ public class SuperStructure extends SubsystemBase {
         CUBE_INTAKE,
         CONE_INTAKE,
         FALLEN_CONE,
+        PORTAL,
         OPEN_DOOR,
         STOWED,
         SEAGUL,
@@ -227,6 +228,8 @@ public class SuperStructure extends SubsystemBase {
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
+            case PORTAL:
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_PORTAL, SuperStructureConstants.WRIST_INTAKE_PORTAL.plus(wristAdj), IntakeState.INTAKE_CONE);
             case ZERO:
                 zeroAll();
                 break;

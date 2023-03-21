@@ -39,6 +39,7 @@ import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
+import java.time.chrono.HijrahEra;
 import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -110,8 +111,9 @@ public class RobotContainer {
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
     m_driverController.povDown().onTrue(new DriveBackwards(1, drive, tracker));
 
-    
-   
+    m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
+    m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
+    m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
   }
 
   public Command getAutonomousCommand(String auto) {
