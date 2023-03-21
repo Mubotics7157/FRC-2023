@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ScoreConeHigh;
+import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.Stow;
@@ -23,6 +24,7 @@ public class PreloadPlusOne extends SequentialCommandGroup{
 
     public PreloadPlusOne(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
         PathPlannerTrajectory driveToCube = PathPlanner.loadPath("PL + intake", 3,4);
+        PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusThreePart2", 3,4);
         vision.setTargetLLState(VisionState.CUBE);
 
         addCommands(
@@ -32,10 +34,10 @@ public class PreloadPlusOne extends SequentialCommandGroup{
          new ShootCone(),
          new WaitCommand(.2),
          new Stow(superStructure),
-         new ParallelCommandGroup(drive.followPath(driveToCube),new SequentialCommandGroup(new WaitCommand(.7),new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
-         new DriveBackwards( 1, drive, tracker))
-         //drive.followPath(tracker.getPose(),1.77)
-
+         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(.7),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
+         new DriveBackwards( 1, drive, tracker)),
+         new ParallelCommandGroup(new Stow(superStructure),drive.followPath(driveToCubeNodeOne,false)),
+         new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6))
         );
     }
     

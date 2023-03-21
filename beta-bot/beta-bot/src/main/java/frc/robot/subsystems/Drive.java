@@ -230,10 +230,12 @@ public class Drive extends SubsystemBase {
         
     }
 
-    public PPSwerveControllerCommand followPath(PathPlannerTrajectory traj){
+    public PPSwerveControllerCommand followPath(PathPlannerTrajectory traj,boolean startingPath){
             traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
 
-            Tracker.getInstance().setPose(traj.getInitialHolonomicPose());
+            if(startingPath)
+                Tracker.getInstance().setPose(traj.getInitialHolonomicPose());
+            
             return new PPSwerveControllerCommand(
                  traj,
                  Tracker.getInstance()::getPose, // Pose supplier
