@@ -18,6 +18,8 @@ public class DriveBackwards extends CommandBase {
     private Drive drive;
     private Tracker tracker;
     private double deltaSpeed;
+    private boolean overridePosition;
+    private Pose2d newPosition;
 
       public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
@@ -28,8 +30,23 @@ public class DriveBackwards extends CommandBase {
         this.distance = distance;
         this.drive = drive;
         this.tracker = tracker;
-        addRequirements(drive,tracker);
+
         controller.setTolerance(.05);
+        overridePosition = false;
+
+        addRequirements(drive,tracker);
+    }
+
+    public DriveBackwards(double distance, Drive drive, Tracker tracker,Pose2d newPosition){
+        this.distance = distance;
+        this.drive = drive;
+        this.tracker = tracker;
+
+        controller.setTolerance(.05);
+        overridePosition = true;
+        this.newPosition = newPosition;
+
+        addRequirements(drive,tracker);
     }
 
     @Override
@@ -53,7 +70,10 @@ public class DriveBackwards extends CommandBase {
         return controller.atSetpoint();
     }
 
-        
+    @Override
+    public void end(boolean interrupted) {
+        if(overridePosition)
+            tracker.setPose(newPosition);
+    }
 
-    
 }
