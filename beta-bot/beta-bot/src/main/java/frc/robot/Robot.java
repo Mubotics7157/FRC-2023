@@ -86,6 +86,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     LED.getInstance().setOrangeFade();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("test");
   }
 
   @Override
@@ -148,5 +149,7 @@ public class Robot extends TimedRobot {
   public void autonomousExit() {
     Drive.getInstance().lockModules();
   }
+  
+  
 
 }

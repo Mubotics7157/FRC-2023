@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,18 +26,20 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
     public PreloadPlusTwoWeak(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
         PathPlannerTrajectory driveToCube = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart1", 1,1);
         PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart2", 1,1);
-        vision.setTargetLLState(VisionState.CUBE);
+        PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart3", 1,1);
+        //vision.setTargetLLState(VisionState.CUBE);
 
         addCommands(
-         new Stow(superStructure),
-         new ScoreConeHigh(superStructure),
+        new Stow(superStructure),
+         //new ScoreConeHigh(superStructure),
          new ShootCone(),
          new WaitCommand(.2),
          new Stow(superStructure),
-         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(.7),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
-         new DriveBackwards( .36, drive, tracker)),
+         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(4),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
+         new DriveBackwards( .36, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose())),
          new ParallelCommandGroup(new Stow(superStructure),drive.followPath(driveToCubeNodeOne,false)),
-         new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6))
+         new SequentialCommandGroup(/*new ScoreCubeHigh(superStructure),*/ new ShootCone(), new WaitCommand(.6)),
+         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(4).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))))
         );
     }
     

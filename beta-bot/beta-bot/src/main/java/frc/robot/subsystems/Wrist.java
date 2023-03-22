@@ -50,6 +50,7 @@ public class Wrist extends SubsystemBase {
         //SmartDashboard.putNumber("Wrist setpoint", -117);
         SmartDashboard.putNumber("mid score", -135);
         SmartDashboard.putNumber("custom wrist", -104);
+
     }
 
     public static Wrist getInstance(){
@@ -150,6 +151,7 @@ public class Wrist extends SubsystemBase {
 
         wristMotor.setInverted(true);
         wristMotor.setNeutralMode(NeutralMode.Brake);
+        
         wristMotor.configPeakOutputForward(WristConstants.WRIST_PEAK_OUTPUT_FORWARD);
         wristMotor.configPeakOutputReverse(WristConstants.WRIST_PEAK_OUTPUT_REVERSE);
         wristMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 10, 1));

@@ -26,6 +26,7 @@ import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.auto.DriveBackwards;
 import frc.robot.commands.auto.PreloadPlusOne;
 import frc.robot.commands.auto.PreloadPlusTwo;
+import frc.robot.commands.auto.PreloadPlusTwoWeak;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AutoBalance;
@@ -158,9 +159,9 @@ public class RobotContainer {
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-
-    return new PreloadPlusTwo(drive, vision, superStructure,tracker);
-    //return new AutoRoutine("Climb jawn Copy", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
+    //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
+    //return new AutoRoutine("Straight-line", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
   public static boolean gotDriverInput(){

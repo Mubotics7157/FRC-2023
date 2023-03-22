@@ -16,8 +16,8 @@ public class SuperStructure extends SubsystemBase {
     private Intake intake = Intake.getInstance();
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
-    private LED led = LED.getInstance();
-    //private LED led;
+    //private LED led = LED.getInstance();
+    private LED led;
     private boolean scoreHigh;
     private boolean idleIntake = true;
     
@@ -73,24 +73,24 @@ public class SuperStructure extends SubsystemBase {
     }
     public void goToPosition(double elevatorSetpoint, Rotation2d wristSetpoint){
         wrist.setSetpoint(wristSetpoint);
-        elevator.setElevatorHeight(elevatorSetpoint);
+        //elevator.setElevatorHeight(elevatorSetpoint);
     }
 
     public void intakeCone(double elevatorSetpoint, Rotation2d wristSetpoint){
-        elevator.setElevatorHeight(elevatorSetpoint);
+        ///elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
 
         intake.setIntakeState(IntakeState.INTAKE_CONE);
     }
 
     public void intakeCube(double elevatorSetpoint, Rotation2d wristSetpoint){
-        elevator.setElevatorHeight(elevatorSetpoint);
+        //elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
         intake.setIntakeState(IntakeState.INTAKE_CUBE);
     }
 
     public void intake(double elevatorSetpoint, Rotation2d wristSetpoint, IntakeState intakeState){
-        elevator.setElevatorHeight(elevatorSetpoint);
+        //elevator.setElevatorHeight(elevatorSetpoint);
         wrist.setSetpoint(wristSetpoint);
         intake.setIntakeState(intakeState);
     }
@@ -124,7 +124,7 @@ public class SuperStructure extends SubsystemBase {
 
 
     public void stowAll(){
-        elevator.setState(ElevatorState.STOW);
+        //elevator.setState(ElevatorState.STOW);
         intake.setIntakeState(IntakeState.OFF);
         wrist.setWristState(WristState.STOW);
     }
@@ -144,7 +144,7 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public boolean atSetpoint(){
-        return wrist.atSetpoint() && elevator.atSetpoint();
+        return wrist.atSetpoint(); //&& elevator.atSetpoint();
     }
 
     public SuperStructureState getState(){
@@ -162,14 +162,14 @@ public class SuperStructure extends SubsystemBase {
     else
         idleIntake = false;
     
-        scoringState = state;
     
-    if(scoringState==SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CUBE_INTAKE)
+    if((state==SuperStructureState.FALLEN_CONE || state == SuperStructureState.CUBE_INTAKE))
         wrist.configWristSlowMode();
-    else
+    else if(state!=SuperStructureState.STOWED)
         wrist.configWristFastMode();
-
-        setLedMode(scoringState);
+    
+        //setLedMode(scoringState);
+        scoringState = state;
 
         switch(scoringState){
             case CONE_HIGH:
