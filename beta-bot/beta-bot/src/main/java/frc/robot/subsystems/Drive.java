@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
 
+import java.util.HashMap;
+
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import frc.robot.util.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
@@ -21,15 +24,29 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.util.SwerveModule;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.OpenDoor;
+import frc.robot.commands.ScoreConeHigh;
+import frc.robot.commands.ScoreConeMid;
+import frc.robot.commands.ScoreCubeHigh;
+import frc.robot.commands.ScoreCubeHighShoot;
+import frc.robot.commands.SetIntakingHeight;
+import frc.robot.commands.ShootCone;
+import frc.robot.commands.ShootPosition;
+import frc.robot.commands.Stow;
+import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
 public class Drive extends SubsystemBase {
-    
+    private static final SuperStructure superStructure = SuperStructure.getInstance();
+
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     private double tanDeadband = 0.1;
@@ -51,6 +68,8 @@ public class Drive extends SubsystemBase {
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
+    HashMap<String, Command> eventMap = new HashMap<>();
+
 
     public Drive(){
         rotController.setTolerance(5);
@@ -63,6 +82,30 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("offset strafe", 0);
 
         PathPlannerServer.startServer(5811);
+
+    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.2)));
+    //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
+    eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
+    eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
+    eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
+    eventMap.put("stow",new Stow(superStructure));
+    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.25)));
+    eventMap.put("uncook", new Stow(superStructure));
+    eventMap.put("lock", new InstantCommand(this::lockModules));
+    eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(0.3), new Stow(superStructure)));
+    eventMap.put("go-to-shoot", new ShootPosition());
+    eventMap.put("shoot", new ShootCone());
+    eventMap.put("snipe cube high", new ScoreCubeHighShoot(superStructure));
+    eventMap.put("score cube high", new SequentialCommandGroup(new Stow(superStructure), new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6)));
+    eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
+    eventMap.put("reset", new InstantCommand(Tracker.getInstance()::resetViaVision));
+    //eventMap.put("score-1", new ShootCube());
+    //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
+    //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
+    //eventMap.put("stow", new Stow(superStructure));
+    //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
+    //ooga-wooga
     }
 
     public static Drive getInstance(){
@@ -230,12 +273,12 @@ public class Drive extends SubsystemBase {
         
     }
 
-    public PPSwerveControllerCommand    followPath(PathPlannerTrajectory traj,boolean startingPath){
+    public PPSwerveControllerCommand followPath(PathPlannerTrajectory traj,boolean startingPath){
             traj = PathPlannerTrajectory.transformTrajectoryForAlliance(traj, DriverStation.getAlliance());
 
             if(startingPath)
                 Tracker.getInstance().setPose(traj.getInitialHolonomicPose());
-            
+  
             return new PPSwerveControllerCommand(
                  traj,
                  Tracker.getInstance()::getPose, // Pose supplier
@@ -249,6 +292,16 @@ public class Drive extends SubsystemBase {
                  this
             );
     }
+
+    public FollowPathWithEvents followPathEvents(PathPlannerTrajectory traj, boolean startingPath){
+
+        return new FollowPathWithEvents(
+            followPath(traj, startingPath), //path command
+            traj.getMarkers(), //trajectory
+            eventMap // hashmap for events
+            );
+    }
+
         public PPSwerveControllerCommand followPath(Pose2d starting,double distMeters){
             Pose2d offsetPose = starting.plus(new Transform2d(new Translation2d(distMeters, 0),Rotation2d.fromDegrees(0)));
             PathPlannerTrajectory traj = PathPlanner.generatePath(
