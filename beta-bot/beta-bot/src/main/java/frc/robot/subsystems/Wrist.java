@@ -171,20 +171,28 @@ public class Wrist extends SubsystemBase {
     }
 
     public void configWristSlowMode(){
+        /* 
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
         config.motionCruiseVelocity = 80000/2;
         config.motionAcceleration = 85000/2;
         wristMotor.configAllSettings(config);
+        */
+
+        wristMotor.configMotionCruiseVelocity(80000 / 2);
+        wristMotor.configMotionAcceleration(85000 / 2);
 
     }
 
     public void configWristFastMode(){
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
-        config.motionCruiseVelocity = 80000;
-        config.motionAcceleration = 85000;
-        wristMotor.configAllSettings(config);
+        //TalonFXConfiguration config = new TalonFXConfiguration();
+        //config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
+        //config.motionCruiseVelocity = 80000;
+        //config.motionAcceleration = 85000;
+
+        wristMotor.configMotionCruiseVelocity(80000);
+        wristMotor.configMotionAcceleration(85000);
+        //wristMotor.configAllSettings(config);
     }
 
     public void setWristState(WristState state){
