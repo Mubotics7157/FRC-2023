@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 
 public class DriveBackwards extends CommandBase {
-    private PIDController controller = new PIDController(1, 0, 0);
+    private PIDController controller = new PIDController(2, 0, 0);
 
     private Pose2d initial;
     private double distance;
@@ -73,7 +73,7 @@ public class DriveBackwards extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         if(overridePosition)
-            tracker.setPose(newPosition);
+            tracker.setPose(new Pose2d(newPosition.getTranslation(), tracker.getPose().getRotation()));
     }
 
 }

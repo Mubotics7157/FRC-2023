@@ -163,7 +163,7 @@ public class SuperStructure extends SubsystemBase {
         idleIntake = false;
     
     
-    if((state==SuperStructureState.FALLEN_CONE || state == SuperStructureState.CUBE_INTAKE))
+    if((state==SuperStructureState.FALLEN_CONE || state == SuperStructureState.CUBE_INTAKE || state== SuperStructureState.OPEN_DOOR))
         wrist.configWristSlowMode();
     else if(state!=SuperStructureState.STOWED)
         wrist.configWristFastMode();
