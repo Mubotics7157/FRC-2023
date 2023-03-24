@@ -240,6 +240,11 @@ public final class Constants {
       public static final double ANGLE_OFFSET = 2;  
   }
 
+  public static final class ForksConstants{
+    public static final int DEVICE_ID_FORKS = 33;
+    
+  }
+
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 

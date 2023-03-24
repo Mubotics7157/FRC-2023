@@ -28,7 +28,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
         PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart2", 1,1);
         PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart3", 1,1);
         PathPlannerTrajectory driveToCubeNodeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart4", 1,1);
-        //vision.setTargetLLState(VisionState.CUBE);
+        vision.setTargetLLState(VisionState.CUBE);
 
         addCommands(
         new Stow(superStructure),

@@ -68,7 +68,7 @@ public class Drive extends SubsystemBase {
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
-    HashMap<String, Command> eventMap = new HashMap<>();
+    //HashMap<String, Command> eventMap = new HashMap<>();
 
 
     public Drive(){
@@ -82,7 +82,7 @@ public class Drive extends SubsystemBase {
         SmartDashboard.putNumber("offset strafe", 0);
 
         PathPlannerServer.startServer(5811);
-
+/* 
     eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.2)));
     //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
@@ -106,10 +106,15 @@ public class Drive extends SubsystemBase {
     //eventMap.put("stow", new Stow(superStructure));
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
+    */
     }
 
     public static Drive getInstance(){
-        return instance;
+        if(instance == null){
+            return new Drive();
+        }
+        else
+            return instance;
     }
 
     @Override
@@ -292,7 +297,7 @@ public class Drive extends SubsystemBase {
                  this
             );
     }
-
+    /* 
     public FollowPathWithEvents followPathEvents(PathPlannerTrajectory traj, boolean startingPath){
 
         return new FollowPathWithEvents(
@@ -301,7 +306,7 @@ public class Drive extends SubsystemBase {
             eventMap // hashmap for events
             );
     }
-
+    */
         public PPSwerveControllerCommand followPath(Pose2d starting,double distMeters){
             Pose2d offsetPose = starting.plus(new Transform2d(new Translation2d(distMeters, 0),Rotation2d.fromDegrees(0)));
             PathPlannerTrajectory traj = PathPlanner.generatePath(

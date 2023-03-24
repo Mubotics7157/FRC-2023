@@ -159,8 +159,9 @@ public class RobotContainer {
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-    return new PreloadPlusOne(drive, vision, superStructure, tracker);
+    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
+    return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
     //return new AutoRoutine("Straight-line", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
