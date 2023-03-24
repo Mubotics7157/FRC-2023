@@ -39,8 +39,11 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(4),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
          new DriveBackwards( .36, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose())),
          new ParallelCommandGroup(new Stow(superStructure),drive.followPath(driveToCubeNodeOne,false)),
-         new SequentialCommandGroup(/*new ScoreCubeHigh(superStructure),*/ new ShootCone(), new WaitCommand(.6)),
-         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(4).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))))
+         new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)),
+         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(4).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)))),
+         new DriveBackwards(.36, drive, tracker, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeTwo, DriverStation.getAlliance()).getInitialHolonomicPose()),
+         new Stow(superStructure),
+         new SequentialCommandGroup(drive.followPath(driveToCubeNodeTwo, false), new ScoreCubeHigh(superStructure), new WaitCommand(.5), new ShootCone(), new Stow(superStructure))
         );
     }
 
