@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +19,7 @@ private static Fork instance = new Fork();
         forkMotor.configFactoryDefault();
         forkMotor.setNeutralMode(NeutralMode.Brake);
         forkMotor.setInverted(false);
+        //forkMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 20, 1));
         
     }
 

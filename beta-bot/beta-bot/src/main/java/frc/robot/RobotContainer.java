@@ -5,6 +5,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.IntakePortal;
+import frc.robot.commands.MoveFork;
 import frc.robot.commands.OpenDoor;
 import frc.robot.commands.ScoreCone;
 import frc.robot.commands.ScoreConeHigh;
@@ -34,6 +35,7 @@ import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
 import frc.robot.commands.drive.HorizontalLock;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Fork;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.SuperStructure;
@@ -68,6 +70,7 @@ public class RobotContainer {
   private final Tracker tracker = Tracker.getInstance();
   private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
+  private final Fork fork = Fork.getInstance();
 
 
   public RobotContainer() {
@@ -121,7 +124,10 @@ public class RobotContainer {
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
-    m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
+    //m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
+    m_operatorController.button(1).whileTrue(new MoveFork(fork, m_operatorController::getY));
+
+
   }
 
   public Command getAutonomousCommand(String auto) {
