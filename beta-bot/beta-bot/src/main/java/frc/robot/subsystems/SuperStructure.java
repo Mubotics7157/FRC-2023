@@ -155,7 +155,7 @@ public class SuperStructure extends SubsystemBase {
     Rotation2d wristAdj = Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0));
     double elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
 
-    if(scoringState==SuperStructureState.CUBE_INTAKE)
+    if(state==SuperStructureState.CUBE_INTAKE || state==SuperStructureState.CONE_INTAKE|| state ==SuperStructureState.FALLEN_CONE)
         idleIntake = false;
     else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.PORTAL || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
         idleIntake = true;

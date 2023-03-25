@@ -70,7 +70,6 @@ public class RobotContainer {
   private final Tracker tracker = Tracker.getInstance();
   private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
-  private final Fork fork = Fork.getInstance();
 
 
   public RobotContainer() {
@@ -119,13 +118,12 @@ public class RobotContainer {
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
-    m_driverController.povDown().onTrue(new DriveBackwards(1, drive, tracker));
+    m_driverController.povDown().onTrue(new AlignObject(drive, vision));
 
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
-    //m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
-    m_operatorController.button(1).whileTrue(new MoveFork(fork, m_operatorController::getY));
+    m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
 
 
   }
@@ -165,9 +163,9 @@ public class RobotContainer {
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
+    return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
-    return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
+    //return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
     //return new AutoRoutine("Straight-line", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
