@@ -39,9 +39,9 @@ public class Tracker extends SubsystemBase{
             .1
         ),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
-            1,
-            1,
-            5
+            .5,
+            .5,
+            2.5
         )
     );
 

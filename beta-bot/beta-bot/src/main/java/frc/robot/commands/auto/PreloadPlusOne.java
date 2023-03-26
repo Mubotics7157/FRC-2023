@@ -28,8 +28,8 @@ public class PreloadPlusOne extends SequentialCommandGroup{
     public PreloadPlusOne(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
         PathPlannerTrajectory driveToCube = PathPlanner.loadPath("PL + intake", 4,4);
         PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusThreePart2", 4,3);
-        PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusOnePart3", 3, 4);
-        PathPlannerTrajectory driveUpChargeStation = PathPlanner.loadPath("PreloadPlusOnePart4",3,4);
+        PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusOnePart3", 4, 4);
+        PathPlannerTrajectory driveUpChargeStation = PathPlanner.loadPath("PreloadPlusOnePart4",4,4);
         vision.setTargetLLState(VisionState.CUBE);
 
         addCommands(
