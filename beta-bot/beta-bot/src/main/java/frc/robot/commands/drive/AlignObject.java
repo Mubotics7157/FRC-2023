@@ -14,7 +14,7 @@ import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignObject extends CommandBase {
 
-    private PIDController strafeController = new PIDController(1
+    private PIDController strafeController = new PIDController(2
     ,0,0);
     private Drive drive;
     private VisionManager vision;
@@ -24,7 +24,7 @@ public class AlignObject extends CommandBase {
         drive = instance;
         this.vision = vision;
 
-        strafeController.setTolerance(Units.degreesToRadians(1));
+        strafeController.setTolerance(Units.degreesToRadians(2));
         addRequirements(drive,vision);
     }
     public void driveFromChassis(ChassisSpeeds speeds){
@@ -37,7 +37,7 @@ public class AlignObject extends CommandBase {
     public void initialize() {
         //vision.setTargetLLState(VisionState.CUBE);
         strafeController.reset();
-        strafeController.setSetpoint(0);
+        strafeController.setSetpoint(Units.degreesToRadians(5));
     }
     
 
@@ -46,9 +46,9 @@ public class AlignObject extends CommandBase {
             if(!(strafeController.atSetpoint()) )
                 deltaSpeed = strafeController.calculate(vision.getCubeYaw().getRadians());
             else
-                strafeController.calculate(0);
+                strafeController.calculate(Units.degreesToRadians(0));
             
-            driveFromChassis(new ChassisSpeeds(0, deltaSpeed*frc.robot.Constants.DriveConstants.MAX_TANGENTIAL_VELOCITY, 0));
+            driveFromChassis(new ChassisSpeeds(0, deltaSpeed*3, 0));
         
     }
 

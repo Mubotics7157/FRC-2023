@@ -213,10 +213,10 @@ public class VisionManager extends SubsystemBase{
                 return targetLL.getTargetYaw();
             }
             catch(Exception e){
-                return Rotation2d.fromDegrees(0);
+                return Rotation2d.fromDegrees(7);
             }
         }
         else
-            return Rotation2d.fromDegrees(0);
+            return Rotation2d.fromDegrees(7);
     }
 }   
