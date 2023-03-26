@@ -24,7 +24,7 @@ public class AlignObject extends CommandBase {
         drive = instance;
         this.vision = vision;
 
-        strafeController.setTolerance(Units.degreesToRadians(2));
+        strafeController.setTolerance(Units.degreesToRadians(1));
         addRequirements(drive,vision);
     }
     public void driveFromChassis(ChassisSpeeds speeds){
