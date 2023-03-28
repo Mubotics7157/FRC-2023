@@ -4,7 +4,6 @@ import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
-import frc.robot.commands.EnableForks;
 import frc.robot.commands.IntakePortal;
 import frc.robot.commands.MoveFork;
 import frc.robot.commands.OpenDoor;
