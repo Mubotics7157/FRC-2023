@@ -4,6 +4,7 @@ import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
+import frc.robot.commands.EnableForks;
 import frc.robot.commands.IntakePortal;
 import frc.robot.commands.MoveFork;
 import frc.robot.commands.OpenDoor;
@@ -70,17 +71,19 @@ public class RobotContainer {
   private final Tracker tracker = Tracker.getInstance();
   private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
+  private final Fork forks = Fork.getInstance();
 
 
   public RobotContainer() {
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive,tracker));
+    superStructure.setDefaultCommand(new Stow(superStructure));
 
   }
 
   private void configureBindings() {
 
-    m_driverController.leftTrigger().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
+    m_driverController.leftTrigger().and(m_operatorController.button(1).negate()).onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
     m_driverController.leftTrigger().onFalse(new Stow(superStructure));
 
     m_driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
@@ -101,7 +104,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onTrue(new ScoreCube(superStructure));
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.rightTrigger().whileTrue(new ShootCone());
+    m_driverController.rightTrigger().and(m_operatorController.button(1).negate()).whileTrue(new ShootCone());
     m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
     
     m_driverController.rightStick().onTrue(new ConeSniper(superStructure));
@@ -123,7 +126,9 @@ public class RobotContainer {
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
-    m_operatorController.button(1).onTrue(new ScoreCubeHybrid(superStructure));
+
+    m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
+    m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
 
 
   }
