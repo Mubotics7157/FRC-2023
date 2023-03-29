@@ -233,8 +233,8 @@ public class Intake extends SubsystemBase {
 
     public void currentLimit(boolean enable){
         if(enable){
-            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1)); 
-            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1));
+            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 40, 1)); 
+            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 40, 1));
         }
         
         else{

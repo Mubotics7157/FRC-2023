@@ -76,7 +76,7 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive,tracker));
-    superStructure.setDefaultCommand(new Stow(superStructure));
+    //superStructure.setDefaultCommand(new Stow(superStructure));
 
   }
 

@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 only");
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
