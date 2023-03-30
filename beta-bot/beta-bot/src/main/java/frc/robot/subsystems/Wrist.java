@@ -159,8 +159,8 @@ public class Wrist extends SubsystemBase {
         wristMotor.enableVoltageCompensation(true);
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.slot0.kP = WristConstants.WRIST_CONTROLLER_KP;
-        config.motionCruiseVelocity = 80000;
-        config.motionAcceleration = 85000;
+        config.motionCruiseVelocity = 80000/1.25;
+        config.motionAcceleration = 85000/1.25;
         wristMotor.configAllSettings(config);
 
         zeroOnboardEncoder();
@@ -173,14 +173,14 @@ public class Wrist extends SubsystemBase {
     }
 
     public void configWristSlowMode(){
-        wristMotor.configMotionCruiseVelocity(80000 / 2);
-        wristMotor.configMotionAcceleration(85000 / 2);
+        wristMotor.configMotionCruiseVelocity(80000 / 1.25);
+        wristMotor.configMotionAcceleration(85000 / 1.25);
 
     }
 
     public void configWristFastMode(){
-        wristMotor.configMotionCruiseVelocity(80000);
-        wristMotor.configMotionAcceleration(85000);
+        // wristMotor.configMotionCruiseVelocity(80000);
+        // wristMotor.configMotionAcceleration(85000);
     }
 
     public void setWristState(WristState state){
