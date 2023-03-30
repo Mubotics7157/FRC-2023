@@ -73,6 +73,9 @@ public class LED {
         candle.animate(yellowStrobe);
     }
 
+    public void setGreenStrobe(){
+        candle.animate(strobeAnim);
+    }
 
     public void setPewPew(){
         candle.animate(larsonAnim);

@@ -258,7 +258,7 @@ public class SuperStructure extends SubsystemBase {
     private void setLedMode(SuperStructureState state){
         switch(state){
             case CONE_HIGH:
-                led.setGreen();
+                led.setGreenStrobe();
                 break;
             case CUBE_INTAKE:
                 led.setPurple();
@@ -273,7 +273,7 @@ public class SuperStructure extends SubsystemBase {
                 led.setCurrentIntake();
                 break;
             case SEAGUL:
-                led.setYellow();
+                led.setYellowStrobe();
                 break;
             case CONE_SNIPER:
                 led.setRedStrobe();

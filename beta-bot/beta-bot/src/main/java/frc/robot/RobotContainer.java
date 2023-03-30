@@ -133,7 +133,9 @@ public class RobotContainer {
     m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
     m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
 
-    m_operatorController.button(0).onTrue(new WristClimb());
+    m_operatorController.button(1).onTrue(new WristClimb());
+
+    m_operatorController.button(2).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
   }
 
   public Command getAutonomousCommand(String auto) {
