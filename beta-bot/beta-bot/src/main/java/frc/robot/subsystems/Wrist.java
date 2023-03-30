@@ -112,7 +112,7 @@ public class Wrist extends SubsystemBase {
         
         if(SuperStructure.getInstance().getState() == SuperStructureState.CONE_HIGH || SuperStructure.getInstance().getState() == SuperStructureState.CUBE_HIGH){
             if(Elevator.getInstance().getElevatorHeight() > -2)
-                wristMotor.set(0);
+                wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(Rotation2d.fromDegrees(-17).getRadians(), WristConstants.WRIST_GEARING));
             else
                 wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
         }
@@ -121,8 +121,10 @@ public class Wrist extends SubsystemBase {
             wristMotor.set(ControlMode.MotionMagic,CommonConversions.radiansToSteps(setpoint.getRadians(), WristConstants.WRIST_GEARING));
         }
 
-        if(magSensor.get()==WristConstants.MAG_DETECTED)
+        if(wristState == WristState.STOW &&magSensor.get()==WristConstants.MAG_DETECTED)
             wristMotor.setSelectedSensorPosition(0);
+
+        
     }
 
     public void setGains(){

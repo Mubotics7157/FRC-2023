@@ -15,6 +15,7 @@ import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.ScoreCubeHighShoot;
 import frc.robot.commands.ScoreCubeHybrid;
 import frc.robot.commands.Seagul;
+import frc.robot.commands.SetClimbMode;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.SetScorePosition;
@@ -133,9 +134,11 @@ public class RobotContainer {
     m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
     m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
 
-    m_operatorController.button(1).onTrue(new WristClimb());
+    m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
+    m_operatorController.button(1).onFalse(new Stow(superStructure));
 
     m_operatorController.button(2).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
+
   }
 
   public Command getAutonomousCommand(String auto) {
@@ -181,7 +184,4 @@ public class RobotContainer {
     //return new AutoRoutine("Straight-line", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
-  public static boolean gotDriverInput(){
-    return Math.abs(Math.max(m_driverController.getLeftX(), m_driverController.getLeftY())) > .2;
-  }
 }
