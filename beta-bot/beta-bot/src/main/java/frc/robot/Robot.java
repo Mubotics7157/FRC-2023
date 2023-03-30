@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import javax.lang.model.element.ModuleElement.DirectiveKind;
 import javax.swing.plaf.basic.BasicSliderUI.TrackListener;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -87,11 +89,15 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     LED.getInstance().setOrangeFade();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand("test");
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 only");
+
   }
 
   @Override
   public void disabledPeriodic() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand("PL + 1 only");
+    if(Drive.getInstance().getLastAlliance() != DriverStation.getAlliance()){
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand("yes");
+    }
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */

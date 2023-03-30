@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -51,6 +52,8 @@ public class Drive extends SubsystemBase {
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
     private double tanDeadband = 0.1;
     private double angDeadband = 0.15;
+
+    private Alliance lastKnownAlliance;
 
     private static Drive instance = new Drive();
     /* 
@@ -329,6 +332,14 @@ public class Drive extends SubsystemBase {
                  false,
                  this
             );
+    }
+
+    public Alliance getLastAlliance(){
+        return lastKnownAlliance;
+    }
+
+    public void setLastAlliance(Alliance alliance){
+        lastKnownAlliance = alliance;
     }
 
     private void stop(){

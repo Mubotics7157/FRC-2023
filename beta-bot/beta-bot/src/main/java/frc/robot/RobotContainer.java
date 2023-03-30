@@ -22,6 +22,7 @@ import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
+import frc.robot.commands.WristClimb;
 import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.auto.DriveBackwards;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -71,6 +73,8 @@ public class RobotContainer {
   private final VisionManager vision = VisionManager.getInstance();
   private final SuperStructure superStructure = SuperStructure.getInstance();
   private final Fork forks = Fork.getInstance();
+
+  private PreloadPlusOne plPlusOne = new PreloadPlusOne(drive, vision, superStructure, tracker);
 
 
   public RobotContainer() {
@@ -129,7 +133,7 @@ public class RobotContainer {
     m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
     m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
 
-
+    m_operatorController.button(0).onTrue(new WristClimb());
   }
 
   public Command getAutonomousCommand(String auto) {
@@ -167,6 +171,8 @@ public class RobotContainer {
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
+    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
+    drive.setLastAlliance(DriverStation.getAlliance());
     return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
     //return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);

@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -250,6 +251,8 @@ public final class Constants {
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(2.5, 0, 0);
     public static final PIDConstants ROT_CONTROLLER = new PIDConstants(1.75, 0, 0);
+
+    public static final Alliance CURRENT_ALLIANCE = Alliance.Red;
   }
 
   public static final class SuperStructureConstants{
@@ -265,7 +268,7 @@ public final class Constants {
 
     public static final double ELEVATOR_CUBE_SHOOT = 0;
     public static final Rotation2d WRIST_CUBE_SHOOT = Rotation2d.fromDegrees(-46);
-    //===========================================================================
+    //=============================== ============================================
     public static final double ELEVATOR_CONE_HIGH = -24.5;
     public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-119);
 

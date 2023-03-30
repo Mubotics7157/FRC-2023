@@ -27,7 +27,7 @@ public class OpenDoor extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;//Wrist.getInstance().atSetpoint();
+       return true;//superStructure.atSetpoint();
     }
 
     @Override

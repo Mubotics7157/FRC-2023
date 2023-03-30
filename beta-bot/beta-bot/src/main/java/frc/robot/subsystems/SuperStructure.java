@@ -41,7 +41,8 @@ public class SuperStructure extends SubsystemBase {
         SEAGUL,
         CUSTOM,
         CONE_SNIPER,
-        ZERO
+        ZERO,
+        CLIMB
     }
 
     public enum ScoringPosition{
@@ -168,8 +169,8 @@ public class SuperStructure extends SubsystemBase {
     else if(state!=SuperStructureState.STOWED)
         wrist.configWristFastMode();
     
-        setLedMode(scoringState);
         scoringState = state;
+        setLedMode(scoringState);
 
         switch(scoringState){
             case CONE_HIGH:
@@ -239,6 +240,10 @@ public class SuperStructure extends SubsystemBase {
                 Drive.getInstance().changeMax();
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER + elevAdj, SuperStructureConstants.WRIST_CONE_SNIPER.plus(wristAdj));
                 break;
+            case CLIMB:
+                Intake.getInstance().closeJaws();
+                goToPosition(0, Rotation2d.fromDegrees(0));
+                break;
             default:
                 break;
         }
@@ -272,6 +277,9 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CONE_SNIPER:
                 led.setRedStrobe();
+                break;
+            case CLIMB:
+                led.setRainbow();
                 break;
             default:
                 led.setYellow();
