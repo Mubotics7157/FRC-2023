@@ -33,7 +33,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
 
         addCommands(
         new SetVisionMode(vision, VisionState.TAG),
-        new Stow(superStructure),
+        //new Stow(superStructure),
          new ScoreConeHigh(superStructure),
          new ShootCone(),
          new WaitCommand(.2),
@@ -41,7 +41,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(1.8),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE).andThen(new SetVisionMode(vision, VisionState.CUBE)))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision))
          /*new DriveBackwards( .85, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)*/),
          new SetVisionMode(vision, VisionState.TAG),
-         new ParallelCommandGroup(new Stow(superStructure),drive.followPath(driveToCubeNodeOne,false)),
+         new ParallelCommandGroup(drive.followPath(driveToCubeNodeOne,false), new SequentialCommandGroup(new WaitCommand(0.6), new Stow(superStructure))),
          new DriveSlow(.2, drive, tracker),
          new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)),
          new SetVisionMode(vision, VisionState.CUBE),

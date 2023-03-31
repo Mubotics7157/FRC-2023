@@ -46,7 +46,7 @@ public class AlignObject extends CommandBase {
             if(!(strafeController.atSetpoint()) )
                 deltaSpeed = strafeController.calculate(vision.getCubeYaw().getRadians());
             else
-                strafeController.calculate(Units.degreesToRadians(0));
+                strafeController.calculate(Units.degreesToRadians(5));
             
             driveFromChassis(new ChassisSpeeds(0, deltaSpeed*3, 0));
         
@@ -54,7 +54,7 @@ public class AlignObject extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return strafeController.atSetpoint();
+        return strafeController.atSetpoint() || !vision.getTargetLL().hasTargets() ;
     }
 
     @Override

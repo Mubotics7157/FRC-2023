@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -153,7 +154,7 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void setState(SuperStructureState state){
-    Rotation2d wristAdj = Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0));
+    Rotation2d wristAdj = Rotation2d.fromDegrees(-6).plus(Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0)));
     double elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
 
     if(state==SuperStructureState.CUBE_INTAKE || state==SuperStructureState.CONE_INTAKE|| state ==SuperStructureState.FALLEN_CONE)
@@ -252,8 +253,25 @@ public class SuperStructure extends SubsystemBase {
     }
 
     private void setLedMode(SuperStructureState state){
+        if(led.getLastError() != ErrorCode.FirmVersionCouldNotBeRetrieved){
+
         switch(state){
             case CONE_HIGH:
+                led.setGreenStrobe();
+                break;
+            case CONE_MID:
+                led.setGreenStrobe();
+                break;
+            case CUBE_HIGH:
+                led.setGreenStrobe();
+                break;
+            case CUBE_MID:
+                led.setGreenStrobe();
+                break;
+            case CUBE_MID_SHOOT:
+                led.setGreenStrobe();
+                break;
+            case CUBE_HYBRID:
                 led.setGreenStrobe();
                 break;
             case CUBE_INTAKE:
@@ -281,6 +299,7 @@ public class SuperStructure extends SubsystemBase {
                 led.setYellow();
                 break;
         }
+    }
     }
 
     public void setScorePosition(ScoringPosition position){

@@ -19,6 +19,7 @@ import frc.robot.commands.SetClimbMode;
 import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.SetScorePosition;
+import frc.robot.commands.SetVisionMode;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.ShootPosition;
@@ -46,6 +47,7 @@ import frc.robot.subsystems.VisionManager;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
+import frc.robot.subsystems.VisionManager.VisionState;
 
 import java.time.chrono.HijrahEra;
 import java.util.HashMap;
@@ -88,7 +90,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     m_driverController.leftTrigger().and(m_operatorController.button(1).negate()).onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
-    m_driverController.leftTrigger().onFalse(new Stow(superStructure));
+    m_driverController.leftTrigger().and(m_operatorController.button(1).negate()).onFalse(new Stow(superStructure));
 
     m_driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
     m_driverController.b().onFalse(new Stow(superStructure));
@@ -109,7 +111,7 @@ public class RobotContainer {
     m_driverController.rightBumper().onFalse(new Stow(superStructure));
 
     m_driverController.rightTrigger().and(m_operatorController.button(1).negate()).whileTrue(new ShootCone());
-    m_driverController.rightTrigger().onFalse(new ParallelCommandGroup(new Stow(superStructure),new InstantCommand(superStructure::enableIdling)));
+    m_driverController.rightTrigger().and(m_operatorController.button(1).negate()).onFalse(new InstantCommand(superStructure::enableIdling));
     
     m_driverController.rightStick().onTrue(new ConeSniper(superStructure));
     m_driverController.rightStick().onFalse(new Stow(superStructure));
@@ -135,7 +137,7 @@ public class RobotContainer {
     m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
 
     m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
-    m_operatorController.button(1).onFalse(new Stow(superStructure));
+    //m_operatorController.button(1).onFalse(new Stow(superStructure));
 
     m_operatorController.button(2).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
 
@@ -160,6 +162,8 @@ public class RobotContainer {
     eventMap.put("score cube high", new SequentialCommandGroup(new Stow(superStructure), new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6)));
     eventMap.put("shoot preload", new SequentialCommandGroup(new ShootPosition(),new WaitCommand(.3),new ShootCone()));
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
+    eventMap.put("set tag", new SetVisionMode(vision, VisionState.TAG));
+    eventMap.put("set cube", new SetVisionMode(vision, VisionState.CUBE));
     //eventMap.put("score-1", new ShootCube());
     //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
     //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
@@ -181,7 +185,7 @@ public class RobotContainer {
     return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
     //return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
-    //return new AutoRoutine("Straight-line", new PathConstraints(2, 2), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
+    //return new AutoRoutine("left climb jawn", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
-}
+  }

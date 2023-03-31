@@ -104,6 +104,10 @@ public class VisionManager extends SubsystemBase{
             return ConeNodeMap.get(Tracker.getInstance().getPose().getY());
     }
 
+    public Limelight getTargetLL(){
+        return targetLL;
+    }
+
     public Pose2d getIntakeConePose(){
         // try{
             // return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));

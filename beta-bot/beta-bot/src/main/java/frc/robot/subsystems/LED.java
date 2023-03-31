@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.ColorFlowAnimation;
@@ -12,6 +13,7 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
+import com.ctre.phoenixpro.StatusCode;
 
 
 public class LED {
@@ -124,6 +126,8 @@ public class LED {
         candle.setLEDs(0, 0, 0);
     }
 
+
+
     public void setPurple(){
         offAnim();
         candle.setLEDs(255, 0, 50);
@@ -131,6 +135,9 @@ public class LED {
         candle.configAllSettings(config);
     }
 
+    public ErrorCode getLastError(){
+        return candle.getLastError();
+    }
     private void configSettings(){
         config = new CANdleConfiguration();
         candle.configFactoryDefault();
