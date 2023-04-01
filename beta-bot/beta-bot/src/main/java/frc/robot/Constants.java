@@ -260,7 +260,7 @@ public final class Constants {
     public static final double ELEVATOR_CUBE_HIGH = -21.5;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-127);
 
-    public static final double ELEVATOR_CUBE_MID = -19;
+    public static final double ELEVATOR_CUBE_MID = -18;
     public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-133);
 
     public static final double ELEVATOR_CUBE_HYBRID = 0;

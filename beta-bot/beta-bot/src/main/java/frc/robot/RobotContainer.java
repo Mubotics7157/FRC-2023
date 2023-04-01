@@ -181,10 +181,10 @@ public class RobotContainer {
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
     drive.setLastAlliance(DriverStation.getAlliance());
-    return new PreloadPlusOne(drive, vision, superStructure, tracker);
+    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
-    //return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
+    return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
     //return new AutoRoutine("left climb jawn", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
