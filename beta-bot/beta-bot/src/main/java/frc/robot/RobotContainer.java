@@ -139,13 +139,13 @@ public class RobotContainer {
     m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
     //m_operatorController.button(1).onFalse(new Stow(superStructure));
 
-    m_operatorController.button(2).onTrue(new InstantCommand(superStructure::emergencySetpointReset));
+    m_operatorController.button(2).onTrue(new ParallelCommandGroup(new InstantCommand(superStructure::emergencySetpointReset), new InstantCommand(intake::adjustmentReset)));
 
   }
 
   public Command getAutonomousCommand(String auto) {
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.2)));
+    eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.7)));
     //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
@@ -180,9 +180,9 @@ public class RobotContainer {
     //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
     //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
     //ooga-wooga
-    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     drive.setLastAlliance(DriverStation.getAlliance());
     return new PreloadPlusOne(drive, vision, superStructure, tracker);
+    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
     //return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
     //return new AutoRoutine("left climb jawn", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);

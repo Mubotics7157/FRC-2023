@@ -25,6 +25,9 @@ public class SuperStructure extends SubsystemBase {
     private SuperStructureState scoringState = SuperStructureState.STOWED;
     private ScoringPosition scoringPosition = ScoringPosition.HIGH;
 
+    private Rotation2d wristAdj;
+    private double elevAdj;
+    
     public enum SuperStructureState{
         CONE_HIGH,
         CONE_MID,
@@ -154,8 +157,8 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void setState(SuperStructureState state){
-    Rotation2d wristAdj = Rotation2d.fromDegrees(-6).plus(Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0)));
-    double elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
+    wristAdj = Rotation2d.fromDegrees(-6).plus(Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0)));
+    elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
 
     if(state==SuperStructureState.CUBE_INTAKE || state==SuperStructureState.CONE_INTAKE|| state ==SuperStructureState.FALLEN_CONE)
         idleIntake = false;
