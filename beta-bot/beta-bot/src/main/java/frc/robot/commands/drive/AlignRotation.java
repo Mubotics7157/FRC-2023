@@ -7,6 +7,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -63,6 +65,10 @@ public class AlignRotation extends CommandBase {
     @Override
     public void initialize() {
         strafeController.setP(SmartDashboard.getNumber("align rotation P", 2));
+
+        if(DriverStation.getAlliance() == Alliance.Blue){
+            angle = angle.unaryMinus();
+        }
 
         strafeController.reset();
         strafeController.setSetpoint(angle.getRadians());
