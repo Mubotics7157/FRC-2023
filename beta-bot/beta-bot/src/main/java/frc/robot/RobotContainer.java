@@ -32,6 +32,7 @@ import frc.robot.commands.auto.PreloadPlusOne;
 import frc.robot.commands.auto.PreloadPlusTwo;
 import frc.robot.commands.auto.PreloadPlusTwoWeak;
 import frc.robot.commands.drive.AlignObject;
+import frc.robot.commands.drive.AlignRotation;
 import frc.robot.commands.drive.AlignStrafe;
 import frc.robot.commands.drive.AutoBalance;
 import frc.robot.commands.drive.ChangeNode;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -101,7 +103,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    m_driverController.leftStick().onTrue(new IntakePortal(superStructure));
+    m_driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure), new AlignRotation(drive, Rotation2d.fromDegrees(0), m_driverController::getLeftY, m_driverController::getLeftX)));
     m_driverController.leftStick().onFalse(new Stow(superStructure));
 
     m_driverController.leftBumper().onTrue(new ScoreCone(superStructure));
@@ -123,7 +125,7 @@ public class RobotContainer {
 
     m_driverController.button(7).onTrue(new Zero());
 
-    m_driverController.button(8).whileTrue(new Seagul(superStructure));
+    m_driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure), new AlignRotation(drive, Rotation2d.fromDegrees(90), m_driverController::getLeftY, m_driverController::getLeftX)));
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
