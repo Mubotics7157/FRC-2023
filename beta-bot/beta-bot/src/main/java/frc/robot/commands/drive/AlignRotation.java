@@ -32,6 +32,8 @@ public class AlignRotation extends CommandBase {
 
         strafeController.setTolerance(Units.degreesToRadians(1));
         addRequirements(drive);
+
+        SmartDashboard.putNumber("align rotation P", 2);
     }
     public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
@@ -60,6 +62,8 @@ public class AlignRotation extends CommandBase {
 
     @Override
     public void initialize() {
+        strafeController.setP(SmartDashboard.getNumber("align rotation P", 2));
+
         strafeController.reset();
         strafeController.setSetpoint(angle.getRadians());
     }
@@ -75,7 +79,7 @@ public class AlignRotation extends CommandBase {
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(
                 modifyInputs(-fwd.getAsDouble(), false),
                 modifyInputs(-str.getAsDouble(), false),
-                deltaSpeed*(DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2), 
+                deltaSpeed*(DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4), 
                 Tracker.getInstance().getPose().getRotation())
                 );
         
