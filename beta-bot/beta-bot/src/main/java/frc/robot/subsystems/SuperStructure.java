@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.ErrorCode;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,6 +25,9 @@ public class SuperStructure extends SubsystemBase {
     private SuperStructureState scoringState = SuperStructureState.STOWED;
     private ScoringPosition scoringPosition = ScoringPosition.HIGH;
 
+    private Rotation2d wristAdj;
+    private double elevAdj;
+    
     public enum SuperStructureState{
         CONE_HIGH,
         CONE_MID,
@@ -35,12 +39,14 @@ public class SuperStructure extends SubsystemBase {
         CUBE_INTAKE,
         CONE_INTAKE,
         FALLEN_CONE,
+        PORTAL,
         OPEN_DOOR,
         STOWED,
         SEAGUL,
         CUSTOM,
         CONE_SNIPER,
-        ZERO
+        ZERO,
+        CLIMB
     }
 
     public enum ScoringPosition{
@@ -151,23 +157,19 @@ public class SuperStructure extends SubsystemBase {
     }
 
     public void setState(SuperStructureState state){
-    Rotation2d wristAdj = Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0));
-    double elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
+    wristAdj = Rotation2d.fromDegrees(-6).plus(Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist adjustment", 0)));
+    elevAdj = SmartDashboard.getNumber("custom elevator adjustment", 0);
 
-    if(scoringState==SuperStructureState.CUBE_INTAKE)
+    if(state==SuperStructureState.CUBE_INTAKE || state==SuperStructureState.CONE_INTAKE|| state ==SuperStructureState.FALLEN_CONE)
         idleIntake = false;
-    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
+    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.PORTAL || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
         idleIntake = true;
     else
         idleIntake = false;
     
-        scoringState = state;
     
-    if(scoringState==SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CUBE_INTAKE)
-        wrist.configWristSlowMode();
-    else
-        wrist.configWristFastMode();
-
+    
+        scoringState = state;
         setLedMode(scoringState);
 
         switch(scoringState){
@@ -197,7 +199,7 @@ public class SuperStructure extends SubsystemBase {
                 break;
             case CUBE_HYBRID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID + elevAdj, SuperStructureConstants.WRIST_CUBE_HYRBID.plus(wristAdj));
-                Drive.getInstance().changeSlow();
+                Drive.getInstance().changeMax();
                 break;
             case STOWED:
                 Drive.getInstance().changeMax();
@@ -227,12 +229,20 @@ public class SuperStructure extends SubsystemBase {
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
                 Drive.getInstance().changeSlow();
                 break;
+            case PORTAL:
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_PORTAL, SuperStructureConstants.WRIST_INTAKE_PORTAL.plus(wristAdj), IntakeState.INTAKE_CONE);
+                Drive.getInstance().changeVerySlow();
+                break;
             case ZERO:
                 zeroAll();
                 break;
             case CONE_SNIPER:
                 Drive.getInstance().changeMax();
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_SNIPER + elevAdj, SuperStructureConstants.WRIST_CONE_SNIPER.plus(wristAdj));
+                break;
+            case CLIMB:
+                Intake.getInstance().closeJaws();
+                goToPosition(0, Rotation2d.fromDegrees(0));
                 break;
             default:
                 break;
@@ -246,9 +256,26 @@ public class SuperStructure extends SubsystemBase {
     }
 
     private void setLedMode(SuperStructureState state){
+        if(led.getLastError() != ErrorCode.FirmVersionCouldNotBeRetrieved){
+
         switch(state){
             case CONE_HIGH:
-                led.setGreen();
+                led.setGreenStrobe();
+                break;
+            case CONE_MID:
+                led.setGreenStrobe();
+                break;
+            case CUBE_HIGH:
+                led.setGreenStrobe();
+                break;
+            case CUBE_MID:
+                led.setGreenStrobe();
+                break;
+            case CUBE_MID_SHOOT:
+                led.setGreenStrobe();
+                break;
+            case CUBE_HYBRID:
+                led.setGreenStrobe();
                 break;
             case CUBE_INTAKE:
                 led.setPurple();
@@ -263,12 +290,19 @@ public class SuperStructure extends SubsystemBase {
                 led.setCurrentIntake();
                 break;
             case SEAGUL:
-                led.setYellow();
+                led.setYellowStrobe();
+                break;
+            case CONE_SNIPER:
+                led.setRedStrobe();
+                break;
+            case CLIMB:
+                led.setRainbow();
                 break;
             default:
                 led.setYellow();
                 break;
         }
+    }
     }
 
     public void setScorePosition(ScoringPosition position){

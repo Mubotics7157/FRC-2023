@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -164,8 +165,8 @@ public final class Constants {
       public static final int LIMELIGHT_ON = 0;
       public static final int LIMELIGHT_OFF = 1;
 
-      public static final int TAPE_PIPELINE_INDEX = 1;
-      public static final int TAG_PIPELINE_INDEX = 0;
+      public static final int CUBE_PIPELINE_INDEX = 0;
+      public static final int TAG_PIPELINE_INDEX = 1;
       public static final int CONE_PIPELINE_INDEX = 0;
 
       public static final String INTAKE_LL_NAME = "limelight-botcam";
@@ -200,9 +201,9 @@ public final class Constants {
       public static final int FILTER_SAMPLE_WINDOW = 40;
 
       public static final double CUBE_INTAKE_SPEED = .25 * 5700;
-      public static final double CONE_INTAKE_SPEED = 1 * 5700;
+      public static final double CONE_INTAKE_SPEED = .8 * 5700;
 
-      public static final double IDLE_SPEED = .8/2 * 5700;
+      public static final double IDLE_SPEED = .4/2 * 5700;
 
       public static final double TOP_ROLLER_KP = .1;
       public static final double TOP_ROLLER_KF = .045;
@@ -219,7 +220,7 @@ public final class Constants {
       public static final double CUBE_OUTTAKE_HIGH_SHOOT = -1775;
       public static final double CUBE_OUTTAKE_MID_SHOOT = -1300;
 
-      public static final double CUBE_INTAKE_SETPOINT= .25 * 5700;
+      public static final double CUBE_INTAKE_SETPOINT= .2 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
 
       public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
@@ -240,11 +241,18 @@ public final class Constants {
       public static final double ANGLE_OFFSET = 2;  
   }
 
+  public static final class ForksConstants{
+    public static final int DEVICE_ID_FORKS = 29;
+    
+  }
+
   public static final class AutoConstants{
     //TODO: load path jsons and event maps for relevant auto routines here!!!!
 
     public static final PIDConstants X_Y_CONTROLLER = new PIDConstants(2.5, 0, 0);
-    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(2.75, 0, 0);
+    public static final PIDConstants ROT_CONTROLLER = new PIDConstants(1.75, 0, 0);
+
+    public static final Alliance CURRENT_ALLIANCE = Alliance.Red;
   }
 
   public static final class SuperStructureConstants{
@@ -252,15 +260,15 @@ public final class Constants {
     public static final double ELEVATOR_CUBE_HIGH = -21.5;
     public static final Rotation2d WRIST_CUBE_HIGH = Rotation2d.fromDegrees(-127);
 
-    public static final double ELEVATOR_CUBE_MID = 0;
-    public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-40);
+    public static final double ELEVATOR_CUBE_MID = -18;
+    public static final Rotation2d WRIST_CUBE_MID = Rotation2d.fromDegrees(-133);
 
     public static final double ELEVATOR_CUBE_HYBRID = 0;
     public static final Rotation2d WRIST_CUBE_HYRBID = Rotation2d.fromDegrees(-115);
 
     public static final double ELEVATOR_CUBE_SHOOT = 0;
     public static final Rotation2d WRIST_CUBE_SHOOT = Rotation2d.fromDegrees(-46);
-    //===========================================================================
+    //=============================== ============================================
     public static final double ELEVATOR_CONE_HIGH = -24.5;
     public static final Rotation2d WRIST_CONE_HIGH = Rotation2d.fromDegrees(-119);
 
@@ -271,7 +279,7 @@ public final class Constants {
     public static final Rotation2d WRIST_CONE_HYBRID = Rotation2d.fromDegrees(-50);
 
     public static final double ELEVATOR_CONE_SNIPER = 0;
-    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-68);
+    public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-70);
     //==============================================================================
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
   
@@ -289,6 +297,8 @@ public final class Constants {
     public static final double ELEVATOR_INTAKE_SEAGUL = 0;
     public static final Rotation2d WRIST_INTAKE_SEAGUL = Rotation2d.fromDegrees(-40);
 
+    public static final double ELEVATOR_INTAKE_PORTAL = -16;
+    public static final Rotation2d WRIST_INTAKE_PORTAL = Rotation2d.fromDegrees(-104);
     
   }
 

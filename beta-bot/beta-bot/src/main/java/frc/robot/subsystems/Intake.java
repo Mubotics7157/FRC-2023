@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -20,7 +19,7 @@ import frc.robot.util.CommonConversions;
 
 public class Intake extends SubsystemBase {
 
-    public enum IntakeState{
+    public enum IntakeState {
         OFF,
         INTAKE_CUBE,
         OUTTAKE_CUBE_MID,
@@ -38,26 +37,29 @@ public class Intake extends SubsystemBase {
         CUSTOM
     }
 
-    private TalonFX intakeMaster; 
+    private TalonFX intakeMaster;
     private TalonFX intakeSlave;
 
     private TalonFXConfiguration masterConfig;
     private TalonFXConfiguration slaveConfig;
 
-    private DoubleSolenoid solenoid; 
+    private DoubleSolenoid solenoid;
 
     private IntakeState intakeState;
     private Value commandedSolenoidState;
 
-    //private Ultrasonic tof;
-
+    // private Ultrasonic tof;
 
     private static Intake instance = new Intake();
 
-    private InterpolatingTreeMap<Double,Double> distanceMap = new InterpolatingTreeMap<>();
+    private InterpolatingTreeMap<Double, Double> distanceMap = new InterpolatingTreeMap<>();
 
-    public Intake(){
-        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_PCM, IntakeConstants.PNEUMATICS_MODULE_TYPE, IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
+    private double intakeAdj = 0;
+    private double coneIntakeAdjustment = 0;
+
+    public Intake() {
+        solenoid = new DoubleSolenoid(IntakeConstants.DEVICE_ID_PCM, IntakeConstants.PNEUMATICS_MODULE_TYPE,
+                IntakeConstants.DEVICE_ID_SOLENOID_FORWARD, IntakeConstants.DEVICE_ID_SOLENOID_REVERSE);
         commandedSolenoidState = Value.kForward;
 
         intakeState = IntakeState.OFF;
@@ -82,40 +84,40 @@ public class Intake extends SubsystemBase {
 
         intakeMaster.setInverted(IntakeConstants.INVERT_MASTER);
         intakeSlave.setInverted(intakeMaster.getInverted());
-       
+
         intakeMaster.setNeutralMode(NeutralMode.Brake);
         intakeSlave.setNeutralMode(NeutralMode.Brake);
 
-        intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 70, 1)); 
+        intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 70, 1));
         intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 70, 1));
 
         intakeMaster.configVoltageCompSaturation(10);
         intakeSlave.configVoltageCompSaturation(10);
 
-       intakeMaster.enableVoltageCompensation(true);
-       intakeSlave.enableVoltageCompensation(true);
+        intakeMaster.enableVoltageCompensation(true);
+        intakeSlave.enableVoltageCompensation(true);
 
-
-        SmartDashboard.putNumber("custom intake", -1000);  
+        SmartDashboard.putNumber("custom intake", -1000);
+        SmartDashboard.putNumber("intake adjustment", 0);
+        SmartDashboard.putNumber("cone intake adjustment", 0);
     }
 
-    public static Intake getInstance(){
+    public static Intake getInstance() {
         return instance;
     }
 
-    public void initMap(){
+    public void initMap() {
         distanceMap.put(0.0, 0.0);
     }
 
-
     @Override
     public void periodic() {
+        intakeAdj = SmartDashboard.getNumber("intake adjustment", 0);
+        coneIntakeAdjustment = SmartDashboard.getNumber("cone intake adjustment", 0);
 
-
-        
         SmartDashboard.putString("intake state", intakeState.toString());
-        
-        switch(intakeState){
+
+        switch (intakeState) {
             case OFF:
                 setMotors(0);
                 break;
@@ -125,7 +127,7 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE_MID:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_MID);
-                //toggleIntake(false);
+                // toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
@@ -135,25 +137,25 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE_MID_SHOOT:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_MID_SHOOT);
-                //toggleIntake(false);
+                // toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH_SHOOT:
-                if(DriverStation.isAutonomous())
-                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT-150);
+                if (DriverStation.isAutonomous())
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT - 150);
                 else
                     setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH_SHOOT);
                 break;
             case INTAKE_CONE:
-                setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
-                //setSpeed(2000);
+                setSpeed(IntakeConstants.CONE_INTAKE_SPEED + coneIntakeAdjustment);
+                // setSpeed(2000);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
-                if(DriverStation.isTeleop())
-                    setSpeed(.35*-3000);
+                if (DriverStation.isTeleop())
+                    setSpeed(.35 * -3000);
                 else
-                    setSpeed(.4*-3000);
-                //toggleIntake(true);
+                    setSpeed(.4 * -3000);
+                // toggleIntake(true);
                 break;
             case INTAKE_CONE_SEAGUL:
                 setSpeed(.375 * 5700);
@@ -162,12 +164,12 @@ public class Intake extends SubsystemBase {
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED);
                 break;
             case OUTTAKE:
-                if(DriverStation.isTeleop())
-                    setSpeed(.35*-IntakeConstants.CONE_INTAKE_SPEED);
+                if (DriverStation.isTeleop())
+                    setSpeed(.35 * -IntakeConstants.CONE_INTAKE_SPEED);
                 else
-                setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
+                    setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
 
-                //setSpeed(-3000);
+                // setSpeed(-3000);
                 break;
             case IDLE:
                 setSpeed(IntakeConstants.IDLE_SPEED);
@@ -179,75 +181,82 @@ public class Intake extends SubsystemBase {
                 setSpeed(SmartDashboard.getNumber("custom intake", -1000));
                 break;
         }
-        
+
     }
 
-
-    public void setIntakeState(IntakeState state){
-        if(state != IntakeState.IDLE)//state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID || state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE || state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
+    public void setIntakeState(IntakeState state) {
+        if (state != IntakeState.IDLE)// state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID ||
+                                      // state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE ||
+                                      // state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
             currentLimit(false);
         else
             currentLimit(true);
-            
+
         intakeState = state;
     }
 
-    public void setMotors(double speed){
-        intakeMaster.set(ControlMode.PercentOutput,speed);
-        intakeSlave.set(ControlMode.PercentOutput,speed);
+    public void setMotors(double speed) {
+        intakeMaster.set(ControlMode.PercentOutput, speed);
+        intakeSlave.set(ControlMode.PercentOutput, speed);
     }
 
-    private void setSpeed(double speedRPM){
+    private void setSpeed(double speedRPM) {
+        speedRPM += intakeAdj;
         intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
         intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
+        // intakeMaster.set(ControlMode.PercentOutput, 0);
+        // intakeSlave.set(ControlMode.PercentOutput, 0);
 
-        //intakeMaster.set(ControlMode.PercentOutput,speedRPM/6000);
-        //intakeSlave.set(ControlMode.PercentOutput, speedRPM/6000);
-
-        //topController.setReference(0, ControlType.kVelocity);
     }
 
-    public void toggleIntake(boolean forward){
-        
-        if(forward)
+    public void toggleIntake(boolean forward) {
+
+        if (forward)
             commandedSolenoidState = Value.kForward;
         else
             commandedSolenoidState = Value.kReverse;
-        
+
         solenoid.set(commandedSolenoidState);
     }
 
-    public void closeJaws(){
+    public void closeJaws() {
         solenoid.set(Value.kForward);
     }
 
-    public void openJaws(){
+    public void openJaws() {
         solenoid.set(Value.kReverse);
     }
 
-    public boolean isClosed(){
-        return commandedSolenoidState==Value.kForward;  
+    public boolean isClosed() {
+        return commandedSolenoidState == Value.kForward;
     }
 
-    public IntakeState getState(){
+    public IntakeState getState() {
         return intakeState;
     }
 
-    public void currentLimit(boolean enable){
-        if(enable){
-            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1)); 
-            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 40, 1));
-        }
-        
-        else{
-            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1)); 
-            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1));
-        }
-         
+    public void adjustmentReset(){
+        SmartDashboard.putNumber("intake adjustment", 0);
+        SmartDashboard.putNumber("cone intake adjustment", 0);
+        intakeAdj = 0;
+        coneIntakeAdjustment = 0;
     }
 
-    public double getObjDistance(){
-        //return filter.calculate(tof.getRangeInches());
+    public void currentLimit(boolean enable) {
+        if (enable) {
+            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 40, 1));
+            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 40, 1));
+        }
+
+        else {
+            intakeMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1));
+            intakeSlave.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 70, 80, 1));
+        }
+
+    }
+
+    public double getObjDistance() {
+        // return filter.calculate(tof.getRangeInches());
         return 0;
     }
 

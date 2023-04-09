@@ -39,9 +39,9 @@ public class Tracker extends SubsystemBase{
             .1
         ),
         new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
-            1,
-            1,
-            5
+            .5,
+            .5,
+            2.5
         )
     );
 
@@ -50,7 +50,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public Tracker(){
-        //resetViaVision();
+        resetViaVision();
         initTunableFields();
         SmartDashboard.putNumber("custom offset", 0);
     }
@@ -58,8 +58,10 @@ public class Tracker extends SubsystemBase{
 
     @Override
     public void periodic() {
-        updatePose();
-        m_field.setRobotPose(estimator.getEstimatedPosition());
+        if(DriverStation.isEnabled()){
+            updatePose();
+            m_field.setRobotPose(estimator.getEstimatedPosition());
+        }
 
     }
 
@@ -68,7 +70,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void addVisionMeasurement(Pose2d visionPose,double latency){
-        if(Math.max(Math.abs(visionPose.getX()-getPose().getX()),Math.abs(visionPose.getY()-getPose().getY()))<1)
+        if(Math.max(Math.abs(visionPose.getX() - getPose().getX()), Math.abs(visionPose.getY() - getPose().getY())) < 0.5)
             estimator.addVisionMeasurement(visionPose, Timer.getFPGATimestamp()-latency);
         m_field.getObject("vision pose").setPose(visionPose);
     }
@@ -149,9 +151,15 @@ public class Tracker extends SubsystemBase{
     }
 
     public void resetViaVision(){
-        Pose2d visionPose = VisionManager.getInstance().getBotPose();
-        if(visionPose!=null)
-            estimator.resetPosition(Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions(),visionPose);
+        try{
+            Pose2d visionPose = VisionManager.getInstance().getBotPose();
+
+            if(visionPose!=null)
+                estimator.resetPosition(Drive.getInstance().getDriveHeading(),Drive.getInstance().getModulePositions(),visionPose);
+        }
+        catch(Exception e){
+
+        }
     }
 
     public void resetHeading(){

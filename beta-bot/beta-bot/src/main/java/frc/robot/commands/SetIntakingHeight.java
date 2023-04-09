@@ -1,11 +1,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 
-public class SetIntakingHeight extends CommandBase {
+public class SetIntakingHeight extends InstantCommand {
     private SuperStructure superStructure;
     private SuperStructureState state;
 
@@ -16,10 +17,12 @@ public class SetIntakingHeight extends CommandBase {
         addRequirements(superStructure);
     }
 
-    @Override
-    public void initialize() {
-        superStructure.setState(state);
 
-    }
+
+        @Override
+        public void execute() {
+            superStructure.setState(state);
+        }
+
 
 }
