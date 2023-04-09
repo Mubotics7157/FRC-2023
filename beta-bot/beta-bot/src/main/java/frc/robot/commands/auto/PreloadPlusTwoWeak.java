@@ -30,7 +30,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
     public PreloadPlusTwoWeak(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
         PathPlannerTrajectory driveToCube = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart1", 3,3);
         PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart2",3,4);
-        PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart3", 2.5, 2.5);
+        PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart3", 3, 3);
         PathPlannerTrajectory driveToCubeNodeTwo = PathPlanner.loadPath("PreloadPlusTwoWeakSidePart4", 3,4);
 
 
@@ -41,18 +41,18 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          new ShootCone(),
          new WaitCommand(.2),
          new Stow(superStructure),
-         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(2.55),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE).andThen(new SetVisionMode(vision, VisionState.CUBE)))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose()))
+         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(2.55),new SetVisionMode(vision, VisionState.CUBE),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)
+         )).andThen(new ParallelCommandGroup(new AlignObject(drive, vision, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose()))
          /*new DriveBackwards( .85, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)*/),
          new SetVisionMode(vision, VisionState.TAG),
          new ParallelCommandGroup(drive.followPath(driveToCubeNodeOne,false), new SequentialCommandGroup(new WaitCommand(1), new Stow(superStructure))),
          new DriveSlow(.2, drive, tracker),
          new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)),
-         new SetVisionMode(vision, VisionState.CUBE),
-         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(2.5).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)))),
+         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(2.5),new SetVisionMode(vision,VisionState.CUBE).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)))),
          new AlignObject(drive, vision, new Pose2d(driveToCubeNodeTwo.getInitialHolonomicPose().getTranslation(), Tracker.getInstance().getPose().getRotation())),
          //new DriveBackwards(.36, drive, tracker, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeTwo, DriverStation.getAlliance()).getInitialHolonomicPose()),
          new SetVisionMode(vision, VisionState.TAG),
-         new Stow(superStructure),  
+         //new Stow(superStructure),  
          new ParallelCommandGroup(drive.followPath(driveToCubeNodeTwo, false), new SequentialCommandGroup(new ConeSniper(superStructure), new WaitCommand(1.25), new ShootCone()))
         );
     }
