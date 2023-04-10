@@ -58,7 +58,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          new DriveSlow(0.3, drive, tracker),
          new ScoreCubeHigh(superStructure),
          new ShootCone(),
-         new WaitCommand(0.4),
+         new WaitCommand(0.5),
          new Stow(superStructure)
         );
     }
