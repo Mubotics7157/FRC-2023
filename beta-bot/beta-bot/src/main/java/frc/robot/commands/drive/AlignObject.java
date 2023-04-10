@@ -77,7 +77,7 @@ public class AlignObject extends CommandBase {
 
 
         if(newPose != null){
-            Tracker.getInstance().setPose(new Pose2d(Tracker.getInstance().getPose().getX(), newPose.getY(), Tracker.getInstance().getPose().getRotation()));
+            Tracker.getInstance().setPose(new Pose2d(newPose.getX(), newPose.getY(), Tracker.getInstance().getPose().getRotation()));
         }
 
         //vision.setTargetLLState(VisionState.TAG);
