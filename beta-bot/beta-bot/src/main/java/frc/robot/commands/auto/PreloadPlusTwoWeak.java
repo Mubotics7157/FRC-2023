@@ -55,7 +55,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          //new SetVisionMode(vision, VisionState.TAG),
          //new Stow(superStructure),  
          new ParallelCommandGroup(drive.followPath(driveToCubeNodeTwo, false),new SequentialCommandGroup(new WaitCommand(1.5),new Stow(superStructure), new SetVisionMode(vision, VisionState.TAG))),
-         new DriveSlow(0.3, drive, tracker),
+         new DriveSlow(0.25, drive, tracker),
          new ScoreCubeHigh(superStructure),
          new ShootCone(),
          new WaitCommand(0.5),

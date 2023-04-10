@@ -130,7 +130,10 @@ public class Intake extends SubsystemBase {
                 // toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH:
-                setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
+                if(DriverStation.isTeleop())
+                    setSpeed(IntakeConstants.CUBE_OUTTAKE_HIGH);
+                else
+                    setSpeed(-700);
                 break;
             case OUTTAKE_CUBE_HYBRID:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_HYBRID);
