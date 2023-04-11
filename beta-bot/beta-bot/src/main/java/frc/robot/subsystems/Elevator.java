@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import java.util.ResourceBundle.Control;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -17,19 +22,14 @@ import frc.robot.Constants.SuperStructureConstants;
 
 public class Elevator extends SubsystemBase {
 
-    private CANSparkMax elevatorMotor;
-    private SparkMaxPIDController elevatorController;
-    private RelativeEncoder elevatorEncoder;
-    private CANSparkMax elevatorSlave;
+    private WPI_TalonFX elevatorMotor;
+    private WPI_TalonFX elevatorSlave;
 
     private double setpoint;
 
     private static Elevator instance = new Elevator();
 
     private DigitalInput limitSwitch;
-
-
-    private DutyCycleEncoder absoluteEncoder;
 
     private ElevatorState state = ElevatorState.OFF;
 
@@ -44,14 +44,11 @@ public class Elevator extends SubsystemBase {
     }
 
     public Elevator(){
-        elevatorMotor = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_MASTER, MotorType.kBrushless);
-        elevatorSlave = new CANSparkMax(ElevatorConstants.DEVICE_ID_ELEVATOR_SLAVE, MotorType.kBrushless);
+        elevatorMotor = new WPI_TalonFX(ElevatorConstants.DEVICE_ID_ELEVATOR_MASTER);
+        elevatorSlave = new WPI_TalonFX(ElevatorConstants.DEVICE_ID_ELEVATOR_SLAVE);
 
-        elevatorController = elevatorMotor.getPIDController();
-        elevatorEncoder = elevatorMotor.getEncoder();
-
-        elevatorMotor.restoreFactoryDefaults();
-        elevatorSlave.restoreFactoryDefaults();
+        elevatorMotor.configFactoryDefault();
+        elevatorSlave.configFactoryDefault();
 
         limitSwitch = new DigitalInput(ElevatorConstants.DEVICE_ID_ELEVATOR_SWITCH);
 
@@ -105,14 +102,14 @@ public class Elevator extends SubsystemBase {
         this.setpoint = setpoint;
         setState(ElevatorState.SETPOINT);
         configElevatorMotor();
-        elevatorController.setReference(setpoint, ControlType.kSmartMotion);
+        elevatorMotor.set(ControlMode.MotionMagic, setpoint);
 
         return atSetpoint();
     }
 
 
     private void goToSetpoint(){
-        elevatorController.setReference(setpoint, ControlType.kSmartMotion);   
+        elevatorMotor.set(ControlMode.MotionMagic, setpoint * 2048);   
     }
 
 
@@ -135,11 +132,11 @@ public class Elevator extends SubsystemBase {
     }
 
     public void zeroElevator(){
-        elevatorEncoder.setPosition(0);
+        elevatorMotor.setSelectedSensorPosition(0);
     }
 
     public double getElevatorHeight(){
-        return elevatorEncoder.getPosition();
+        return elevatorMotor.getSelectedSensorPosition() / 2048;
     }
 
     private double getSetpoint(){
@@ -154,17 +151,13 @@ public class Elevator extends SubsystemBase {
         return Math.abs(setpoint - getElevatorHeight()) < ElevatorConstants.ELEVATOR_HEIGHT_TOLERANCE;
     }
 
-    public boolean atZero(){
-        return absoluteEncoder.getAbsolutePosition() == ElevatorConstants.ELEVATOR_ZERO_HEIGHT;
-    }
-
     public void configElevatorPID(boolean useSD){
 
         if(useSD){
-            elevatorController.setP(SmartDashboard.getNumber("Elevator kP", 0));
-            elevatorController.setI(SmartDashboard.getNumber("Elevator kI", 0));
-            elevatorController.setD(SmartDashboard.getNumber("Elevator kD", 0));
-            elevatorController.setFF(SmartDashboard.getNumber("Elevator kF", 0));
+            elevatorMotor.config_kP(0, SmartDashboard.getNumber("Elevator kP", 0));
+            elevatorMotor.config_kI(0, SmartDashboard.getNumber("Elevator kI", 0));
+            elevatorMotor.config_kD(0, SmartDashboard.getNumber("Elevator kD", 0));
+            elevatorMotor.config_kF(0, SmartDashboard.getNumber("Elevator kF", 0));
         }
     }
 
@@ -175,37 +168,38 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setInverted(true);
         elevatorSlave.setInverted(true);
 
-        elevatorMotor.enableVoltageCompensation(10);
-        elevatorSlave.enableVoltageCompensation(10);
+        elevatorMotor.configVoltageCompSaturation(10);
+        elevatorSlave.configVoltageCompSaturation(10);
 
-        elevatorMotor.setControlFramePeriodMs(50);
-        elevatorMotor.setIdleMode(IdleMode.kBrake);
-        elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
+        //elevatorMotor.setStatusFramePeriod(0, 50);
+        elevatorMotor.setNeutralMode(NeutralMode.Brake);
+        elevatorSlave.setNeutralMode(NeutralMode.Brake);
 
         //elevatorMotor.enableSoftLimit(null, false)
         //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
-        elevatorController.setOutputRange(-1, 1, 0);
+        elevatorMotor.configPeakOutputForward(1);
+        elevatorMotor.configPeakOutputReverse(-1);
 
-        elevatorController.setP(.00003);
-        elevatorController.setFF(0.0002);
+        elevatorMotor.config_kP(0, .00003);
+        elevatorMotor.config_kF(0, 0.0002);
 
-        elevatorController.setSmartMotionMaxVelocity(10500, 0);
-        elevatorController.setSmartMotionMaxAccel(11000, 0);
+        elevatorMotor.configMotionAcceleration((10500 / 600) * 2048, 0);
+        elevatorMotor.configMotionCruiseVelocity((11000 / 600) * 2048, 0);
 
-        elevatorController.setSmartMotionMinOutputVelocity(0, 0);
-        elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
+        //elevatorMotor.setSmartMotionMinOutputVelocity(0, 0);
+        elevatorMotor.configAllowableClosedloopError(0, 0);
     }
 
     private void configElevatorDownwardConstraints(){
-        elevatorController.setSmartMotionMaxVelocity(8000, 0);
-        elevatorController.setSmartMotionMaxAccel(8000, 0);
+        elevatorMotor.configMotionCruiseVelocity((8000 / 600) * 2048, 0);
+        elevatorMotor.configMotionAcceleration((8000 / 600) * 2048, 0);
     }
 
     private void logData(){
         SmartDashboard.putNumber("Elevator Setpoint", setpoint);
         SmartDashboard.putString("Elevator State", state.toString());
-        SmartDashboard.putNumber("Elevator Position", elevatorEncoder.getPosition());
+        SmartDashboard.putNumber("Elevator Position", elevatorMotor.getSelectedSensorPosition() / 2048);
         SmartDashboard.putNumber("Elevator Height", getElevatorHeight());
     }
 
