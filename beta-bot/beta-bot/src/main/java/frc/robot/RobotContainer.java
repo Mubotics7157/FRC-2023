@@ -103,7 +103,7 @@ public class RobotContainer {
     m_driverController.a().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
     m_driverController.a().onFalse(new Stow(superStructure));
 
-    m_driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure), new AlignRotation(drive, Rotation2d.fromDegrees(0), m_driverController::getLeftY, m_driverController::getLeftX)));
+    m_driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure)));
     m_driverController.leftStick().onFalse(new Stow(superStructure));
 
     m_driverController.leftBumper().onTrue(new ScoreCone(superStructure));
@@ -125,7 +125,7 @@ public class RobotContainer {
 
     m_driverController.button(7).onTrue(new Zero());
 
-    m_driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure), new AlignRotation(drive, Rotation2d.fromDegrees(90), m_driverController::getLeftY, m_driverController::getLeftX)));
+    m_driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure)));
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));

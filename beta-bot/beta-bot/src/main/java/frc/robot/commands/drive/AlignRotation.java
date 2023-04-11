@@ -19,20 +19,19 @@ import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignRotation extends CommandBase {
 
-    private PIDController strafeController = new PIDController(2,0,0);
+    private PIDController rotController = new PIDController(2,0,0);
     private Drive drive;
-    private Rotation2d angle;
     private double deltaSpeed;
-
+    private Rotation2d angle;
     private DoubleSupplier fwd, str;
 
-    public AlignRotation(Drive instance, Rotation2d angle, DoubleSupplier fwd, DoubleSupplier str){
+    public AlignRotation(Drive instance, DoubleSupplier fwd, DoubleSupplier str){
         drive = instance;
-        this.angle = angle;
         this.fwd = fwd;
         this.str = str;
+        angle = new Rotation2d();
 
-        strafeController.setTolerance(Units.degreesToRadians(1));
+        rotController.setTolerance(Units.degreesToRadians(1));
         addRequirements(drive);
 
         SmartDashboard.putNumber("align rotation P", 2);
@@ -64,23 +63,25 @@ public class AlignRotation extends CommandBase {
 
     @Override
     public void initialize() {
-        strafeController.setP(SmartDashboard.getNumber("align rotation P", 2));
+        angle = Drive.getInstance().getSoftAngle();
+        
+        rotController.setP(SmartDashboard.getNumber("align rotation P", 2));
 
         if(DriverStation.getAlliance() == Alliance.Blue){
             angle = angle.unaryMinus();
         }
 
-        strafeController.reset();
-        strafeController.setSetpoint(angle.getRadians());
+        rotController.reset();
+        rotController.setSetpoint(angle.getRadians());
     }
     
 
     @Override
     public void execute() {
-            if(!(strafeController.atSetpoint()) )
-                deltaSpeed = strafeController.calculate(drive.getDriveHeading().getRadians());
+            if(!(rotController.atSetpoint()) )
+                deltaSpeed = rotController.calculate(drive.getDriveHeading().getRadians());
             else
-                strafeController.calculate(angle.getRadians());
+                rotController.calculate(angle.getRadians());
             
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(
                 modifyInputs(-fwd.getAsDouble(), false),

@@ -176,18 +176,22 @@ public class SuperStructure extends SubsystemBase {
             case CONE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_HIGH + elevAdj, SuperStructureConstants.WRIST_CONE_HIGH.plus(wristAdj));
                 Drive.getInstance().changeSlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(180));
                 break;
             case CONE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CONE_MID + elevAdj, SuperStructureConstants.WRIST_CONE_MID.plus(wristAdj));
                 Drive.getInstance().changeSlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(180));
                 break;
             case CUBE_HIGH:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HIGH + elevAdj, SuperStructureConstants.WRIST_CUBE_HIGH.plus(wristAdj));
                 Drive.getInstance().changeSlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(180));
                 break;
             case CUBE_MID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_MID + elevAdj, SuperStructureConstants.WRIST_CUBE_MID.plus(wristAdj));
                 Drive.getInstance().changeSlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(180));
                 break;
             case CUBE_HIGH_SHOOT:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_SHOOT + elevAdj, SuperStructureConstants.WRIST_CUBE_SHOOT.plus(wristAdj));
@@ -200,6 +204,7 @@ public class SuperStructure extends SubsystemBase {
             case CUBE_HYBRID:
                 goToPosition(SuperStructureConstants.ELEVATOR_CUBE_HYBRID + elevAdj, SuperStructureConstants.WRIST_CUBE_HYRBID.plus(wristAdj));
                 Drive.getInstance().changeMax();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(180));
                 break;
             case STOWED:
                 Drive.getInstance().changeMax();
@@ -228,10 +233,12 @@ public class SuperStructure extends SubsystemBase {
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
                 Drive.getInstance().changeSlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(-90));
                 break;
             case PORTAL:
                 intake(SuperStructureConstants.ELEVATOR_INTAKE_PORTAL, SuperStructureConstants.WRIST_INTAKE_PORTAL.plus(wristAdj), IntakeState.INTAKE_CONE);
                 Drive.getInstance().changeVerySlow();
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(0));
                 break;
             case ZERO:
                 zeroAll();
@@ -243,6 +250,7 @@ public class SuperStructure extends SubsystemBase {
             case CLIMB:
                 Intake.getInstance().closeJaws();
                 goToPosition(0, Rotation2d.fromDegrees(0));
+                Drive.getInstance().setSoftAngle(Rotation2d.fromDegrees(-90));
                 break;
             default:
                 break;
