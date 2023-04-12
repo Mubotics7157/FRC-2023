@@ -14,6 +14,7 @@ import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.ScoreCubeMid;
 import frc.robot.commands.SetIntakingHeight;
+import frc.robot.commands.SetVisionDeviations;
 import frc.robot.commands.SetVisionMode;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.Stow;
@@ -54,7 +55,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          //
          //new SetVisionMode(vision, VisionState.TAG),
          //new Stow(superStructure),  
-         new ParallelCommandGroup(drive.followPath(driveToCubeNodeTwo, false),new SequentialCommandGroup(new WaitCommand(1.5),new Stow(superStructure), new SetVisionMode(vision, VisionState.TAG))),
+         new ParallelCommandGroup(drive.followPath(driveToCubeNodeTwo, false),new SequentialCommandGroup(new WaitCommand(1.5),new Stow(superStructure), new SetVisionMode(vision, VisionState.TAG)), new SequentialCommandGroup(new WaitCommand(2), new SetVisionDeviations(.25, .25, 1))),
          new DriveSlow(0.25, drive, tracker),
          new ScoreCubeHigh(superStructure),
          new ShootCone(),

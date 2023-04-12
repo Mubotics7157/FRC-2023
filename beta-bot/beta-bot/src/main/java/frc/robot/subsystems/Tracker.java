@@ -53,6 +53,7 @@ public class Tracker extends SubsystemBase{
         resetViaVision();
         initTunableFields();
         SmartDashboard.putNumber("custom offset", 0);
+       
     }
 
 
@@ -63,6 +64,14 @@ public class Tracker extends SubsystemBase{
             m_field.setRobotPose(estimator.getEstimatedPosition());
         }
 
+    }
+
+    public void setVisionDeviations(double x, double y, double rot){
+        estimator.setVisionMeasurementStdDevs(new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
+        x,
+        y,
+        rot
+    ));
     }
 
     private void updatePose(){
