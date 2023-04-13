@@ -7,6 +7,7 @@ import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.IntakePortal;
 import frc.robot.commands.MoveFork;
 import frc.robot.commands.OpenDoor;
+import frc.robot.commands.QuickDeployForks;
 import frc.robot.commands.ScoreCone;
 import frc.robot.commands.ScoreConeHigh;
 import frc.robot.commands.ScoreConeMid;
@@ -134,7 +135,7 @@ public class RobotContainer {
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
 
     m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
-    m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getRightTriggerAxis,false));
+    m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new SequentialCommandGroup(new QuickDeployForks(forks),new MoveFork(forks, m_driverController::getRightTriggerAxis,false)));
 
     m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
     //m_operatorController.button(1).onFalse(new Stow(superStructure));

@@ -243,6 +243,10 @@ public final class Constants {
 
   public static final class ForksConstants{
     public static final int DEVICE_ID_FORKS = 29;
+
+    public static final double FORK_KP = 0.05;
+
+    public static final double FORK_DEPLOY_SETPOINT = -600000;
     
   }
 

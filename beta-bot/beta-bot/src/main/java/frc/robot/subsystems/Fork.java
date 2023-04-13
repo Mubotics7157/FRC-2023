@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ForksConstants;
 
 public class Fork extends SubsystemBase{
-    
-WPI_TalonFX forkMotor;
+
+private WPI_TalonFX forkMotor;
+private boolean initialDeploy;
 
 private static Fork instance = new Fork();
     public Fork (){
@@ -19,8 +20,10 @@ private static Fork instance = new Fork();
         forkMotor.configFactoryDefault();
         forkMotor.setNeutralMode(NeutralMode.Brake);
         forkMotor.setInverted(false);
+        forkMotor.config_kP(0, ForksConstants.FORK_KP);
         //forkMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 20, 1));
-        
+        initialDeploy = false;
+
     }
 
     public static Fork getInstance(){
@@ -29,5 +32,19 @@ private static Fork instance = new Fork();
 
     public void set(double speed){
         forkMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    public boolean setSetpoint(double setpoint){
+        forkMotor.set(ControlMode.Position,setpoint);
+        return Math.abs(setpoint-forkMotor.getSelectedSensorPosition()) < 15000;
+    }
+
+    public void setInitialDeployState(boolean state){
+        initialDeploy = state;
+    }
+
+
+    public boolean getInitialDeployState(){
+        return initialDeploy;
     }
 }
