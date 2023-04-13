@@ -86,21 +86,21 @@ public class AlignRotation extends CommandBase {
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(
                 modifyInputs(-fwd.getAsDouble(), false),
                 modifyInputs(-str.getAsDouble(), false),
-                deltaSpeed*(DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 4), 
+                deltaSpeed*(DriveConstants.MAX_TELE_ANGULAR_VELOCITY / 2), 
                 Tracker.getInstance().getPose().getRotation())
                 );
         
     }
-    /* 
+    
     @Override
     public boolean isFinished() {
-        return strafeController.atSetpoint();
+        return rotController.atSetpoint();
     }
-    */
-
+    
     @Override
     public void end(boolean interrupted) {
         //vision.setTargetLLState(VisionState.TAG);
+        //driveFromChassis(0, 0, Rotation2d.fromDegrees(0));
     }
 
     

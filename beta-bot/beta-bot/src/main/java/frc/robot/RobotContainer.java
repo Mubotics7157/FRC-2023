@@ -130,7 +130,7 @@ public class RobotContainer {
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
-    m_driverController.povDown().onTrue(new AlignObject(drive, vision));
+    m_driverController.povDown().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX));
 
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
