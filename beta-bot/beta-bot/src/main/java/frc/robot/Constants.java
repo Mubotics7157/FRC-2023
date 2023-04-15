@@ -246,7 +246,7 @@ public final class Constants {
 
     public static final double FORK_KP = 0.05;
 
-    public static final double FORK_DEPLOY_SETPOINT = -600000;
+    public static final double FORK_DEPLOY_SETPOINT = -650000;
     
   }
 

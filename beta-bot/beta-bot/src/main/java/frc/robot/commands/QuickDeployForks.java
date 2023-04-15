@@ -12,6 +12,7 @@ public class QuickDeployForks extends CommandBase {
     public QuickDeployForks(Fork instance){
         fork = instance;
         addRequirements(fork);
+        
     }
 
     @Override
@@ -28,4 +29,4 @@ public class QuickDeployForks extends CommandBase {
     public void end(boolean interrupted) {
         fork.setInitialDeployState(true);
     }
-}
+}   

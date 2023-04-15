@@ -121,8 +121,8 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
-    m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
-    m_driverController.povLeft().onTrue(new ParallelCommandGroup(new InstantCommand(intake::openJaws)));
+    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
+    m_driverController.povLeft().onTrue(new InstantCommand(intake::toggleJaws));
 
     m_driverController.button(7).onTrue(new Zero());
 
@@ -141,7 +141,7 @@ public class RobotContainer {
 
     m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
     //m_operatorController.button(1).onFalse(new Stow(superStructure));
-
+  
     m_operatorController.button(2).onTrue(new ParallelCommandGroup(new InstantCommand(superStructure::emergencySetpointReset), new InstantCommand(intake::adjustmentReset)));
 
   }

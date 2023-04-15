@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ForksConstants;
 
@@ -24,6 +25,8 @@ private static Fork instance = new Fork();
         //forkMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 20, 1));
         initialDeploy = false;
 
+        forkMotor.setSelectedSensorPosition(0);
+
     }
 
     public static Fork getInstance(){
@@ -36,7 +39,7 @@ private static Fork instance = new Fork();
 
     public boolean setSetpoint(double setpoint){
         forkMotor.set(ControlMode.Position,setpoint);
-        return Math.abs(setpoint-forkMotor.getSelectedSensorPosition()) < 15000;
+        return Math.abs(setpoint-forkMotor.getSelectedSensorPosition()) < 30000;
     }
 
     public void setInitialDeployState(boolean state){
