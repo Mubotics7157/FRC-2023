@@ -30,6 +30,7 @@ import frc.robot.commands.Zero;
 import frc.robot.commands.auto.AutoRoutine;
 import frc.robot.commands.auto.DriveBackwards;
 import frc.robot.commands.auto.PreloadPlusOne;
+import frc.robot.commands.auto.PreloadPlusOneNoClimb;
 import frc.robot.commands.auto.PreloadPlusTwo;
 import frc.robot.commands.auto.PreloadPlusTwoWeak;
 import frc.robot.commands.drive.AlignObject;
@@ -98,11 +99,11 @@ public class RobotContainer {
     m_driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
     m_driverController.b().onFalse(new Stow(superStructure));
 
-    m_driverController.y().onTrue(new ScoreCubeHighShoot(superStructure));
-    m_driverController.y().onFalse(new Stow(superStructure));
+    //m_driverController.y().onTrue(new ScoreCubeHighShoot(superStructure));
+    //m_driverController.y().onFalse(new Stow(superStructure));
 
-    m_driverController.a().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
-    m_driverController.a().onFalse(new Stow(superStructure));
+    m_driverController.povDown().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
+    m_driverController.povDown().onFalse(new Stow(superStructure));
 
     m_driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure)));
     m_driverController.leftStick().onFalse(new Stow(superStructure));
@@ -121,6 +122,9 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
+    m_driverController.x().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(-90)));
+    m_driverController.y().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(0)));
+
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
     m_driverController.povLeft().onTrue(new InstantCommand(intake::toggleJaws));
 
@@ -130,7 +134,7 @@ public class RobotContainer {
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
-    m_driverController.povDown().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX));
+    m_driverController.a().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(180)));
 
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
@@ -187,6 +191,7 @@ public class RobotContainer {
     //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusOne(drive, vision, superStructure, tracker);
     //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
+    //return new PreloadPlusOneNoClimb(drive, vision, superStructure, tracker);
     return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
     //return new AutoRoutine("left climb jawn", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }

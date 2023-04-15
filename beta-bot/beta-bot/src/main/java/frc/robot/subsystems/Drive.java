@@ -50,7 +50,7 @@ public class Drive extends SubsystemBase {
 
     private double driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
     private double driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
-    private double tanDeadband = 0.1;
+    private double tanDeadband = 0.15;
     private double angDeadband = 0.15;
     private Rotation2d softAngle = new Rotation2d();
 
@@ -217,7 +217,7 @@ public class Drive extends SubsystemBase {
     }
     
     public void changeMax(){
-        tanDeadband = 0.1;
+        tanDeadband = 0.15;
         angDeadband = 0.15;
         driveSpeed = DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
         driveAngle = DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
@@ -260,14 +260,6 @@ public class Drive extends SubsystemBase {
 
     public ProfiledPIDController getRotationController(){
         return rotController;
-    }
-
-    public Rotation2d getSoftAngle(){
-        return softAngle;
-    }
-
-    public void setSoftAngle(Rotation2d angle){
-        softAngle = angle;
     }
 
     public void lockModules(){

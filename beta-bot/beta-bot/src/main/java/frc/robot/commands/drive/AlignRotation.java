@@ -19,22 +19,29 @@ import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignRotation extends CommandBase {
 
-    private PIDController rotController = new PIDController(2,0,0);
+    private PIDController rotController = new PIDController(1.25,0,0);
     private Drive drive;
     private double deltaSpeed;
     private Rotation2d angle;
+    private Rotation2d angleToAlign;
     private DoubleSupplier fwd, str;
 
-    public AlignRotation(Drive instance, DoubleSupplier fwd, DoubleSupplier str){
+    public AlignRotation(Drive instance, DoubleSupplier fwd, DoubleSupplier str, Rotation2d angle){
         drive = instance;
         this.fwd = fwd;
         this.str = str;
-        angle = new Rotation2d();
+        this.angle = angle;
 
         rotController.setTolerance(Units.degreesToRadians(1));
+        rotController.isContinuousInputEnabled();
+        rotController.enableContinuousInput(0, Units.degreesToRadians(360));
         addRequirements(drive);
 
-        SmartDashboard.putNumber("align rotation P", 1.5);
+        SmartDashboard.putNumber("align rotation P", 1.25);
+
+        rotController.setP(SmartDashboard.getNumber("align rotation P", 1.25));
+        
+        SmartDashboard.putNumber("angle to rotate", angle.getDegrees());
     }
     public void driveFromChassis(ChassisSpeeds speeds){
         var states = DriveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(speeds);
@@ -64,19 +71,19 @@ public class AlignRotation extends CommandBase {
     @Override
     public void initialize() {
         
-        rotController.setP(SmartDashboard.getNumber("align rotation P", 2));
+        rotController.setP(SmartDashboard.getNumber("align rotation P", 1.25));
 
         if(DriverStation.getAlliance() == Alliance.Blue){
-            angle = Drive.getInstance().getSoftAngle().unaryMinus();
+            angleToAlign = angle.unaryMinus();
         }
-        else{
-            angle = Drive.getInstance().getSoftAngle();
-        }
+        else
+            angleToAlign = angle;
+         
 
         rotController.reset();
-        rotController.setSetpoint(angle.getRadians());
+        rotController.setSetpoint(angleToAlign.getRadians());
         
-        SmartDashboard.putNumber("angle to rotate", angle.getDegrees());
+        SmartDashboard.putNumber("angle to rotate", angleToAlign.getDegrees());
     }
     
 
@@ -85,7 +92,7 @@ public class AlignRotation extends CommandBase {
             if(!(rotController.atSetpoint()))
                 deltaSpeed = rotController.calculate(Tracker.getInstance().getPose().getRotation().getRadians());
             else
-                rotController.calculate(angle.getRadians());
+                rotController.calculate(angleToAlign.getRadians());
             
             driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(
                 modifyInputs(-fwd.getAsDouble(), false),
