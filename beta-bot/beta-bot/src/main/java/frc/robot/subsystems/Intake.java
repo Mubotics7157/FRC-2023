@@ -222,6 +222,15 @@ public class Intake extends SubsystemBase {
         solenoid.set(commandedSolenoidState);
     }
 
+    public void toggleJaws(){
+        if(solenoid.get() == Value.kForward){
+            solenoid.set(Value.kReverse);
+        }
+        else{
+            solenoid.set(Value.kForward);
+        }
+    }
+
     public void closeJaws() {
         solenoid.set(Value.kForward);
     }
