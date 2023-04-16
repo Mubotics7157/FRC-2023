@@ -27,7 +27,7 @@ public class SetScorePosition extends InstantCommand {
                 SmartDashboard.putBoolean("score Mid?", true);  
                 SmartDashboard.putBoolean("score Hybrid?", false);  
             }  
-            else{
+            else {
                 SmartDashboard.putBoolean("score High?", false);   
                 SmartDashboard.putBoolean("score Mid?", false);  
                 SmartDashboard.putBoolean("score Hybrid?", true);  

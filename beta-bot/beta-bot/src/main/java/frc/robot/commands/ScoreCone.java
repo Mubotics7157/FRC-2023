@@ -25,8 +25,10 @@ public class ScoreCone extends CommandBase{
             superStructure.setState(SuperStructureState.CONE_HIGH);
         else if(superStructure.getScoringPosition() == ScoringPosition.MID)
             superStructure.setState(SuperStructureState.CONE_MID);
-        else
+        else if(superStructure.getScoringPosition() == ScoringPosition.HYBRID)
             superStructure.setState(SuperStructureState.CONE_SNIPER);
+        else
+            superStructure.setState(SuperStructureState.CONE_MID_SUPER);
     }
 
     @Override

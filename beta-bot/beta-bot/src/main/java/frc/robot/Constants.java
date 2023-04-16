@@ -246,7 +246,7 @@ public final class Constants {
 
     public static final double FORK_KP = 0.05;
 
-    public static final double FORK_DEPLOY_SETPOINT = -650000;
+    public static final double FORK_DEPLOY_SETPOINT = -670000;
     
   }
 
@@ -284,6 +284,11 @@ public final class Constants {
 
     public static final double ELEVATOR_CONE_SNIPER = 0;
     public static final Rotation2d WRIST_CONE_SNIPER = Rotation2d.fromDegrees(-70);
+    //==============================================================================
+
+    public static final double ELEVATOR_CONE_MID_SUPER = -21;
+    public static final Rotation2d WRIST_CONE_MID_SUPER = Rotation2d.fromDegrees(-153);
+
     //==============================================================================
     public static final double ELEVATOR_INTAKE_CONE_FALLEN = 0;
   

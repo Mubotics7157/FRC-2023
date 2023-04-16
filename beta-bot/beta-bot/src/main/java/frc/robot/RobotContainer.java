@@ -139,6 +139,7 @@ public class RobotContainer {
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
     m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
+    m_operatorController.button(10).onTrue(new SetScorePosition(ScoringPosition.MID_SUPER));
 
     m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
     m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new SequentialCommandGroup(new QuickDeployForks(forks),new MoveFork(forks, m_driverController::getRightTriggerAxis,false)));

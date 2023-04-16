@@ -181,8 +181,8 @@ public class Intake extends SubsystemBase {
             if(DriverStation.isTeleop())
                 setSpeed(IntakeConstants.CONE_SNIPER_SPEED);
             else
-                setSpeed(IntakeConstants.CONE_SNIPER_SPEED - 500);
-                
+                setSpeed(IntakeConstants.CONE_SNIPER_SPEED + 500);
+
                 break;
             case CUSTOM:
                 setSpeed(SmartDashboard.getNumber("custom intake", -1000));
