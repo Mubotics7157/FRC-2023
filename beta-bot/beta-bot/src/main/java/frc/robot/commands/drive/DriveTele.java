@@ -52,7 +52,7 @@ public class DriveTele extends CommandBase {
 
     @Override
     public void initialize() {
-        drive.changeMax();
+        //drive.changeMax();
     }
 
     @Override

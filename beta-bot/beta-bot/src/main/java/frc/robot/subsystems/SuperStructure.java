@@ -65,7 +65,7 @@ public class SuperStructure extends SubsystemBase {
     @Override
     public void periodic() {
         //SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
-        //SmartDashboard.putString("SuperStructure state", scoringState.toString());
+        SmartDashboard.putString("SuperStructure state", scoringState.toString());
         //SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
         if(idleIntake && Intake.getInstance().getState() != IntakeState.IDLE)

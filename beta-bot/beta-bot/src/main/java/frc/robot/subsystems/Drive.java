@@ -124,6 +124,7 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         //logData();
+        SmartDashboard.putNumber("Drive Speed", getTan());
     }
     
     public void logData(){

@@ -26,16 +26,16 @@ public class AlignRotation extends CommandBase {
     private Rotation2d angleToAlign;
     private DoubleSupplier fwd, str;
 
-    public AlignRotation(Drive instance, DoubleSupplier fwd, DoubleSupplier str, Rotation2d angle){
-        drive = instance;
+    public AlignRotation(DoubleSupplier fwd, DoubleSupplier str, Rotation2d angle){
+        drive = Drive.getInstance();
         this.fwd = fwd;
         this.str = str;
         this.angle = angle;
 
+        addRequirements(drive);
         rotController.setTolerance(Units.degreesToRadians(1));
         rotController.isContinuousInputEnabled();
         rotController.enableContinuousInput(0, Units.degreesToRadians(360));
-        addRequirements(drive);
 
         SmartDashboard.putNumber("align rotation P", 1.25);
 

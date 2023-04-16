@@ -122,8 +122,8 @@ public class RobotContainer {
 
     m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
-    m_driverController.x().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(-90)));
-    m_driverController.y().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(0)));
+    m_driverController.x().onTrue(new AlignRotation( m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(-90)));
+    m_driverController.y().onTrue(new AlignRotation(m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(0)));
 
     //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
     m_driverController.povLeft().onTrue(new InstantCommand(intake::toggleJaws));
@@ -134,7 +134,7 @@ public class RobotContainer {
     m_driverController.button(8).onFalse(new Stow(superStructure));
 
     //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
-    m_driverController.a().onTrue(new AlignRotation(drive, m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(180)));
+    m_driverController.a().onTrue(new AlignRotation( m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(180)));
 
     m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
     m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
