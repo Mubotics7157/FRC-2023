@@ -294,7 +294,7 @@ public final class Constants {
   
     public static final Rotation2d WRIST_INTAKE_CONE_FALLEN = Rotation2d.fromDegrees(-124); //-123
 
-    public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -6;
+    public static final double ELEVATOR_INTAKE_CONE_UPRIGHT = -5.5;
     public static final Rotation2d WRIST_INTAKE_CONE_UPRIGHT = Rotation2d.fromDegrees(-127);
 
     public static final double ELEVATOR_INTAKE_CUBE = 0;
