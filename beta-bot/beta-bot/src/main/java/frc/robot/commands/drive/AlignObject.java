@@ -69,7 +69,7 @@ public class AlignObject extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return strafeController.atSetpoint() || !vision.getTargetLL().hasTargets() ;
+        return strafeController.atSetpoint() || !vision.getTargetLL().hasTargets();
     }
 
     @Override
