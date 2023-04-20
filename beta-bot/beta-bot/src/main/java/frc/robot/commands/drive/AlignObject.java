@@ -50,6 +50,7 @@ public class AlignObject extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("===========align started===============");
         //vision.setTargetLLState(VisionState.CUBE);
         strafeController.reset();
         strafeController.setSetpoint(Units.degreesToRadians(5));
@@ -69,13 +70,16 @@ public class AlignObject extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        if(!vision.getTargetLL().hasTargets()){
+            System.out.println("=========== cube not seen ==========");
+        }
         return strafeController.atSetpoint() || !vision.getTargetLL().hasTargets();
     }
 
     @Override
     public void end(boolean interrupted) {
 
-
+        System.out.println("==============align ended==============");
         if(newPose != null){
             Tracker.getInstance().setPose(new Pose2d(newPose.getX(), newPose.getY(), Tracker.getInstance().getPose().getRotation()));
         }
