@@ -46,12 +46,12 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
          new Stow(superStructure),
          new ParallelCommandGroup(drive.followPath(driveToCube,true), new SetVisionMode(vision, VisionState.CUBE), new SequentialCommandGroup(new WaitCommand(1.75),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)
          )),
-         new AlignObject(drive, vision, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeTwo, DriverStation.getAlliance()).getInitialHolonomicPose()),
+         new AlignObject(drive, vision, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose()),
          /*new DriveBackwards( .85, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)*/
         // new SetVisionMode(vision, VisionState.TAG),
          new ParallelCommandGroup(drive.followPath(driveToCubeNodeOne,false), new SequentialCommandGroup(new WaitCommand(1), new ConeSniper(superStructure), new WaitCommand(.45), new ShootCone())),
          //new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.6), new Stow(superStructure)),
-         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),new SequentialCommandGroup(new WaitCommand(.25), new SetVisionMode(vision,VisionState.CUBE).andThen(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)))),
+         new ParallelCommandGroup(drive.followPath(driveToCubeTwo, false),  new SetVisionMode(vision,VisionState.CUBE), new SequentialCommandGroup(new WaitCommand(.25), new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))),
          new AlignObject(drive, vision, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeTwo, DriverStation.getAlliance()).getInitialHolonomicPose()),
          //new Stow(superStructure),
          //new DriveBackwarx`ds(.36, drive, tracker, PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeTwo, DriverStation.getAlliance()).getInitialHolonomicPose()),
@@ -69,6 +69,7 @@ public class PreloadPlusTwoWeak extends SequentialCommandGroup{
 
     
 
+    
     
     
 }
