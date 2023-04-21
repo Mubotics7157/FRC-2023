@@ -25,14 +25,17 @@ import frc.robot.subsystems.VisionManager.VisionState;
 
 public class PreloadPlusOneNoClimb extends SequentialCommandGroup{
 
-    public PreloadPlusOneNoClimb(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
+    public 
+    PreloadPlusOneNoClimb(Drive drive,VisionManager vision, SuperStructure superStructure,Tracker tracker){
         PathPlannerTrajectory driveToCube = PathPlanner.loadPath("PL + intake", 4,4);
         PathPlannerTrajectory driveToCubeNodeOne = PathPlanner.loadPath("PreloadPlusThreePart2", 4,3);
+        PathPlannerTrajectory driveToCenter = PathPlanner.loadPath("PreloadPlusThreeNCPart3", 4, 3);
         //PathPlannerTrajectory driveToCubeTwo = PathPlanner.loadPath("PreloadPlusOnePart3", 4, 4);
         //PathPlannerTrajectory driveUpChargeStation = PathPlanner.loadPath("PreloadPlusOnePart4",4,4);
         vision.setTargetLLState(VisionState.CUBE);
 
         addCommands(
+        /* 
          new SetVisionMode(vision, VisionState.CUBE),
          //new Stow(superStructure),
          new ScoreConeHigh(superStructure),
@@ -41,6 +44,21 @@ public class PreloadPlusOneNoClimb extends SequentialCommandGroup{
          new Stow(superStructure),
          new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(1.25),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
          new DriveBackwards( 1.2, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)),
+         new ParallelCommandGroup(new Stow(superStructure).andThen(new SetVisionMode(vision, VisionState.TAG)),drive.followPath(driveToCubeNodeOne,false)),
+         new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)),
+         drive.followPath(driveToCenter, false)
+         //drive.followPath(driveToCubeTwo, false).andThen(new SequentialCommandGroup(new OpenDoor(superStructure, .5),new WaitCommand(.4))),
+         //drive.followPath(driveUpChargeStation,false),
+         //new Stow(superStructure)
+         */
+        new SetVisionMode(vision, VisionState.CUBE),
+         //new Stow(superStructure),
+         new ScoreConeHigh(superStructure),
+         new ShootCone(),
+         new WaitCommand(.35),
+         new Stow(superStructure),
+         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(1.25),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision)),
+         new DriveBackwards( 1.7, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)),
          new ParallelCommandGroup(new Stow(superStructure).andThen(new SetVisionMode(vision, VisionState.TAG)),drive.followPath(driveToCubeNodeOne,false)),
          new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure))
          //drive.followPath(driveToCubeTwo, false).andThen(new SequentialCommandGroup(new OpenDoor(superStructure, .5),new WaitCommand(.4))),
