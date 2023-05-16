@@ -88,11 +88,13 @@ public class Tracker extends SubsystemBase{
         //man i love polar bears
         Translation2d offsetPose = new Translation2d(node.getX(), node.getY() + coneOffset);
         
+        //position, heading, rotation, velocity override
+
         if(DriverStation.getAlliance() == Alliance.Red)
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(), Rotation2d.fromDegrees(180)) // position, heading
             );
         else
             traj = PathPlanner.generatePath(
