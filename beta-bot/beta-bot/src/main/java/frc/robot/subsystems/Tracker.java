@@ -28,6 +28,8 @@ import frc.robot.util.PPSwerveControllerCommand;
 public class Tracker extends SubsystemBase{
 
     private Pose2d node = FieldConstants.RedConstants.NODE_CONE_RED_1;
+
+    private Pose2d pathPoint = new Pose2d();
     private double coneOffset = 0;
     private PathPlannerTrajectory traj;
     private final Field2d m_field = new Field2d();
@@ -53,6 +55,10 @@ public class Tracker extends SubsystemBase{
         resetViaVision();
         initTunableFields();
         SmartDashboard.putNumber("custom offset", 0);
+
+        SmartDashboard.putNumber("Custom PP X", 0);
+        SmartDashboard.putNumber("Custom PP Y", 0);
+        SmartDashboard.putNumber("Custom PP Rot", 0);
        
     }
 
@@ -84,7 +90,8 @@ public class Tracker extends SubsystemBase{
         m_field.getObject("vision pose").setPose(visionPose);
     }
 
-    public void regeneratePath(){
+    public void regenOffsetPath(){
+        //to be used for nodes but with offset
         //man i love polar bears
         Translation2d offsetPose = new Translation2d(node.getX(), node.getY() + coneOffset);
         
@@ -104,8 +111,8 @@ public class Tracker extends SubsystemBase{
             );
     }
 
-    public void regenDistancePath(){
-
+    public void regenNodePath(){
+        //to be used for node paths
         if(DriverStation.getAlliance() == Alliance.Red)
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
@@ -120,6 +127,22 @@ public class Tracker extends SubsystemBase{
             );
 
     }
+
+    public void regenPathOTF(){
+        //to be used for random path points (not node)
+        if(DriverStation.getAlliance() == Alliance.Red)
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(pathPoint.getTranslation(), getPose().getRotation(), pathPoint.getRotation()) // position, heading, rotation
+            );
+        else
+            traj = PathPlanner.generatePath(
+                new com.pathplanner.lib.PathConstraints(2, 3),
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
+                new PathPoint(pathPoint.getTranslation(), getPose().getRotation(), pathPoint.getRotation().unaryMinus()) // position, heading, rotation
+            );
+    }
     
     public void setOffset(){
         coneOffset = SmartDashboard.getNumber("custom offset", 0);
@@ -128,6 +151,11 @@ public class Tracker extends SubsystemBase{
     public void editNodePose(double nodeY){
         node = new Pose2d(new Translation2d(FieldConstants.BlueConstants.NODE_CONE_BLUE_2.getX(), nodeY), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
         m_field.getObject("pose").setPose(node);
+    }
+
+    public void editPathPointPose(Pose2d pose){
+        pathPoint = pose;
+        m_field.getObject("path point").setPose(pathPoint);
     }
 
     public void setPose(Pose2d pose){

@@ -20,7 +20,7 @@ public class AlignStrafe extends CommandBase{
 
     @Override
     public void initialize() {
-        tracker.regeneratePath();
+        tracker.regenOffsetPath();
         run = tracker.getPathFollowingCommand();
         run.schedule();
     }

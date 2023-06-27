@@ -1,4 +1,7 @@
 package frc.robot.commands.drive;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
@@ -6,6 +9,7 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 
 public class AlignDistance extends CommandBase{
+
     private Drive drive;
     private Tracker tracker;
     private Command run;
@@ -20,7 +24,14 @@ public class AlignDistance extends CommandBase{
 
     @Override
     public void initialize() {
-        tracker.regenDistancePath();
+
+        tracker.editPathPointPose(new Pose2d(
+            SmartDashboard.getNumber("Custom PP X", 0),
+            SmartDashboard.getNumber("Custom PP Y", 0),
+            Rotation2d.fromDegrees(SmartDashboard.getNumber("Custom PP Rot", 0))
+        ));
+
+        tracker.regenPathOTF();
         run = tracker.getPathFollowingCommand();
         run.schedule();
     }
@@ -28,7 +39,7 @@ public class AlignDistance extends CommandBase{
     @Override
     public void execute() {
         if(Math.abs(RobotContainer.m_driverController.getLeftY())>.2||Math.abs(RobotContainer.m_driverController.getLeftX())>.2){
-            this.end(true);
+            run.cancel();
         }
     }
 
@@ -39,7 +50,7 @@ public class AlignDistance extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        run.end(true);
+        run.cancel();
     }
     
 
