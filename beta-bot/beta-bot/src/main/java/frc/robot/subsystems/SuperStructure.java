@@ -51,7 +51,6 @@ public class SuperStructure extends SubsystemBase {
         HIGH,
         MID,
         HYBRID,
-        //=====
         MID_SUPER
     }
 
@@ -62,9 +61,8 @@ public class SuperStructure extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //SmartDashboard.putBoolean("robot at setpoint", atSetpoint());
         SmartDashboard.putString("SuperStructure state", scoringState.toString());
-        //SmartDashboard.putString("Scoring Position", scoringPosition.toString());
+        SmartDashboard.putString("Scoring Position", scoringPosition.toString());
 
         if(idleIntake && Intake.getInstance().getState() != IntakeState.IDLE)
             intake.setIntakeState(IntakeState.IDLE);
@@ -100,32 +98,39 @@ public class SuperStructure extends SubsystemBase {
 
     public void shoot(){
         idleIntake = false;
-        
-        if(scoringState == SuperStructureState.CONE_HIGH || scoringState == SuperStructureState.CONE_MID)
-            intake.setIntakeState(IntakeState.OUTTAKE_CONE);
 
-        else if(scoringState == SuperStructureState.CUBE_MID)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
-        
-        else if(scoringState == SuperStructureState.CONE_MID_SUPER)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
-
-        else if(scoringState == SuperStructureState.CUBE_HIGH)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH);
-
-        else if(scoringState == SuperStructureState.CONE_SNIPER)
-            intake.setIntakeState(IntakeState.CONE_SNIPER);
-
-        else if(scoringState == SuperStructureState.CUBE_HIGH_SHOOT)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH_SHOOT);
-
-        else if(scoringState == SuperStructureState.CUBE_MID_SHOOT)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID_SHOOT);
-
-        else if(scoringState == SuperStructureState.CUBE_HYBRID)
-            intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HYBRID);
-        else
-            intake.setIntakeState(IntakeState.CUSTOM);
+        switch(scoringState){
+            case CONE_HIGH:
+                intake.setIntakeState(IntakeState.OUTTAKE_CONE);
+                break;
+            case CONE_MID:
+                intake.setIntakeState(IntakeState.OUTTAKE_CONE);
+                break;
+            case CUBE_MID:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
+                break;
+            case CONE_MID_SUPER:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID);
+                break;
+            case CUBE_HIGH:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH);
+                break;
+            case CONE_SNIPER:
+                intake.setIntakeState(IntakeState.CONE_SNIPER);
+                break;
+            case CUBE_HIGH_SHOOT:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HIGH_SHOOT);
+                break;
+            case CUBE_MID_SHOOT:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_MID_SHOOT);
+                break;
+            case CUBE_HYBRID:
+                intake.setIntakeState(IntakeState.OUTTAKE_CUBE_HYBRID);
+                break;
+            default:
+                intake.setIntakeState(IntakeState.CUSTOM);
+            break;
+        }
     }
 
 

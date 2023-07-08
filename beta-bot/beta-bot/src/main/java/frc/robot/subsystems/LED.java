@@ -13,7 +13,6 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
-import com.ctre.phoenixpro.StatusCode;
 
 
 public class LED {
@@ -113,7 +112,6 @@ public class LED {
         candle.configAllSettings(config);
         candle.setLEDs(255, 25, 0);
         
-        //candle.animate(larsonAnim);
     }
 
     public void setOrangeFade(){
@@ -150,7 +148,6 @@ public class LED {
         strobeAnim = new StrobeAnimation(0, 255, 0, 0, 0, 300);
         redStrobe = new StrobeAnimation(255, 0, 0, 0, 0, 300);
         yellowStrobe = new StrobeAnimation(255, 100, 0, 0 , 0, 300);
-        //yellow 255, 100, 0
         purpleStrobe = new StrobeAnimation(255, 0, 50, 0, 0, 0, 300);
         FIREEE = new FireAnimation(1, 1, 300, 0.5, 0.5);
         colorFLow = new ColorFlowAnimation(255, 25, 0, 0, 0.5, 250, Direction.Forward, 0);
