@@ -43,7 +43,7 @@ public class SuperStructure extends SubsystemBase {
         PORTAL,
         OPEN_DOOR,
         STOWED,
-        SEAGUL,
+        SEAGULL,
         CUSTOM,
         CONE_SNIPER,
         ZERO,
@@ -168,7 +168,7 @@ public class SuperStructure extends SubsystemBase {
 
     if(state==SuperStructureState.CUBE_INTAKE || state==SuperStructureState.CONE_INTAKE|| state ==SuperStructureState.FALLEN_CONE)
         idleIntake = false;
-    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || state==SuperStructureState.CONE_MID_SUPER || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.PORTAL || scoringState == SuperStructureState.SEAGUL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
+    else if((state==SuperStructureState.CONE_HIGH || state==SuperStructureState.CONE_MID || state==SuperStructureState.CONE_MID_SUPER || scoringState == SuperStructureState.FALLEN_CONE || scoringState == SuperStructureState.CONE_INTAKE || scoringState == SuperStructureState.PORTAL || scoringState == SuperStructureState.SEAGULL || state == SuperStructureState.CONE_SNIPER) || !atSetpoint())
         idleIntake = true;
     else
         idleIntake = false;
@@ -234,9 +234,9 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
                 Drive.getInstance().changeSlow();
                 break;
-            case SEAGUL:
+            case SEAGULL:
                 //goToPosition(0, Rotation2d.fromDegrees(-20));
-                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGULL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGULL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGULL);
                 Drive.getInstance().changeSlow();
                 break;
             case PORTAL:
@@ -299,7 +299,7 @@ public class SuperStructure extends SubsystemBase {
             case STOWED:
                 led.setCurrentIntake();
                 break;
-            case SEAGUL:
+            case SEAGULL:
                 led.setYellowStrobe();
                 break;
             case CONE_SNIPER:

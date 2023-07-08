@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
         OUTTAKE_CUBE_MID_SHOOT,
         INTAKE_CONE,
         OUTTAKE_CONE,
-        INTAKE_CONE_SEAGUL,
+        INTAKE_CONE_SEAGULL,
         INTAKE,
         OUTTAKE,
         IDLE,
@@ -153,7 +153,7 @@ public class Intake extends SubsystemBase {
                 else
                     setSpeed(.4 * -3000);
                 break;
-            case INTAKE_CONE_SEAGUL:
+            case INTAKE_CONE_SEAGULL:
                 setSpeed(.375 * 5700);
                 break;
             case INTAKE:

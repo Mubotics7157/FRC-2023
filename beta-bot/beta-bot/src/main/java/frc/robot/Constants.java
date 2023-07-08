@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 1;
+    public static final int DRIVER_CONTROLLER_PORT = 0;
+    public static final int OPERATOR_CONTROLLER_PORT = 1;
   }
 
   public static final class SwerveModuleConstants{
@@ -115,7 +115,6 @@ public final class Constants {
       public static final int DEVICE_ID_ELEVATOR_SWITCH = 3;
 
       public static final boolean MAG_DETECTED = false;
-      //TODO: find out what id to use
 
     }
 
@@ -223,7 +222,7 @@ public final class Constants {
       public static final double CUBE_INTAKE_SETPOINT= .2 * 5700;
       public static final double CONE_INTAKE_SETPOINT= .75 * 5700;
 
-      public static final double CONE_INTAKE_SEAGUL = .375 * 5700;
+      public static final double CONE_INTAKE_SEAGULL = .375 * 5700;
       
 
       public static final double CONE_OUTTAKE_SETPOINT=-30123 ;
@@ -303,8 +302,8 @@ public final class Constants {
     public static final Rotation2d WRIST_STOW = Rotation2d.fromDegrees(-15);
     public static final double ELEVATOR_STOW = 0;
 
-    public static final double ELEVATOR_INTAKE_SEAGUL = 0;
-    public static final Rotation2d WRIST_INTAKE_SEAGUL = Rotation2d.fromDegrees(-40);
+    public static final double ELEVATOR_INTAKE_SEAGULL = 0;
+    public static final Rotation2d WRIST_INTAKE_SEAGULL = Rotation2d.fromDegrees(-40);
 
     public static final double ELEVATOR_INTAKE_PORTAL = -16;
     public static final Rotation2d WRIST_INTAKE_PORTAL = Rotation2d.fromDegrees(-104);

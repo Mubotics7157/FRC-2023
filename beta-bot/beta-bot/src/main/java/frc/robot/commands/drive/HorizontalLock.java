@@ -53,7 +53,6 @@ public class HorizontalLock extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        //drive.lockModules();
         driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
     }
 

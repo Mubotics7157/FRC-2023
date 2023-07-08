@@ -2,7 +2,6 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
-import frc.robot.commands.CustomSetpoints;
 import frc.robot.commands.IntakePortal;
 import frc.robot.commands.MoveFork;
 import frc.robot.commands.OpenDoor;
@@ -13,49 +12,29 @@ import frc.robot.commands.ScoreConeMid;
 import frc.robot.commands.ScoreCube;
 import frc.robot.commands.ScoreCubeHigh;
 import frc.robot.commands.ScoreCubeHighShoot;
-import frc.robot.commands.ScoreCubeHybrid;
-import frc.robot.commands.Seagul;
+import frc.robot.commands.Seagull;
 import frc.robot.commands.SetClimbMode;
-import frc.robot.commands.SetIntakeState;
 import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.SetScorePosition;
 import frc.robot.commands.SetVisionMode;
 import frc.robot.commands.ShootCone;
-import frc.robot.commands.ShootCube;
 import frc.robot.commands.ShootPosition;
 import frc.robot.commands.Stow;
 import frc.robot.commands.WristClimb;
 import frc.robot.commands.Zero;
-import frc.robot.commands.auto.AutoRoutine;
-import frc.robot.commands.auto.DriveBackwards;
-import frc.robot.commands.auto.PreloadPlusOne;
-import frc.robot.commands.auto.PreloadPlusOneNoClimb;
-import frc.robot.commands.auto.PreloadPlusTwo;
-import frc.robot.commands.auto.PreloadPlusTwoWeak;
-import frc.robot.commands.drive.AlignObject;
+import frc.robot.commands.auto.routines.PreloadPlusTwoWeak;
 import frc.robot.commands.drive.AlignRotation;
-import frc.robot.commands.drive.AlignStrafe;
-import frc.robot.commands.drive.AutoBalance;
-import frc.robot.commands.drive.ChangeNode;
 import frc.robot.commands.drive.DriveTele;
-import frc.robot.commands.drive.HorizontalLock;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Fork;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
-import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
 import frc.robot.subsystems.VisionManager.VisionState;
-
-import java.time.chrono.HijrahEra;
 import java.util.HashMap;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -69,9 +48,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class RobotContainer {
 
   public static final CommandXboxController driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(OperatorConstants.DRIVER_CONTROLLER_PORT);
  public static final CommandJoystick operatorController =
-      new CommandJoystick(OperatorConstants.kOperatorControllerPort);
+      new CommandJoystick(OperatorConstants.OPERATOR_CONTROLLER_PORT);
 
   private final Drive drive = Drive.getInstance();
   private final Intake intake = Intake.getInstance();
@@ -124,7 +103,7 @@ public class RobotContainer {
 
     driverController.button(7).onTrue(new Zero());
 
-    driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure)));
+    driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagull(superStructure)));
     driverController.button(8).onFalse(new Stow(superStructure));
 
     driverController.a().onTrue(new AlignRotation( driverController::getLeftY, driverController::getLeftX, Rotation2d.fromDegrees(180)));
@@ -143,7 +122,7 @@ public class RobotContainer {
 
   }
 
-  public Command getAutonomousCommand(String auto) {
+  public Command getAutonomousCommand() {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.7)));
     eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
@@ -151,7 +130,7 @@ public class RobotContainer {
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
     eventMap.put("intake-cube",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE)));
     eventMap.put("stow",new Stow(superStructure));
-    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.25)));
+    eventMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure), new WaitCommand(.25)));
     eventMap.put("uncook", new Stow(superStructure));
     eventMap.put("lock", new InstantCommand(drive::lockModules));
     eventMap.put("score-cube-mid", new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(0.3), new Stow(superStructure)));
@@ -167,7 +146,7 @@ public class RobotContainer {
     HashMap<String, Command> climbMap = new HashMap<>();
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.2),new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.3), new Stow(superStructure)));
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.25),new ScoreConeHigh(superStructure), new WaitCommand(0.55), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
-    climbMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure, 0.5), new WaitCommand(.5)));
+    climbMap.put("cook",new SequentialCommandGroup(new OpenDoor(superStructure), new WaitCommand(.5)));
     climbMap.put("uncook", new Stow(superStructure));
     climbMap.put("lock", new InstantCommand(drive::lockModules));
 

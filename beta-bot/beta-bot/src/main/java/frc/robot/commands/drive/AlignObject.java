@@ -1,20 +1,16 @@
 package frc.robot.commands.drive;
 
-import javax.sound.midi.Track;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 import frc.robot.subsystems.VisionManager;
-import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignObject extends CommandBase {
 
@@ -80,7 +76,6 @@ public class AlignObject extends CommandBase {
             Tracker.getInstance().setPose(new Pose2d(newPose.getX(), newPose.getY(), Tracker.getInstance().getPose().getRotation()));
         }
 
-        //vision.setTargetLLState(VisionState.TAG);
     }
 
     
