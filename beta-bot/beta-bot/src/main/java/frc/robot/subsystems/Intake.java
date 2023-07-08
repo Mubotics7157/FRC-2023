@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
-import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.util.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -14,7 +13,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.SuperStructureConstants;
 import frc.robot.util.CommonConversions;
 
 public class Intake extends SubsystemBase {
@@ -48,7 +46,6 @@ public class Intake extends SubsystemBase {
     private IntakeState intakeState;
     private Value commandedSolenoidState;
 
-    // private Ultrasonic tof;
 
     private static Intake instance = new Intake();
 
@@ -127,7 +124,6 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE_MID:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_MID);
-                // toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH:
                 if(DriverStation.isTeleop())
@@ -140,7 +136,6 @@ public class Intake extends SubsystemBase {
                 break;
             case OUTTAKE_CUBE_MID_SHOOT:
                 setSpeed(IntakeConstants.CUBE_OUTTAKE_MID_SHOOT);
-                // toggleIntake(false);
                 break;
             case OUTTAKE_CUBE_HIGH_SHOOT:
                 if (DriverStation.isAutonomous())
@@ -150,7 +145,6 @@ public class Intake extends SubsystemBase {
                 break;
             case INTAKE_CONE:
                 setSpeed(IntakeConstants.CONE_INTAKE_SPEED + coneIntakeAdjustment);
-                // setSpeed(2000);
                 toggleIntake(true);
                 break;
             case OUTTAKE_CONE:
@@ -158,7 +152,6 @@ public class Intake extends SubsystemBase {
                     setSpeed(.35 * -3000);
                 else
                     setSpeed(.4 * -3000);
-                // toggleIntake(true);
                 break;
             case INTAKE_CONE_SEAGUL:
                 setSpeed(.375 * 5700);
@@ -172,7 +165,6 @@ public class Intake extends SubsystemBase {
                 else
                     setSpeed(-IntakeConstants.CONE_INTAKE_SPEED);
 
-                // setSpeed(-3000);
                 break;
             case IDLE:
                 setSpeed(IntakeConstants.IDLE_SPEED);
@@ -192,9 +184,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void setIntakeState(IntakeState state) {
-        if (state != IntakeState.IDLE)// state==IntakeState.OUTTAKE_CONE || state==IntakeState.OUTTAKE_CUBE_MID ||
-                                      // state==IntakeState.OUTTAKE_CUBE_HIGH || state==IntakeState.INTAKE_CONE ||
-                                      // state==IntakeState.INTAKE_CUBE || state == IntakeState.CUSTOM)
+        if (state != IntakeState.IDLE)
             currentLimit(false);
         else
             currentLimit(true);
@@ -211,9 +201,6 @@ public class Intake extends SubsystemBase {
         speedRPM += intakeAdj;
         intakeMaster.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
         intakeSlave.set(ControlMode.Velocity, CommonConversions.RPMToStepsPerDecisec(speedRPM));
-        // intakeMaster.set(ControlMode.PercentOutput, 0);
-        // intakeSlave.set(ControlMode.PercentOutput, 0);
-
     }
 
     public void toggleIntake(boolean forward) {

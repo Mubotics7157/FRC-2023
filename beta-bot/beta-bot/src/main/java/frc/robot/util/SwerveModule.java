@@ -1,9 +1,5 @@
 package frc.robot.util;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.ctre.phoenixpro.BaseStatusSignalValue;
 import com.ctre.phoenixpro.StatusCode;
 import com.ctre.phoenixpro.StatusSignalValue;
@@ -24,9 +20,8 @@ import com.ctre.phoenixpro.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.AltConstants.DriveConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
@@ -123,13 +118,11 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getPosition() {
-        /* Refresh all signals */
         drivePosition.refresh();
         driveVelocity.refresh();
         steerPosition.refresh();
         steerVelocity.refresh();
 
-        /* Now latency-compensate our signals */
         double drive_rot =
                 drivePosition.getValue()
                         + (driveVelocity.getValue() * drivePosition.getTimestamp().getLatency());

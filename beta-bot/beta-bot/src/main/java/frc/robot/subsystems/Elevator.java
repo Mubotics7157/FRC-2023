@@ -62,8 +62,6 @@ public class Elevator extends SubsystemBase {
         elevatorSlave.follow(elevatorMotor);
 
 
-        //SmartDashboard.putNumber("elevator setpoint", -26);
-        SmartDashboard.putNumber("custom elevator", -24.5);
         zeroElevator();
 
 
@@ -119,7 +117,6 @@ public class Elevator extends SubsystemBase {
     public void zeroRoutine(){
         if(limitSwitch.get() != ElevatorConstants.MAG_DETECTED){
             elevatorMotor.set(ElevatorConstants.ZEROING_SPEED);
-            //go down until mag is hit
         }
 
         else{
@@ -170,8 +167,6 @@ public class Elevator extends SubsystemBase {
 
     private void configElevatorMotor(){
 
-        //elevatorMotor.setSmartCurrentLimit(20);
-        //elevatorSlave.setSmartCurrentLimit(20);
         elevatorMotor.setInverted(true);
         elevatorSlave.setInverted(true);
 
@@ -182,8 +177,6 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
 
-        //elevatorMotor.enableSoftLimit(null, false)
-        //elevatorEncoder.setPositionConversionFactor(2*Math.PI * ElevatorConstants.ELEVATOR_GEARING);
 
         elevatorController.setOutputRange(-1, 1, 0);
 

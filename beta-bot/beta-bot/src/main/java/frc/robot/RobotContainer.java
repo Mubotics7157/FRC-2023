@@ -1,6 +1,5 @@
 package frc.robot;
 
-import frc.robot.AltConstants.FieldConstants.RedConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ConeSniper;
 import frc.robot.commands.CustomSetpoints;
@@ -69,9 +68,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
 
-  public static final CommandXboxController m_driverController =
+  public static final CommandXboxController driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
- public static final CommandJoystick m_operatorController =
+ public static final CommandJoystick operatorController =
       new CommandJoystick(OperatorConstants.kOperatorControllerPort);
 
   private final Drive drive = Drive.getInstance();
@@ -81,80 +80,72 @@ public class RobotContainer {
   private final SuperStructure superStructure = SuperStructure.getInstance();
   private final Fork forks = Fork.getInstance();
 
-  private PreloadPlusOne plPlusOne = new PreloadPlusOne(drive, vision, superStructure, tracker);
 
 
   public RobotContainer() {
     configureBindings();
-    drive.setDefaultCommand(new DriveTele(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController::getRightX, drive,tracker));
-    //superStructure.setDefaultCommand(new Stow(superStructure));
+    drive.setDefaultCommand(new DriveTele(driverController::getLeftY, driverController::getLeftX, driverController::getRightX, drive,tracker));
 
   }
 
   private void configureBindings() {
 
-    m_driverController.leftTrigger().and(m_operatorController.button(1).negate()).onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
-    m_driverController.leftTrigger().and(m_operatorController.button(1).negate()).onFalse(new Stow(superStructure));
+    driverController.leftTrigger().and(operatorController.button(1).negate()).onTrue(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE));
+    driverController.leftTrigger().and(operatorController.button(1).negate()).onFalse(new Stow(superStructure));
 
-    m_driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
-    m_driverController.b().onFalse(new Stow(superStructure));
+    driverController.b().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE));
+    driverController.b().onFalse(new Stow(superStructure));
 
-    //m_driverController.y().onTrue(new ScoreCubeHighShoot(superStructure));
-    //m_driverController.y().onFalse(new Stow(superStructure));
 
-    m_driverController.povDown().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
-    m_driverController.povDown().onFalse(new Stow(superStructure));
+    driverController.povDown().onTrue(new SetIntakingHeight(superStructure, SuperStructureState.CONE_INTAKE));
+    driverController.povDown().onFalse(new Stow(superStructure));
 
-    m_driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure)));
-    m_driverController.leftStick().onFalse(new Stow(superStructure));
+    driverController.leftStick().whileTrue(new ParallelCommandGroup(new IntakePortal(superStructure)));
+    driverController.leftStick().onFalse(new Stow(superStructure));
 
-    m_driverController.leftBumper().onTrue(new ScoreCone(superStructure));
-    m_driverController.leftBumper().onFalse(new Stow(superStructure));
+    driverController.leftBumper().onTrue(new ScoreCone(superStructure));
+    driverController.leftBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.rightBumper().onTrue(new ScoreCube(superStructure));
-    m_driverController.rightBumper().onFalse(new Stow(superStructure));
+    driverController.rightBumper().onTrue(new ScoreCube(superStructure));
+    driverController.rightBumper().onFalse(new Stow(superStructure));
 
-    m_driverController.rightTrigger().and(m_operatorController.button(1).negate()).whileTrue(new ShootCone());
-    m_driverController.rightTrigger().and(m_operatorController.button(1).negate()).onFalse(new InstantCommand(superStructure::enableIdling));
+    driverController.rightTrigger().and(operatorController.button(1).negate()).whileTrue(new ShootCone());
+    driverController.rightTrigger().and(operatorController.button(1).negate()).onFalse(new InstantCommand(superStructure::enableIdling));
     
-    m_driverController.rightStick().onTrue(new ConeSniper(superStructure));
-    m_driverController.rightStick().onFalse(new Stow(superStructure));
+    driverController.rightStick().onTrue(new ConeSniper(superStructure));
+    driverController.rightStick().onFalse(new Stow(superStructure));
 
-    m_driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
+    driverController.povUp().onTrue(new InstantCommand(drive::resetHeading));
 
-    m_driverController.x().onTrue(new AlignRotation( m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(-90)));
-    m_driverController.y().onTrue(new AlignRotation(m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(0)));
+    driverController.x().onTrue(new AlignRotation( driverController::getLeftY, driverController::getLeftX, Rotation2d.fromDegrees(-90)));
+    driverController.y().onTrue(new AlignRotation(driverController::getLeftY, driverController::getLeftX, Rotation2d.fromDegrees(0)));
 
-    //m_driverController.povRight().onTrue(new ParallelCommandGroup(new InstantCommand(intake::closeJaws)));
-    m_driverController.povLeft().onTrue(new InstantCommand(intake::toggleJaws));
+    driverController.povLeft().onTrue(new InstantCommand(intake::toggleJaws));
 
-    m_driverController.button(7).onTrue(new Zero());
+    driverController.button(7).onTrue(new Zero());
 
-    m_driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure)));
-    m_driverController.button(8).onFalse(new Stow(superStructure));
+    driverController.button(8).whileTrue(new ParallelCommandGroup(new Seagul(superStructure)));
+    driverController.button(8).onFalse(new Stow(superStructure));
 
-    //m_driverController.povDown().onTrue(new AlignObject(drive, vision));
-    m_driverController.a().onTrue(new AlignRotation( m_driverController::getLeftY, m_driverController::getLeftX, Rotation2d.fromDegrees(180)));
+    driverController.a().onTrue(new AlignRotation( driverController::getLeftY, driverController::getLeftX, Rotation2d.fromDegrees(180)));
 
-    m_operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
-    m_operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
-    m_operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
-    m_operatorController.button(10).onTrue(new SetScorePosition(ScoringPosition.MID_SUPER));
+    operatorController.button(7).onTrue(new SetScorePosition(ScoringPosition.HIGH));
+    operatorController.button(9).onTrue(new SetScorePosition(ScoringPosition.MID));
+    operatorController.button(11).onTrue(new SetScorePosition(ScoringPosition.HYBRID));
+    operatorController.button(10).onTrue(new SetScorePosition(ScoringPosition.MID_SUPER));
 
-    m_driverController.leftTrigger().and(m_operatorController.button(1)).whileTrue(new MoveFork(forks, m_driverController::getLeftTriggerAxis,true));
-    m_driverController.rightTrigger().and(m_operatorController.button(1)).whileTrue(new SequentialCommandGroup(new QuickDeployForks(forks),new MoveFork(forks, m_driverController::getRightTriggerAxis,false)));
+    driverController.leftTrigger().and(operatorController.button(1)).whileTrue(new MoveFork(forks, driverController::getLeftTriggerAxis,true));
+    driverController.rightTrigger().and(operatorController.button(1)).whileTrue(new SequentialCommandGroup(new QuickDeployForks(forks),new MoveFork(forks, driverController::getRightTriggerAxis,false)));
 
-    m_operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
-    //m_operatorController.button(1).onFalse(new Stow(superStructure));
+    operatorController.button(1).onTrue(new ParallelCommandGroup(new WristClimb(), new SetClimbMode(superStructure)));
   
-    m_operatorController.button(2).onTrue(new ParallelCommandGroup(new InstantCommand(superStructure::emergencySetpointReset), new InstantCommand(intake::adjustmentReset)));
+    operatorController.button(2).onTrue(new ParallelCommandGroup(new InstantCommand(superStructure::emergencySetpointReset), new InstantCommand(intake::adjustmentReset)));
 
   }
 
   public Command getAutonomousCommand(String auto) {
     HashMap<String, Command> eventMap = new HashMap<>();
     eventMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.7)));
-    //eventMap.put("score", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("unstowed score cone", new SequentialCommandGroup(new Stow(superStructure), new ScoreConeHigh(superStructure), new WaitCommand(.2), new ShootCone()));
     eventMap.put("score-cone-mid", new SequentialCommandGroup(new ScoreConeMid(superStructure), new WaitCommand(.5), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)));
     eventMap.put("intake-cone",new SequentialCommandGroup(new SetIntakingHeight(superStructure, SuperStructureState.FALLEN_CONE)));
@@ -172,12 +163,7 @@ public class RobotContainer {
     eventMap.put("reset", new InstantCommand(tracker::resetViaVision));
     eventMap.put("set tag", new SetVisionMode(vision, VisionState.TAG));
     eventMap.put("set cube", new SetVisionMode(vision, VisionState.CUBE));
-    //eventMap.put("score-1", new ShootCube());
-    //eventMap.put("score-preload", new SequentialCommandGroup(new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone()));
-    //eventMap.put("intake",new frc.robot.commands.Intake(superStructure, true));
-    //eventMap.put("stow", new Stow(superStructure));
-    //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
-    //ooga-wooga
+
     HashMap<String, Command> climbMap = new HashMap<>();
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.2),new ScoreConeHigh(superStructure), new WaitCommand(0.75), new ShootCone(), new WaitCommand(.3), new Stow(superStructure)));
     climbMap.put("score", new SequentialCommandGroup(new Stow(superStructure),new WaitCommand(.25),new ScoreConeHigh(superStructure), new WaitCommand(0.55), new ShootCone(), new WaitCommand(.5), new Stow(superStructure)));
@@ -185,16 +171,8 @@ public class RobotContainer {
     climbMap.put("uncook", new Stow(superStructure));
     climbMap.put("lock", new InstantCommand(drive::lockModules));
 
-    //TODO: add wait until to check drive pitch before releasing door so we can engage on the path
-    //eventMap.put("not-kadoomer", new ParallelCommandGroup(new SetWristAngle(Rotation2d.fromDegrees(-7), wrist, false, false), new RunIntake(intake, IntakeState.OFF)));
-    //ooga-wooga
     drive.setLastAlliance(DriverStation.getAlliance());
-    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
-    //return new PreloadPlusOne(drive, vision, superStructure, tracker);
-    //return new PreloadPlusTwo(drive, vision, superStructure,tracker);
-    //return new PreloadPlusOneNoClimb(drive, vision, superStructure, tracker);
     return new PreloadPlusTwoWeak(drive, vision, superStructure, tracker);
-    //return new AutoRoutine("left climb jawn", new PathConstraints(3, 3), eventMap).buildAuto();//Autos.exampleAuto(m_exampleSubsystem);
   }
 
   }

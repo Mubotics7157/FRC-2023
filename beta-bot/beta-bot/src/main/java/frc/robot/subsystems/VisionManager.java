@@ -122,11 +122,8 @@ public class VisionManager extends SubsystemBase{
     public void addFieldRelativePose(){
         if(Math.abs(Drive.getInstance().getDrivePitch()) < 1){
             try{
-            if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+            if(targetLL.hasTargets())
                 Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-           // if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-                //Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
-        //lastTimeStamp = targetLL.getBootTimeStamp();
             }
             catch(Exception e){
 
@@ -181,25 +178,19 @@ public class VisionManager extends SubsystemBase{
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_5.getY(), BlueConstants.NODE_CONE_BLUE_5.getY());
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_6.getY(), BlueConstants.NODE_CONE_BLUE_6.getY());
 
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_1.getY(), RedConstants.NODE_CONE_RED_1.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_2.getY(), RedConstants.NODE_CONE_RED_2.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_3.getY(), RedConstants.NODE_CONE_RED_3.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
     }
 
     public void logData(){
 
-        //SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
-        //SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
-        //SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
+        SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
+        SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         
-        //SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
-        //SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
-        //SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
+        SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
+        SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
 
-        //SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
+        SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
 
         try{
             SmartDashboard.putNumber("Cube Yaw", getCubeYaw().getDegrees());

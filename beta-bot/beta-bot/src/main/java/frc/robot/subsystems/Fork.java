@@ -22,7 +22,6 @@ private static Fork instance = new Fork();
         forkMotor.setNeutralMode(NeutralMode.Brake);
         forkMotor.setInverted(false);
         forkMotor.config_kP(0, ForksConstants.FORK_KP);
-        //forkMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 20, 1));
         initialDeploy = false;
 
         forkMotor.setSelectedSensorPosition(0);

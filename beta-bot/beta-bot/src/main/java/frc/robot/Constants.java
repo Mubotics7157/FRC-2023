@@ -88,7 +88,7 @@ public final class Constants {
 
     public static final SwerveModuleState[] LOCKED_MODULE_STATES = {new SwerveModuleState(0, Rotation2d.fromDegrees(45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(-45)),new SwerveModuleState(0, Rotation2d.fromDegrees(45))};
 
-    public static final double MAX_DRIVE_TANGENTIAL_ACCEL = .5; // in units of m/s/s
+    public static final double MAX_DRIVE_TANGENTIAL_ACCEL = 4; // in units of m/s/s
 
     public static final String CANIVORE_NAME = "swerve";
 

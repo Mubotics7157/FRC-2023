@@ -16,14 +16,12 @@ public class HorizontalLock extends CommandBase {
             if(Math.abs(val)<drive.getAngDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
             return val*drive.getAng();
         }
         else{
             if(Math.abs(val)<drive.getTanDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
             return val*drive.getTan();
         }
     }
