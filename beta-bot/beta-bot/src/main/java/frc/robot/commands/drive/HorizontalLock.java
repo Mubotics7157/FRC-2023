@@ -16,14 +16,12 @@ public class HorizontalLock extends CommandBase {
             if(Math.abs(val)<drive.getAngDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
             return val*drive.getAng();
         }
         else{
             if(Math.abs(val)<drive.getTanDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
             return val*drive.getTan();
         }
     }
@@ -55,7 +53,6 @@ public class HorizontalLock extends CommandBase {
         double vy =  modifyInputs(str.getAsDouble(),false);
         double omega = modifyInputs(rot.getAsDouble(), true);
 
-        //drive.lockModules();
         driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(0, -vy, -omega, Tracker.getInstance().getPose().getRotation()));
     }
 

@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +17,6 @@ public class SuperStructure extends SubsystemBase {
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
     private LED led = LED.getInstance();
-   
     private boolean idleIntake = true;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;
@@ -42,7 +40,7 @@ public class SuperStructure extends SubsystemBase {
         PORTAL,
         OPEN_DOOR,
         STOWED,
-        SEAGUL,
+        SEAGULL,
         CUSTOM,
         CONE_SNIPER,
         ZERO,
@@ -171,7 +169,7 @@ public class SuperStructure extends SubsystemBase {
                 scoringState == SuperStructureState.FALLEN_CONE || 
                 scoringState == SuperStructureState.CONE_INTAKE || 
                 scoringState == SuperStructureState.PORTAL || 
-                scoringState == SuperStructureState.SEAGUL || 
+                scoringState == SuperStructureState.SEAGULL || 
                 state == SuperStructureState.CONE_SNIPER) || 
                 !atSetpoint())
         idleIntake = true;
@@ -255,9 +253,8 @@ public class SuperStructure extends SubsystemBase {
                 goToPosition(SmartDashboard.getNumber("custom elevator", 0), Rotation2d.fromDegrees(SmartDashboard.getNumber("custom wrist", -55)));
                 Drive.getInstance().changeSlow();
                 break;
-
-            case SEAGUL:
-                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGUL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGUL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGUL);
+            case SEAGULL:
+                intake(SuperStructureConstants.ELEVATOR_INTAKE_SEAGULL + elevAdj, SuperStructureConstants.WRIST_INTAKE_SEAGULL.plus(wristAdj), IntakeState.INTAKE_CONE_SEAGULL);
                 Drive.getInstance().changeSlow();
                 break;
 
@@ -325,7 +322,7 @@ public class SuperStructure extends SubsystemBase {
             case STOWED:
                 led.setCurrentIntake();
                 break;
-            case SEAGUL:
+            case SEAGULL:
                 led.setYellowStrobe();
                 break;
             case CONE_SNIPER:

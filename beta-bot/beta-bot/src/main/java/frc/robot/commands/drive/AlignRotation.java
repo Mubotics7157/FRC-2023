@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
-import frc.robot.subsystems.VisionManager;
-import frc.robot.subsystems.VisionManager.VisionState;
 
 public class AlignRotation extends CommandBase {
 
@@ -108,11 +106,6 @@ public class AlignRotation extends CommandBase {
         return rotController.atSetpoint();
     }
     
-    @Override
-    public void end(boolean interrupted) {
-        //vision.setTargetLLState(VisionState.TAG);
-        //driveFromChassis(0, 0, Rotation2d.fromDegrees(0));
-    }
 
     
 }

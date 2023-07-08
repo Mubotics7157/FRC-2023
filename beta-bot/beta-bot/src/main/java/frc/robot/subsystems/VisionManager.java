@@ -19,10 +19,7 @@ public class VisionManager extends SubsystemBase{
     private Limelight intakeLL;
     private MedianFilter coneFilter;
     private double coneOffset;
-    private boolean useVision = true;
-    private double lastTimeStamp = 0;
     private TreeMap<Double, Double> ConeNodeMap = new TreeMap<>();
-    private double lastKnownDistance = 0;
 
     public enum VisionState{
         TAG,
@@ -108,40 +105,18 @@ public class VisionManager extends SubsystemBase{
         return targetLL;
     }
 
-    public Pose2d getIntakeConePose(){
-        // try{
-            // return Tracker.getInstance().getPose().transformBy(new Transform2d(new Translation2d(VisionConstants.CAM_DIST_TO_INTAKE,getDistanceToTarget()), Rotation2d.fromDegrees(0)));
-        // }
-        // catch(Exception e ){
-            // System.out.print("==========COULD NOT GRAB CONE POSE=======");
-            // return Tracker.getInstance().getPose();
-        // }
-        return Tracker.getInstance().getPose();
-    }
 
     public void addFieldRelativePose(){
         if(Math.abs(Drive.getInstance().getDrivePitch()) < 1){
             try{
-            if(targetLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
+            if(targetLL.hasTargets())
                 Tracker.getInstance().addVisionMeasurement(targetLL.getBotPose(),targetLL.getLatency());
-           // if(intakeLL.hasTargets()) //&& (targetLL.getBootTimeStamp()-lastKnownDistance) > 1000) 
-                //Tracker.getInstance().addVisionMeasurement(intakeLL.getBotPose(),intakeLL.getLatency());
-        //lastTimeStamp = targetLL.getBootTimeStamp();
             }
             catch(Exception e){
 
             }
         }
     }
-
-    public void useVision(){
-        useVision = true;
-    }
-
-    public void noUseVision(){
-        useVision = false;
-    }
-
 
     public void togglePipeline(){
         targetLL.setPipelineIndex(targetLL.getPipelineIndex()==VisionConstants.CUBE_PIPELINE_INDEX? VisionConstants.TAG_PIPELINE_INDEX: VisionConstants.CUBE_PIPELINE_INDEX);
@@ -181,25 +156,14 @@ public class VisionManager extends SubsystemBase{
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_5.getY(), BlueConstants.NODE_CONE_BLUE_5.getY());
         ConeNodeMap.put(BlueConstants.NODE_CONE_BLUE_6.getY(), BlueConstants.NODE_CONE_BLUE_6.getY());
 
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_1.getY(), RedConstants.NODE_CONE_RED_1.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_2.getY(), RedConstants.NODE_CONE_RED_2.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_3.getY(), RedConstants.NODE_CONE_RED_3.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_4.getY(), RedConstants.NODE_CONE_RED_4.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_5.getY(), RedConstants.NODE_CONE_RED_5.getY());
-        //ConeNodeMap.put(RedConstants.NODE_CONE_RED_6.getY(), RedConstants.NODE_CONE_RED_6.getY());
     }
 
     public void logData(){
 
-        //SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
-        //SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
-        //SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
+        SmartDashboard.putNumber("Vision Pose X", targetLL.getBotPose().getX());
+        SmartDashboard.putNumber("Vision Pose Y", targetLL.getBotPose().getY());
+        SmartDashboard.putNumber("Vision Pose R", targetLL.getBotPose().getRotation().getDegrees());
         
-        //SmartDashboard.putNumber("Cone Pose X", getIntakeConePose().getX());
-        //SmartDashboard.putNumber("Cone Pose Y", getIntakeConePose().getY());
-        //SmartDashboard.putNumber("Cone Pose R", getIntakeConePose().getRotation().getDegrees());
-
-        //SmartDashboard.putNumber("Interpolated Cone Horizontal Distance", getOffset().getDegrees());
 
         try{
             SmartDashboard.putNumber("Cube Yaw", getCubeYaw().getDegrees());

@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import java.time.OffsetDateTime;
 
-import javax.sound.midi.Track;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -38,7 +36,7 @@ public class Tracker extends SubsystemBase{
             .1,
             .1
         ),
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill( 
             .5,
             .5,
             2.5
@@ -67,7 +65,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void setVisionDeviations(double x, double y, double rot){
-        estimator.setVisionMeasurementStdDevs(new MatBuilder<>(Nat.N3(), Nat.N1()).fill( //vision boi
+        estimator.setVisionMeasurementStdDevs(new MatBuilder<>(Nat.N3(), Nat.N1()).fill( 
         x,
         y,
         rot
@@ -85,20 +83,20 @@ public class Tracker extends SubsystemBase{
     }
 
     public void regeneratePath(){
-        //man i love polar bears
+        //man i love polar bears    
         Translation2d offsetPose = new Translation2d(node.getX(), node.getY() + coneOffset);
         
         if(DriverStation.getAlliance() == Alliance.Red)
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), // position, heading
-                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation(),Tracker.getInstance().getPose().getRotation()), 
+                new PathPoint(offsetPose, Tracker.getInstance().getPose().getRotation(),Rotation2d.fromDegrees(180)) 
             );
         else
             traj = PathPlanner.generatePath(
                 new com.pathplanner.lib.PathConstraints(2, 3),
-                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), // position, heading
-                new PathPoint(offsetPose, Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(0)) // position, heading
+                new PathPoint(Tracker.getInstance().getPose().getTranslation(), Tracker.getInstance().getPose().getRotation()), 
+                new PathPoint(offsetPose, Rotation2d.fromDegrees(0),Rotation2d.fromDegrees(0)) 
             );
     }
 
@@ -124,7 +122,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void editNodePose(double nodeY){
-        node = new Pose2d(new Translation2d(FieldConstants.BlueConstants.NODE_CONE_BLUE_2.getX(), nodeY), Rotation2d.fromDegrees(0));//new Pose2d(new Translation2d(SmartDashboard.getNumber("Node X", 14.25), VisionManager.getInstance().getNodeY()), Rotation2d.fromDegrees(0));
+        node = new Pose2d(new Translation2d(FieldConstants.BlueConstants.NODE_CONE_BLUE_2.getX(), nodeY), Rotation2d.fromDegrees(0));
         m_field.getObject("pose").setPose(node);
     }
 

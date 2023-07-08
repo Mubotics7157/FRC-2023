@@ -3,7 +3,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.AltConstants.DriveConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 
 public class AutoDock extends CommandBase{
@@ -40,7 +40,6 @@ public class AutoDock extends CommandBase{
             driveFromChassis(chassisSpeeds);
         }
 
-        //chassisSpeeds = new ChassisSpeeds(driveSpeed * DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY, 0, 0);
         driveFromChassis(chassisSpeeds);
 
         lastKnownPitch = drive.getDrivePitch();

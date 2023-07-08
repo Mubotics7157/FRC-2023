@@ -16,16 +16,12 @@ public class DriveTele extends CommandBase {
             if(Math.abs(val)<drive.getAngDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_ANGULAR_VELOCITY;
-            //val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getAng();
         }
         else{
             if(Math.abs(val)<drive.getTanDeadband()){
                 val = 0;
             }
-            //return val*DriveConstants.MAX_TELE_TANGENTIAL_VELOCITY;
-            //val = Math.copySign(Math.pow(val, 2),val);
             return val*drive.getTan();
         }
     }
@@ -57,10 +53,6 @@ public class DriveTele extends CommandBase {
 
     @Override
     public void execute() {
-        
-        
-       
-
         driveFromChassis(ChassisSpeeds.fromFieldRelativeSpeeds(-modifyInputs(fwd.getAsDouble(),false), -modifyInputs(str.getAsDouble(),false),  -modifyInputs(rot.getAsDouble(), true), tracker.getPose().getRotation()));
     }
 

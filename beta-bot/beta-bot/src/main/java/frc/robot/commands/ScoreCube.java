@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SuperStructure;
 import frc.robot.subsystems.SuperStructure.ScoringPosition;
 import frc.robot.subsystems.SuperStructure.SuperStructureState;
@@ -19,7 +18,6 @@ public class ScoreCube extends CommandBase{
 
     @Override
     public void initialize() {
-        //Drive.getInstance().changeVerySlow();
 
         if (superStructure.getScoringPosition() == ScoringPosition.HIGH)
             superStructure.setState(SuperStructureState.CUBE_HIGH);
@@ -36,6 +34,5 @@ public class ScoreCube extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        //Drive.getInstance().changeMax();
     }
 }

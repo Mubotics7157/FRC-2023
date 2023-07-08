@@ -1,10 +1,9 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.auto.routines;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -14,6 +13,8 @@ import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.SetVisionMode;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.Stow;
+import frc.robot.commands.auto.DriveBackwards;
+import frc.robot.commands.auto.DriveSlow;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SuperStructure;
@@ -33,13 +34,11 @@ public class PreloadPlusTwoWeakOG extends SequentialCommandGroup{
 
         addCommands(
         new SetVisionMode(vision, VisionState.TAG),
-        //new Stow(superStructure),
          new ScoreConeHigh(superStructure),
          new ShootCone(),
          new WaitCommand(.2),
          new Stow(superStructure),
-         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(2.8),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE).andThen(new SetVisionMode(vision, VisionState.CUBE)))).andThen(new ParallelCommandGroup(new AlignObject(drive, vision))
-         /*new DriveBackwards( .85, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)*/),
+         new ParallelCommandGroup(drive.followPath(driveToCube,true),new SequentialCommandGroup(new WaitCommand(2.8),new SetIntakingHeight(superStructure, SuperStructureState.CUBE_INTAKE).andThen(new SetVisionMode(vision, VisionState.CUBE)))).andThen(),
          new SetVisionMode(vision, VisionState.TAG),
          new ParallelCommandGroup(drive.followPath(driveToCubeNodeOne,false), new SequentialCommandGroup(new WaitCommand(1), new Stow(superStructure))),
          new DriveSlow(.2, drive, tracker),

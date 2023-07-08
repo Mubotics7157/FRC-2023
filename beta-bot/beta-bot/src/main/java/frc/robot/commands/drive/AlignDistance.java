@@ -27,7 +27,7 @@ public class AlignDistance extends CommandBase{
 
     @Override
     public void execute() {
-        if(Math.abs(RobotContainer.m_driverController.getLeftY())>.2||Math.abs(RobotContainer.m_driverController.getLeftX())>.2){
+        if(Math.abs(RobotContainer.driverController.getLeftY())>.2||Math.abs(RobotContainer.driverController.getLeftX())>.2){
             this.end(true);
         }
     }

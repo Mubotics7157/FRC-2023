@@ -5,9 +5,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.AltConstants.DriveConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Tracker;
 
@@ -18,9 +17,6 @@ public class DriveSlow extends CommandBase {
     private double distance;
     private Drive drive;
     private Tracker tracker;
-    private double deltaSpeed;
-    private boolean overridePosition;
-    private Pose2d newPosition;
     private Timer timer = new Timer();
 
       public void driveFromChassis(ChassisSpeeds speeds){
@@ -34,7 +30,6 @@ public class DriveSlow extends CommandBase {
         this.tracker = tracker;
 
         controller.setTolerance(.05);
-        overridePosition = false;
 
         addRequirements(drive,tracker);
     }
@@ -45,8 +40,6 @@ public class DriveSlow extends CommandBase {
         this.tracker = tracker;
 
         controller.setTolerance(.05);
-        overridePosition = true;
-        this.newPosition = newPosition;
 
         addRequirements(drive,tracker);
     }
@@ -70,8 +63,5 @@ public class DriveSlow extends CommandBase {
         return timer.get()>.3;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-    }
 
 }

@@ -1,10 +1,9 @@
-package frc.robot.commands.auto;
+package frc.robot.commands.auto.routines;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -15,6 +14,7 @@ import frc.robot.commands.SetIntakingHeight;
 import frc.robot.commands.SetVisionMode;
 import frc.robot.commands.ShootCone;
 import frc.robot.commands.Stow;
+import frc.robot.commands.auto.DriveBackwards;
 import frc.robot.commands.drive.AlignObject;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.SuperStructure;
@@ -34,7 +34,6 @@ public class PreloadPlusOne extends SequentialCommandGroup{
 
         addCommands(
          new SetVisionMode(vision, VisionState.CUBE),
-         //new Stow(superStructure),
          new ScoreConeHigh(superStructure),
          new ShootCone(),
          new WaitCommand(.35),
@@ -43,7 +42,7 @@ public class PreloadPlusOne extends SequentialCommandGroup{
          new DriveBackwards( 1.7, drive, tracker,PathPlannerTrajectory.transformTrajectoryForAlliance(driveToCubeNodeOne, DriverStation.getAlliance()).getInitialHolonomicPose(),1.5)),
          new ParallelCommandGroup(new Stow(superStructure).andThen(new SetVisionMode(vision, VisionState.TAG)),drive.followPath(driveToCubeNodeOne,false)),
          new SequentialCommandGroup(new ScoreCubeHigh(superStructure), new ShootCone(), new WaitCommand(.4), new Stow(superStructure)),
-         drive.followPath(driveToCubeTwo, false).andThen(new SequentialCommandGroup(new OpenDoor(superStructure, .5),new WaitCommand(.4))),
+         drive.followPath(driveToCubeTwo, false).andThen(new SequentialCommandGroup(new OpenDoor(superStructure),new WaitCommand(.4))),
          drive.followPath(driveUpChargeStation,false),
          new Stow(superStructure)
         );
