@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.ErrorCode;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,8 +17,6 @@ public class SuperStructure extends SubsystemBase {
     private Elevator elevator = Elevator.getInstance();
     private Wrist wrist = Wrist.getInstance();
     private LED led = LED.getInstance();
-    //private LED led;
-    private boolean scoreHigh;
     private boolean idleIntake = true;
     
     private SuperStructureState scoringState = SuperStructureState.STOWED;

@@ -167,32 +167,32 @@ public class Elevator extends SubsystemBase {
 
     private void configElevatorMotor(){
 
-        elevatorMotor.setInverted(true);
-        elevatorSlave.setInverted(true);
+        elevatorMotor.setInverted(ElevatorConstants.INVERT_MASTER_MOTOR);
+        elevatorSlave.setInverted(ElevatorConstants.INVERT_SLAVE_MOTOR);
 
-        elevatorMotor.enableVoltageCompensation(10);
-        elevatorSlave.enableVoltageCompensation(10);
+        elevatorMotor.enableVoltageCompensation(ElevatorConstants.ELEVATOR_NOMINAL_VOLTAGE);
+        elevatorSlave.enableVoltageCompensation(ElevatorConstants.ELEVATOR_NOMINAL_VOLTAGE);
 
-        elevatorMotor.setControlFramePeriodMs(50);
+        elevatorMotor.setControlFramePeriodMs(ElevatorConstants.ELEVATOR_CONTROL_PERIOD);
         elevatorMotor.setIdleMode(IdleMode.kBrake);
         elevatorSlave.setIdleMode(elevatorMotor.getIdleMode());
 
 
-        elevatorController.setOutputRange(-1, 1, 0);
+        elevatorController.setOutputRange(ElevatorConstants.ELEVATOR_PEAK_OUTPUT_REVERSE, ElevatorConstants.ELEVATOR_PEAK_OUTPUT_FORWARD, 0);
 
-        elevatorController.setP(.00003);
-        elevatorController.setFF(0.0002);
+        elevatorController.setP(ElevatorConstants.ELEVATOR_KP);
+        elevatorController.setFF(ElevatorConstants.ELEVATOR_KF);
 
-        elevatorController.setSmartMotionMaxVelocity(10500, 0);
-        elevatorController.setSmartMotionMaxAccel(11000, 0);
+        elevatorController.setSmartMotionMaxVelocity(ElevatorConstants.ELEVATOR_FORWARD_VEL_CONSTRAINT, 0);
+        elevatorController.setSmartMotionMaxAccel(ElevatorConstants.ELEVATOR_FORWARD_ACCEL_CONSTRAINT, 0);
 
         elevatorController.setSmartMotionMinOutputVelocity(0, 0);
         elevatorController.setSmartMotionAllowedClosedLoopError(0, 0);
     }
 
     private void configElevatorDownwardConstraints(){
-        elevatorController.setSmartMotionMaxVelocity(8000, 0);
-        elevatorController.setSmartMotionMaxAccel(8000, 0);
+        elevatorController.setSmartMotionMaxVelocity(ElevatorConstants.ELEVATOR_DOWNWARD_VEL_CONSTRAINT, 0);
+        elevatorController.setSmartMotionMaxAccel(ElevatorConstants.ELEVATOR_DOWNWARD_ACCEL_CONSTRAINT, 0);
     }
 
     private void logData(){

@@ -2,11 +2,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ForksConstants;
 
 public class Fork extends SubsystemBase{
@@ -38,7 +37,7 @@ private static Fork instance = new Fork();
 
     public boolean setSetpoint(double setpoint){
         forkMotor.set(ControlMode.Position,setpoint);
-        return Math.abs(setpoint-forkMotor.getSelectedSensorPosition()) < 30000;
+        return Math.abs(setpoint-forkMotor.getSelectedSensorPosition()) < Constants.ForksConstants.ACCEPTABLE_ERROR;
     }
 
     public void setInitialDeployState(boolean state){

@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.PIDConstants;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -101,16 +100,31 @@ public final class Constants {
       public static final int DEVICE_ID_ELEVATOR_MASTER = 10;
       public static final int DEVICE_ID_ELEVATOR_SLAVE = 11;
 
-      public static final double WRIST_PEAK_OUTPUT_FORWARD = .75;
-      public static final double WRIST_PEAK_OUTPUT_REVERSE = -.75;
 
-      public static final double ELEVATOR_KP = .08;
+      public static final boolean INVERT_MASTER_MOTOR = true;
+      public static final boolean INVERT_SLAVE_MOTOR = true;
+
+      public static final double ELEVATOR_PEAK_OUTPUT_FORWARD = 1;
+      public static final double ELEVATOR_PEAK_OUTPUT_REVERSE = -1;
+
+      public static final double ELEVATOR_KP = .00003;
+      public static final double ELEVATOR_KF = .0002;
+
+      public static final double ELEVATOR_FORWARD_VEL_CONSTRAINT = 10500;
+      public static final double ELEVATOR_FORWARD_ACCEL_CONSTRAINT = 11000;
+      public static final double ELEVATOR_DOWNWARD_VEL_CONSTRAINT = 8000;
+      public static final double ELEVATOR_DOWNWARD_ACCEL_CONSTRAINT = 8000;
+
+      public static final int ELEVATOR_CONTROL_PERIOD = 50;
+
+      public static final int ELEVATOR_NOMINAL_VOLTAGE = 10;
 
       public static final double ELEVATOR_HEIGHT_TOLERANCE = 1.5;
 
       public static final double ZEROING_SPEED = -.05;
 
-      public static final double ELEVATOR_ZERO_HEIGHT = 0;
+      public static final int ELEVATOR_ZERO_HEIGHT = 0;
+      public static final int ELEVATOR_MAX_HEIGHT = -24;
 
       public static final int DEVICE_ID_ELEVATOR_SWITCH = 3;
 
@@ -128,30 +142,32 @@ public final class Constants {
       public static final double WRIST_PEAK_OUTPUT_FORWARD = 1;
       public static final double WRIST_PEAK_OUTPUT_REVERSE = -1;
 
-      public static final double WRIST_CONTROLLER_TOLERANCE_RAD = Units.degreesToRadians(2);
+      public static final double WRIST_MOTION_VEL = 80000/1.25;
+      public static final double WRIST_MOTION_ACCEL = 85000/1.25;
+
+      public static final int WRIST_NOMINAL_VOLTAGE = 10;
+
+      public static final int WRIST_CURRENT_LIMIT = 35;
+      public static final int WRIST_TRIGGER_THRESHOLD_CURRENT = 35;
 
       public static final int ABS_ENCODER_PORT = 0;
 
       public static final int DEVICE_ID_MAG_SENSOR = 0;
-      //TODO: find out what the id is
-
 
       public static final double WRIST_CONTROLLER_KP = .075;
       public static final double WRIST_CONTROLLER_KI = 0;
       public static final double WRIST_CONTROLLER_KD = 0;
       public static final double WRIST_CONTROLLER_KF = 0;
 
-      public static final double WRIST_KS = .13938;
-      public static final double WRIST_KV = 1.08;
-      public static final double WRIST_KG = 1.45;
-      public static final double WRIST_KA = .0020997;
+      public static final Rotation2d WRIST_STOWING_ANGLE = Rotation2d.fromDegrees(-25);
 
-
-      public static final ArmFeedforward ARM_FF = new ArmFeedforward(WRIST_KS, WRIST_KG, WRIST_KV);
+      public static final int ELEVATOR_AVOID_HEIGHT = -2;
 
       public static final boolean MAG_DETECTED = false;
 
       public static final double ZEROING_SPEED = 0.1;
+
+      public static final int WRIST_CONTROLLER_TOLERANCE_DEGREES = 3;
     }
 
     public static class VisionConstants{
@@ -234,11 +250,6 @@ public final class Constants {
 
     }
 
-    public static final class LidarConstants {
-      public static final double CALIBRATION_OFFSET = 0;
-      public static final int DIO_PORT = 0;
-      public static final double ANGLE_OFFSET = 2;  
-  }
 
   public static final class ForksConstants{
     public static final int DEVICE_ID_FORKS = 29;
@@ -246,6 +257,8 @@ public final class Constants {
     public static final double FORK_KP = 0.05;
 
     public static final double FORK_DEPLOY_SETPOINT = -675000;
+
+    public static final double ACCEPTABLE_ERROR = 30000;
     
   }
 

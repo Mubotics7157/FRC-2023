@@ -46,7 +46,6 @@ public class Drive extends SubsystemBase {
     private TrapezoidProfile.Constraints rotProfile = new TrapezoidProfile.Constraints(2*Math.PI,Math.PI);
     private ProfiledPIDController rotController = new ProfiledPIDController(.5, 0, 0,rotProfile);
 
-    //HashMap<String, Command> eventMap = new HashMap<>();
 
 
     public Drive(){

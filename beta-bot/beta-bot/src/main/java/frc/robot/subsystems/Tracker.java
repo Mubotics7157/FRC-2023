@@ -83,7 +83,7 @@ public class Tracker extends SubsystemBase{
     }
 
     public void regeneratePath(){
-        //man i love polar bears
+        //man i love polar bears    
         Translation2d offsetPose = new Translation2d(node.getX(), node.getY() + coneOffset);
         
         if(DriverStation.getAlliance() == Alliance.Red)
